@@ -8,10 +8,14 @@ public class Subtitle {
 		private long timeStart;
 		private long timeStop;
 		
-		public Subtitle(ArrayList<Speech> contenuInput, long timeStartIntput, long timeStopInput) {
-			contenu = contenuInput;
+		public Subtitle(long timeStartIntput, long timeStopInput) {
+			contenu = new ArrayList<>();
 			timeStart = timeStartIntput;
 			timeStop = timeStopInput;
+		}
+		
+		public void addSpeech(Speech speech) {
+			contenu.add(speech);
 		}
 		
 		public ArrayList<Speech> getContenu() {

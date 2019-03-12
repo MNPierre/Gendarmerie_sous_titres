@@ -60,12 +60,12 @@ public class Controleur implements Initializable {
     
     @FXML
     void validSubititlesOnClick(ActionEvent event) throws IOException {
-    	addSubtitles(subtitlesInput.getText());
+    	//addSubtitles(subtitlesInput.getText());
     }
     
     @FXML
     void saveSubtitlesOnClick(ActionEvent event) throws IOException {
-    	saveSubtitles(subtitleFile);
+    	//saveSubtitles(subtitleFile);
     }
 
 
@@ -123,16 +123,4 @@ public class Controleur implements Initializable {
 		return subtitleFile;
 	}
 	
-	private void saveSubtitles(File f) throws IOException {			
-		PrintWriter pw;
-		pw = new PrintWriter(subtitleFile);
-		for(Subtitle s : subtitles) {
-			pw.println(s.getText());
-		}
-		pw.close();
-	}
-	
-	private void addSubtitles(String text) {
-		subtitles.add(new Subtitle(text , 50));
-	}
 }

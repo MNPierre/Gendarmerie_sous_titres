@@ -5,13 +5,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import Subtitles.Subtitles;
+import Subtitles.SubtitlesList;
 
 public class Encoder {
 	
-	private Subtitles subtitles;
+	private SubtitlesList subtitles;
 	
-	public Encoder(Subtitles subtitlesInput, String fileNameInput) throws IOException {
+	public Encoder(SubtitlesList subtitlesInput, String fileNameInput) throws IOException {
 		subtitles=subtitlesInput;
 		File xmlFile = new File(fileNameInput+".xml");
 		xmlFile.createNewFile();

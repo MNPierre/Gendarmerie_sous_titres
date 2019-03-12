@@ -2,14 +2,21 @@ package Subtitles;
 
 import java.util.ArrayList;
 
-public class Subtitles {
+public class SubtitlesList {
 	
 	ArrayList<Style>styles;
 	ArrayList<Subtitle>subtitles;
 	
-	public Subtitles(ArrayList<Style>stylesInput, ArrayList<Subtitle>subtitlesInput) {
-		styles = stylesInput;
-		subtitles = subtitlesInput;
+	public SubtitlesList() {
+		styles = new ArrayList<>();
+		subtitles = new ArrayList<>();
+	}
+	
+	public void addStyle(Style style) {
+		styles.add(style);
+	}
+	public void addSubtitles(Subtitle subtitle) {
+		subtitles.add(subtitle);
 	}
 	
 	public String getXml() {

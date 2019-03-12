@@ -6,32 +6,31 @@ import java.util.ArrayList;
 import Subtitles.Speech;
 import Subtitles.Style;
 import Subtitles.Subtitle;
-import Subtitles.Subtitles;
+import Subtitles.SubtitlesList;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		ArrayList<Style>styles = new ArrayList<>();
-		styles.add(new Style("Narrateur 1", "#FFFFFF"));
-		styles.add(new Style("Narrateur 2", "#000000"));
+		Speech speech1 = new Speech("TEST1", "AUTEUR1");
+		Speech speech2 = new Speech("TEST2", "AUTEUR2");
 		
+		Subtitle sub1 = new Subtitle(0, 1000);
+		sub1.addSpeech(speech1);
 		
-		ArrayList<Speech>speech = new ArrayList<>();
-		ArrayList<Speech>speech2 = new ArrayList<>();
+		Subtitle sub2 = new Subtitle(1001, 2001);
+		sub2.addSpeech(speech2);
 		
-		speech.add(new Speech("Salut", "Auteur1"));
-		speech2.add(new Speech("Yo cava", "Auteur2"));
+		SubtitlesList subs = new SubtitlesList();
+		subs.addSubtitles(sub1);
+		subs.addSubtitles(sub2);
 		
-		Subtitle subtitle1 = new Subtitle(speech, 0, 2000);
-		Subtitle subtitle2 = new Subtitle(speech2, 2001, 3000);		
-		ArrayList<Subtitle>subslist = new ArrayList<>();
-		subslist.add(subtitle1);
-		subslist.add(subtitle2);
+		Style style1 = new Style("AUTEUR1", "#FFFFFF");
+		Style style2 = new Style("AUTEUR2", "#000000");
 		
-		Subtitles subs = new Subtitles(styles, subslist);
+		subs.addStyle(style1);
+		subs.addStyle(style2);
 		
-		Encoder encod = new Encoder(subs, "TEST1");
-		System.out.println(encod.encodageXML());
+		Encoder encod = new Encoder(subs, "TEST2");
 	}
 
 }
