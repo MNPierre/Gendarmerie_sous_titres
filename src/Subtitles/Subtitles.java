@@ -1,31 +1,32 @@
 package Subtitles;
 
+import java.util.ArrayList;
 
 public class Subtitles {
-
-		private String text;
-		private int time;
-		
-		public Subtitles(String textIntput, int timeIntput) {
-			text = textIntput;
-			time = timeIntput;
-		}
-
-		public String getText() {
-			return text;
-		}
-
-		public void setText(String text) {
-			this.text = text;
-		}
-
-		public int getTime() {
-			return time;
-		}
-
-		public void setTime(int time) {
-			this.time = time;
+	
+	ArrayList<Style>styles;
+	ArrayList<Subtitle>subtitles;
+	
+	public Subtitles(ArrayList<Style>stylesInput, ArrayList<Subtitle>subtitlesInput) {
+		styles = stylesInput;
+		subtitles = subtitlesInput;
+	}
+	
+	public String getXml() {
+		String res = "<styles>\n";
+		for(Style s : styles) {
+			res += s.getXml();
 		}
 		
+		res += "</styles>\n";
+		res += "<subtitles>\n";
 		
+		for(Subtitle sub : subtitles) {
+			res += sub.getXml();
+		}
+		res += "</subtitles>\n";
+		return res;
+	}
+	
+	
 }

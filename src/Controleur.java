@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import Subtitles.Subtitles;
+import Subtitles.Subtitle;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
@@ -56,7 +56,7 @@ public class Controleur implements Initializable {
     private Button saveSubtitlesButton;
     
     File subtitleFile;
-    ArrayList<Subtitles> subtitles;
+    ArrayList<Subtitle> subtitles;
     
     @FXML
     void validSubititlesOnClick(ActionEvent event) throws IOException {
@@ -90,7 +90,7 @@ public class Controleur implements Initializable {
     	video.setLayoutX(-50);
     	video.getMediaPlayer().play();
     	
-    	//création de la liste de sous-titres
+    	//crï¿½ation de la liste de sous-titres
     	subtitles = new ArrayList<>();
     	
     	try {
@@ -126,13 +126,13 @@ public class Controleur implements Initializable {
 	private void saveSubtitles(File f) throws IOException {			
 		PrintWriter pw;
 		pw = new PrintWriter(subtitleFile);
-		for(Subtitles s : subtitles) {
+		for(Subtitle s : subtitles) {
 			pw.println(s.getText());
 		}
 		pw.close();
 	}
 	
 	private void addSubtitles(String text) {
-		subtitles.add(new Subtitles(text , 50));
+		subtitles.add(new Subtitle(text , 50));
 	}
 }
