@@ -1,17 +1,23 @@
+import XML.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import Subtitles.Speech;
+import Subtitles.Style;
 import Subtitles.Subtitle;
+import Subtitles.SubtitlesList;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -22,41 +28,44 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 public class Controleur implements Initializable {
 
-    @FXML
-    private TextField mp3path;
-
-    @FXML
-    private TextField soustitrepath;
-
-    @FXML
+	@FXML
     private Pane paneVideo;
-    
+	
+	 @FXML
+	 private Pane panePrincipal;
+
     @FXML
     private Pane PaneVideoControl;
-    
+
+    @FXML
+    private Text timeOutput;
+
     @FXML
     private Slider videoSlider;
 
-    @FXML
-    private Button buttonMP3;
+    
+    private TextArea subtitlesInput;
+
+    
+    private TextField debutInput;
+
+    
+    private TextField finInput;
 
     @FXML
-    private Button buttonsoustitre;
-    
+    private Button ajouterButton;
+
     @FXML
-    private TextArea subtitlesInput;
-    
-    @FXML
-    private Text timeOutput;
-    
-    @FXML
-    private Button validSubititles;
-    
-    @FXML
-    private Button saveSubtitlesButton;
+    private Button sauvegarderButton;
+
+
+
+    ComboBox<String> personneInput;
     
     File subtitleFile;
-    ArrayList<Subtitle> subtitles;
+    SubtitlesList subtitles;
+    
+    ObservableList<String> personnes;
     
     @FXML
     void validSubititlesOnClick(ActionEvent event) throws IOException {
@@ -73,14 +82,35 @@ public class Controleur implements Initializable {
 	@Override
     public void initialize(URL location, ResourceBundle resources) {
     	
+		
+		//Déclarations
     	//video.setMediaPlayer(value);
     	File path = new File("Sans titre.mp4");
     	System.out.println("test : "+path.getAbsoluteFile());
     	Media fichierVideo = new Media(path.toURI().toString());
     	MediaPlayer player = new MediaPlayer(fichierVideo);
     	MediaView video = new MediaView(player);
+    	debutInput = new TextField();
     	paneVideo.getChildren().add(video);
     	videoSlider = new Slider();
+    	subtitles = new SubtitlesList();
+    	
+    	debutInput = new TextField();
+    	finInput = new TextField();
+    	subtitlesInput = new TextArea();
+    	
+    	personneInput = new ComboBox<>();
+    	
+    	personnes = FXCollections.observableArrayList("personne1","personne2");
+    	
+    	personneInput.setItems(personnes);
+    	
+    	//ajout des textfiels plus ajout au pan
+    	
+    	panePrincipal.getChildren().add(personneInput);
+    	panePrincipal.getChildren().add(debutInput);
+    	panePrincipal.getChildren().add(finInput);
+    	panePrincipal.getChildren().add(subtitlesInput);
     	
     	paneVideo.setMaxWidth(480);
     	paneVideo.setMaxHeight(200);
@@ -90,16 +120,20 @@ public class Controleur implements Initializable {
     	video.setLayoutX(-50);
     	video.getMediaPlayer().play();
     	
-    	//crï¿½ation de la liste de sous-titres
-    	subtitles = new ArrayList<>();
+    	personneInput.setLayoutX(457);
+    	personneInput.setLayoutY(356);
     	
-    	try {
-    		subtitleFile = createSubtitlesFiles();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  
+    	debutInput.setLayoutX(457);
+    	debutInput.setLayoutY(291);
+    	
+    	finInput.setLayoutX(457);
+    	finInput.setLayoutY(324);
+    	
+    	subtitlesInput.setLayoutX(47);
+    	subtitlesInput.setLayoutY(284);
+    	subtitlesInput.setPrefWidth(275);
+    	subtitlesInput.setPrefHeight(96);
+   	
     	
     	videoSlider.valueProperty().addListener(new InvalidationListener() {
     		public void invalidated(Observable ov) {
@@ -114,13 +148,30 @@ public class Controleur implements Initializable {
  	}
 
 
-	private File createSubtitlesFiles() throws IOException {
-		subtitleFile =  new File("fileName.txt");		
-		if(!subtitleFile.exists()) {
-			System.out.println(subtitleFile.getName());
-			subtitleFile.createNewFile();
+	@FXML
+    void ajouterCommentaire(ActionEvent event) {
+		if(debutInput.getText().equals("") || finInput.getText().equals("") || personneInput.getValue() == null || subtitlesInput.getText().equals("")) {
+			throw new Error("Remplir tous les champs");
 		}
-		return subtitleFile;
+		
+		Subtitle sub = subtitles.createSubtitle(Long.valueOf(debutInput.getText()), Long.valueOf(finInput.getText()));
+		sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
+				
+		debutInput.setText("");
+		finInput.setText("");
+		subtitlesInput.setText("");
+		personneInput.setValue(null);
+		System.out.println(subtitles.getXml());
 	}
 	
+	@FXML
+	//TODO CATCH ERROR
+    void sauvegarderOnClick(ActionEvent event) throws IOException{
+		for(String p : personnes) {
+			subtitles.addStyle(new Style(p, "#FFFFFF"));
+		}
+		
+		Encoder encodeur = new Encoder(subtitles, "Final");
+
+    }
 }
