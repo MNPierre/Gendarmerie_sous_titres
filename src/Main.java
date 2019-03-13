@@ -1,10 +1,14 @@
 import java.io.File;
 import java.net.URL;
 
+import com.sun.prism.paint.Color;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -20,9 +24,13 @@ public class Main extends Application {
         loader.setLocation(url);
         System.out.println(loader.getLocation());
         Parent root = FXMLLoader.load(url);
-        Scene scene = new Scene(root,450,250);
+        Scene scene = new Scene(root,1200,850);
         primaryStage.setScene(scene);
         primaryStage.show();
+       
+        
+        //création du fond de la barre de fonction
+        
 
           /*  Scene scene = new Scene(new Group(), 540, 209);
             primaryStage.setScene(scene);
