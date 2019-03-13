@@ -29,4 +29,8 @@ public class Speech {
 	public String getXml() {
 		return "\t\t<text speaker=\""+getAuthor()+"\">"+getText()+"</text>\n";
 	}
+	
+	public String toString() {
+		return "author=\""+author+"\", text=\""+text+"\" ";
+	}
 }

@@ -1,5 +1,6 @@
 package XML;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ import Subtitles.SubtitlesList;
 
 public class Main {
 
+	/*
 	public static void main(String[] args) throws IOException {
 		Speech speech1 = new Speech("TEST1", "AUTEUR1");
 		Speech speech2 = new Speech("TEST2", "AUTEUR2");
@@ -31,6 +33,14 @@ public class Main {
 		subs.addStyle(style2);
 		
 		Encoder encod = new Encoder(subs, "TEST2");
-	}
+	}*/
 
+	public static void main(String[] args) {
+		try {
+			Decoder.Decode("TEST2.xml");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

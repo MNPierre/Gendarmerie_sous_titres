@@ -64,4 +64,12 @@ public class Subtitle {
 				return res;
 		}
 		
+		public String toString() {
+			String string = "timeStart="+timeStart+", timeStop="+timeStop+" {\n";
+			for(Speech speech:contenu) {
+				string+=" "+speech.toString()+"\n";
+			}
+			return string+"}";
+		}
+		
 }
