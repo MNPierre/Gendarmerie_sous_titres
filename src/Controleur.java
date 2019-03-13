@@ -7,6 +7,7 @@ import Subtitles.Speech;
 import Subtitles.Style;
 import Subtitles.Subtitle;
 import Subtitles.SubtitlesList;
+import XML.Decoder;
 import XML.Encoder;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -22,6 +23,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -61,6 +63,10 @@ public class Controleur implements Initializable {
 
 
 	private TextField finInput;
+	
+	private Label videoTime;
+	
+	private Label videoTimeMax;
 
 	@FXML
 	private Button ajouterButton;
@@ -106,6 +112,10 @@ public class Controleur implements Initializable {
 		subtitles = new SubtitlesList();
 		PaneVideoControl = new Pane();
 		timeOutput = new Text();
+		videoTime = new Label();
+		videoTimeMax = new Label();
+		//long videoTimeValue;
+		
 
 		debutInput = new TextField();
 		finInput = new TextField();
@@ -132,6 +142,14 @@ public class Controleur implements Initializable {
 		video.setLayoutX(118);
 		video.getMediaPlayer().play();
 
+		videoTime.setText("00:00:00");
+		videoTime.setLayoutX(video.getLayoutX());
+		videoTime.setLayoutY(570);
+		
+		videoTimeMax.setText("/ "+fichierVideo.getDuration().toMillis());
+		videoTimeMax.setLayoutX(video.getLayoutX()+75);
+		videoTimeMax.setLayoutY(570);
+
 		personneInput.setLayoutX(698);
 		personneInput.setLayoutY(777);
 
@@ -149,7 +167,9 @@ public class Controleur implements Initializable {
 		fonctions.getChildren().add(fond);
 		//fonctions.setTranslateY(video.getFitHeight()-30);
 		paneVideo.getChildren().add(fonctions);
-
+		paneVideo.getChildren().add(videoTime);
+		paneVideo.getChildren().add(videoTimeMax);
+		
 		subtitlesInput.setLayoutX(288);
 		subtitlesInput.setLayoutY(705);
 		subtitlesInput.setPrefWidth(275);
@@ -214,6 +234,7 @@ public class Controleur implements Initializable {
         player.currentTimeProperty().addListener(new ChangeListener(){
             @Override public void changed(ObservableValue o, Object oldVal, Object newVal){
                 barre_lecture.setWidth(player.getCurrentTime().toMillis()/(player.getTotalDuration().toMillis())*barre_fond.getWidth());
+                videoTime.setText(Subtitle.MillisecondsToString((long)player.getCurrentTime().toMillis()));
             }
         });
         
@@ -224,10 +245,21 @@ public class Controleur implements Initializable {
                 player.seek(Duration.millis(me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()));
 
                 barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
-
+                
             }
 
         });
+        //debutInput.textProperty().bind((player.currentTimeProperty()).asString());
+        
+        debutInput.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				debutInput.setText(videoTime.getText());
+			}
+        	
+		});
+        		
 	}
 
 
@@ -240,7 +272,7 @@ public class Controleur implements Initializable {
 			throw new Error("Remplir tous les champs");
 		}
 
-		Subtitle sub = subtitles.createSubtitle(Long.valueOf(debutInput.getText()), Long.valueOf(finInput.getText()));
+		Subtitle sub = subtitles.createSubtitle(Decoder.StringToMillisecond(debutInput.getText()), Decoder.StringToMillisecond(finInput.getText()));
 		sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
 
 		debutInput.setText("");

@@ -108,7 +108,7 @@ public class Decoder {
 		return subtitles;
 	}
 
-	private static long StringToMillisecond(String time) {
+	public static long StringToMillisecond(String time) {
 		String[] splitedTime = time.split(":");	
 		int hours = Integer.parseInt(splitedTime[0]);
 		int minutes = Integer.parseInt(splitedTime[1]);

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<USFSubtitles version="1.0">
+<styles>
+	<style namggge="personne1" color="#FFFFFF"></style>
+	<style namggge="personne2" color="#FFFFFF"></style>
+</styles>
+<subtitles>
+	<subtitle start="0:0:2.251" stop="0:0:5.251">
+		<text speaker="personne1">regergerg</text>
+	</subtitle>
+</subtitles>
+</USFSubtitles>
