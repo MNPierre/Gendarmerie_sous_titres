@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -73,7 +74,19 @@ public class Controleur implements Initializable {
 
 	@FXML
 	private Button sauvegarderButton;
+	
+    @FXML
+    private TextField wordToSearchBox;
 
+    Image img_play;
+	Image img_pause;
+	MediaPlayer player;
+	ImageView image_bouton;
+    
+    @FXML
+    void EditerPersonnes(ActionEvent event) {
+    	System.out.println("Ouverture fenêtre\n");
+    }
 
 
 	ComboBox<String> personneInput;
@@ -93,6 +106,17 @@ public class Controleur implements Initializable {
 		//saveSubtitles(subtitleFile);
 	}
 
+	
+	private void playPauseVideo() {
+		if(player.getStatus() == Status.PLAYING){//pause
+			image_bouton.setImage(img_play);
+			player.pause();
+		}
+		else{//play
+			image_bouton.setImage(img_pause);
+			player.play();
+		}
+	}
 
 
 	@Override
@@ -104,7 +128,7 @@ public class Controleur implements Initializable {
 		File path = new File("Sans titre.mp4");
 		System.out.println("test : "+path.getAbsoluteFile());
 		Media fichierVideo = new Media(path.toURI().toString());
-		MediaPlayer player = new MediaPlayer(fichierVideo);
+		player = new MediaPlayer(fichierVideo);
 		MediaView video = new MediaView(player);
 		debutInput = new TextField();
 		paneVideo.getChildren().add(video);
@@ -149,16 +173,21 @@ public class Controleur implements Initializable {
 		//System.out.println(fichierVideo.getDuration());
 		videoTimeMax.setText("/ "+fichierVideo.getDuration().toMillis());
 		videoTimeMax.setLayoutX(video.getLayoutX()+75);
-		videoTimeMax.setLayoutY(570);
+		videoTimeMax.setLayoutY(ajouterButton.getLayoutY()+570);
+		
+		personneInput.setLayoutX(ajouterButton.getLayoutX()+298);
+		personneInput.setLayoutY(ajouterButton.getLayoutY()+127);
 
-		personneInput.setLayoutX(698);
-		personneInput.setLayoutY(777);
+		debutInput.setLayoutX(ajouterButton.getLayoutX()+298);
+		debutInput.setLayoutY(ajouterButton.getLayoutY()+62);
 
-		debutInput.setLayoutX(698);
-		debutInput.setLayoutY(712);
-
-		finInput.setLayoutX(698);
-		finInput.setLayoutY(745);
+		finInput.setLayoutX(ajouterButton.getLayoutX()+298);
+		finInput.setLayoutY(ajouterButton.getLayoutY()+95);
+		
+		subtitlesInput.setLayoutX(ajouterButton.getLayoutX());
+		subtitlesInput.setLayoutY(ajouterButton.getLayoutY()+55);
+		subtitlesInput.setPrefWidth(275);
+		subtitlesInput.setPrefHeight(96);
 
 		Group fonctions = new Group();
 		Rectangle fond = new Rectangle(video.getFitWidth(),30);
@@ -171,10 +200,7 @@ public class Controleur implements Initializable {
 		paneVideo.getChildren().add(videoTime);
 		paneVideo.getChildren().add(videoTimeMax);
 		
-		subtitlesInput.setLayoutX(288);
-		subtitlesInput.setLayoutY(705);
-		subtitlesInput.setPrefWidth(275);
-		subtitlesInput.setPrefHeight(96);
+		
 
 
 		videoSlider.valueProperty().addListener(new InvalidationListener() {
@@ -192,31 +218,39 @@ public class Controleur implements Initializable {
 		Rectangle fond_bouton = new Rectangle(30,30);
 		fond_bouton.setArcHeight(5);
 		fond_bouton.setArcWidth(5);
-		Image img_play = new Image("file:///home/etudiants/info/rauriac/git/Gendarmerie_sous_titres/PAUSE.png");
-		Image img_pause = new Image("file:///home/etudiants/info/rauriac/git/Gendarmerie_sous_titres/PLAY.png");
-		ImageView image_bouton = new ImageView(img_play);
-		image_bouton.setFitWidth(22);;
-		image_bouton.setLayoutX(4);
-		image_bouton.setLayoutY(4);
-		image_bouton.setFitHeight(22);
-		play_pause.getChildren().add(fond_bouton);
-		play_pause.getChildren().add(image_bouton);
-		play_pause.setTranslateX(video.getLayoutX());
-		play_pause.setTranslateY(538);
-		play_pause.setCursor(Cursor.HAND);
-		//Quand on clique sur le bouton play/pause, on démarre ou on arrête la vidéo
-		play_pause.setOnMouseClicked(new EventHandler<MouseEvent>(){
-			public void handle(MouseEvent me){
-				if(player.getStatus() == Status.PLAYING){//pause
-					image_bouton.setImage(img_pause);
-					player.pause();
+		
+		try {
+			img_play = new Image(new File("PLAY.png").toURI().toURL().toString());
+			img_pause = new Image(new File("PAUSE.png").toURI().toURL().toString());
+
+			image_bouton = new ImageView(img_pause);
+			image_bouton.setFitWidth(22);;
+			image_bouton.setLayoutX(4);
+			image_bouton.setLayoutY(4);
+			image_bouton.setFitHeight(22);
+			play_pause.getChildren().add(fond_bouton);
+			play_pause.getChildren().add(image_bouton);
+			play_pause.setTranslateX(video.getLayoutX());
+			play_pause.setTranslateY(538);
+			play_pause.setCursor(Cursor.HAND);
+
+			//Quand on clique sur le bouton play/pause, on démarre ou on arrête la vidéo
+			play_pause.setOnMouseClicked(new EventHandler<MouseEvent>(){
+				public void handle(MouseEvent me){
+					playPauseVideo();
 				}
-				else{//play
-					image_bouton.setImage(img_play);
-					player.play();
+			});
+			
+			//Event clique sur la video
+	        video.setOnMouseClicked(new EventHandler<MouseEvent>(){
+				public void handle(MouseEvent me){
+					playPauseVideo();
 				}
-			}
-		});
+			});
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 		fonctions.getChildren().add(play_pause);
 		
 		Group barres = new Group();
@@ -247,17 +281,14 @@ public class Controleur implements Initializable {
                 barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
                 
             }
-
         });
         //debutInput.textProperty().bind((player.currentTimeProperty()).asString());
         
         debutInput.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
 			@Override
 			public void handle(MouseEvent event) {
 				debutInput.setText(videoTime.getText());
 			}
-        	
 		});
         		
 	}
