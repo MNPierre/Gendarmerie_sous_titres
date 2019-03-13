@@ -146,6 +146,7 @@ public class Controleur implements Initializable {
 		videoTime.setLayoutX(video.getLayoutX());
 		videoTime.setLayoutY(570);
 		
+		//System.out.println(fichierVideo.getDuration());
 		videoTimeMax.setText("/ "+fichierVideo.getDuration().toMillis());
 		videoTimeMax.setLayoutX(video.getLayoutX()+75);
 		videoTimeMax.setLayoutY(570);
@@ -239,7 +240,6 @@ public class Controleur implements Initializable {
         });
         
         barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
-
             public void handle(MouseEvent me){
 
                 player.seek(Duration.millis(me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()));
