@@ -9,7 +9,7 @@ import Subtitles.Style;
 import Subtitles.Subtitle;
 import Subtitles.SubtitlesList;
 
-public class Main {
+public class MainTest {
 
 	/*
 	public static void main(String[] args) throws IOException {
