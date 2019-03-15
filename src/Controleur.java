@@ -42,8 +42,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 public class Controleur implements Initializable {
 
-	@FXML
-	private Pane paneVideo;
 
 	@FXML
 	private Pane panePrincipal;
@@ -77,24 +75,44 @@ public class Controleur implements Initializable {
 	
     @FXML
     private TextField wordToSearchBox;
+    
+    @FXML
+    private TextField videoPlayStart;
+
+    @FXML
+    private TextField videoPlayEnd;
 
     Image img_play;
 	Image img_pause;
+	
 	MediaPlayer player;
 	ImageView image_bouton;
-    
-    @FXML
-    void EditerPersonnes(ActionEvent event) {
-    	System.out.println("Ouverture fenêtre\n");
-    }
-
-
+	
 	ComboBox<String> personneInput;
 
 	File subtitleFile;
 	SubtitlesList subtitles;
 
 	ObservableList<String> personnes;
+	
+	Rectangle fond_bouton;
+	Rectangle barre_fond;
+    Rectangle barre_lecture;
+	
+	@FXML
+    void showEditSpeakers(ActionEvent event) {
+
+    }
+
+    @FXML
+    void showFileImport(ActionEvent event) {
+
+    }
+    
+    @FXML
+    void EditerPersonnes(ActionEvent event) {
+    	System.out.println("Ouverture fenêtre\n");
+    }
 
 	@FXML
 	void validSubititlesOnClick(ActionEvent event) throws IOException {
@@ -108,17 +126,47 @@ public class Controleur implements Initializable {
 
 	
 	private void playPauseVideo() {
-		if(player.getStatus() == Status.PLAYING){//pause
+		//pause
+		if(player.getStatus() == Status.PLAYING){
 			image_bouton.setImage(img_play);
 			player.pause();
-		}
-		else{//play
+			
+		//play
+		}else{
 			image_bouton.setImage(img_pause);
 			player.play();
 		}
 	}
+	
+	@FXML
+	void ajouterCommentaire(ActionEvent event) {
+		if(debutInput.getText().equals("") || finInput.getText().equals("") || personneInput.getValue() == null || subtitlesInput.getText().equals("")) {
+			throw new Error("Remplir tous les champs");
+		}
+
+		Subtitle sub = subtitles.createSubtitle(Decoder.StringToMillisecond(debutInput.getText()), Decoder.StringToMillisecond(finInput.getText()));
+		sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
+
+		debutInput.setText("");
+		finInput.setText("");
+		subtitlesInput.setText("");
+		personneInput.setValue(null);
+		System.out.println(subtitles.getXml());
+	}
+
+	@FXML
+	//TODO CATCH ERROR
+	void sauvegarderOnClick(ActionEvent event) throws IOException{
+		for(String p : personnes) {
+			subtitles.addStyle(new Style(p, "#FFFFFF"));
+		}
+
+		Encoder encodeur = new Encoder(subtitles, "Final");
+
+	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -131,7 +179,7 @@ public class Controleur implements Initializable {
 		player = new MediaPlayer(fichierVideo);
 		MediaView video = new MediaView(player);
 		debutInput = new TextField();
-		paneVideo.getChildren().add(video);
+		panePrincipal.getChildren().add(video);
 		videoSlider = new Slider();
 		subtitles = new SubtitlesList();
 		PaneVideoControl = new Pane();
@@ -158,8 +206,6 @@ public class Controleur implements Initializable {
 		panePrincipal.getChildren().add(finInput);
 		panePrincipal.getChildren().add(subtitlesInput);
 
-		paneVideo.setMaxWidth(480);
-		paneVideo.setMaxHeight(200);
 		video.setFitWidth(950);
 		video.setFitHeight(650);
 		video.setLayoutY(4);
@@ -196,9 +242,9 @@ public class Controleur implements Initializable {
 		fond.setLayoutY(538);
 		fonctions.getChildren().add(fond);
 		//fonctions.setTranslateY(video.getFitHeight()-30);
-		paneVideo.getChildren().add(fonctions);
-		paneVideo.getChildren().add(videoTime);
-		paneVideo.getChildren().add(videoTimeMax);
+		panePrincipal.getChildren().add(fonctions);
+		panePrincipal.getChildren().add(videoTime);
+		panePrincipal.getChildren().add(videoTimeMax);
 		
 		
 
@@ -215,7 +261,7 @@ public class Controleur implements Initializable {
 
 		//création du bouton play/pause
 		Group play_pause = new Group();
-		Rectangle fond_bouton = new Rectangle(30,30);
+		fond_bouton = new Rectangle(30,30);
 		fond_bouton.setArcHeight(5);
 		fond_bouton.setArcWidth(5);
 		
@@ -257,26 +303,44 @@ public class Controleur implements Initializable {
         barres.setTranslateX(video.getLayoutX() + 35);
         barres.setTranslateY(541);
         barres.setCursor(Cursor.HAND);
-        Rectangle barre_fond = new Rectangle(video.getFitWidth()-60, 22);
-        Rectangle barre_lecture = new Rectangle(0, 22);
-        barres.getChildren().add(barre_fond);
-        barres.getChildren().add(barre_lecture);
+        barre_fond = new Rectangle(video.getFitWidth()-60, 22);
+        barre_lecture = new Rectangle(0, 22);
+        
         barre_lecture.setFill(Color.BLUE);
         barre_fond.setFill(Color.BROWN);
+       // barre_lecture_supprimer1.setFill(Color.color(0.251, 0.251, 0.251, 0.5));
+       // barre_lecture_supprimer2.setFill(Color.color(0.251, 0.251, 0.251, 0.5));
+        
         fonctions.getChildren().add(barres);
+        barres.getChildren().add(barre_fond);
+        barres.getChildren().add(barre_lecture);
+        
+       
 
         //On ajuste la longueure de la barre de lecture au taux de lecture de la vidéo
         player.currentTimeProperty().addListener(new ChangeListener(){
             @Override public void changed(ObservableValue o, Object oldVal, Object newVal){
-                barre_lecture.setWidth(player.getCurrentTime().toMillis()/(player.getTotalDuration().toMillis())*barre_fond.getWidth());
+            	
+            	if(player.getCurrentTime().toMillis()<Decoder.StringToMillisecond(videoPlayStart.textProperty().get()))
+            		player.seek( Duration.millis(Decoder.StringToMillisecond(videoPlayStart.textProperty().get())) );
+            	
+            	if(player.getCurrentTime().toMillis()>Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())) {
+            		player.seek( Duration.millis(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())) );
+            		player.pause();
+            	}
+            	
+            	
+                barre_lecture.setWidth( (player.getCurrentTime().toMillis()-Decoder.StringToMillisecond(videoPlayStart.textProperty().get())) /(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())-Decoder.StringToMillisecond(videoPlayStart.textProperty().get()))*barre_fond.getWidth());
                 videoTime.setText(Subtitle.MillisecondsToString((long)player.getCurrentTime().toMillis()));
+                
             }
         });
+        
         
         barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
             public void handle(MouseEvent me){
 
-                player.seek(Duration.millis(me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()));
+                player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get()) - Decoder.StringToMillisecond(videoPlayStart.textProperty().get()) ) ).add(Duration.millis( Decoder.StringToMillisecond(videoPlayStart.textProperty().get()) ) )  );
 
                 barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
                 
@@ -293,34 +357,4 @@ public class Controleur implements Initializable {
         		
 	}
 
-
-
-
-
-	@FXML
-	void ajouterCommentaire(ActionEvent event) {
-		if(debutInput.getText().equals("") || finInput.getText().equals("") || personneInput.getValue() == null || subtitlesInput.getText().equals("")) {
-			throw new Error("Remplir tous les champs");
-		}
-
-		Subtitle sub = subtitles.createSubtitle(Decoder.StringToMillisecond(debutInput.getText()), Decoder.StringToMillisecond(finInput.getText()));
-		sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
-
-		debutInput.setText("");
-		finInput.setText("");
-		subtitlesInput.setText("");
-		personneInput.setValue(null);
-		System.out.println(subtitles.getXml());
-	}
-
-	@FXML
-	//TODO CATCH ERROR
-	void sauvegarderOnClick(ActionEvent event) throws IOException{
-		for(String p : personnes) {
-			subtitles.addStyle(new Style(p, "#FFFFFF"));
-		}
-
-		Encoder encodeur = new Encoder(subtitles, "Final");
-
-	}
 }

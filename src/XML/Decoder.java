@@ -109,13 +109,20 @@ public class Decoder {
 	}
 
 	public static long StringToMillisecond(String time) {
-		String[] splitedTime = time.split(":");	
-		int hours = Integer.parseInt(splitedTime[0]);
-		int minutes = Integer.parseInt(splitedTime[1]);
-		String[] secAndMilliSec = splitedTime[2].split("[.]");
-		int seconds = Integer.parseInt(secAndMilliSec[0]);
-		int milliseconds = Integer.parseInt(secAndMilliSec[1]);
-		return hours*1000*60*60 + minutes*1000*60 + seconds*1000 + milliseconds;
+		try {
+			String stringMilli = time.replaceAll("[^0123456789:.]", "");
+			System.out.println("Befor \""+time+"\" after \""+stringMilli+"\"");
+			String[] splitedTime = stringMilli.split(":");
+			int hours = splitedTime.length<1?0:Integer.parseInt(splitedTime[0]);
+			int minutes = splitedTime.length<2?0:Integer.parseInt(splitedTime[1]);
+			String[] secAndMilliSec = splitedTime.length<3?"00.000".split("[.]"):splitedTime[2].split("[.]");
+			int seconds = Integer.parseInt(secAndMilliSec[0]);
+			int milliseconds = Integer.parseInt(secAndMilliSec[1]);
+			return hours*1000*60*60 + minutes*1000*60 + seconds*1000 + milliseconds;
+		}catch(NumberFormatException e) {
+			System.out.println(e.getCause());
+			return 0;
+		}
 	}
 	
 }
