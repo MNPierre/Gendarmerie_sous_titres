@@ -11,7 +11,7 @@ public class Style {
 	}
 	
 	public String getXml() {
-		return "\t<style namggge=\""+getNarrator()+"\" color=\""+getColor()+"\"></style>\n";
+		return "\t<style name=\""+getNarrator()+"\" color=\""+getColor()+"\"></style>\n";
 	}
 
 	public String getNarrator() {

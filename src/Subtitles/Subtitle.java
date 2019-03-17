@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Subtitle {
 
+		
 		private ArrayList<Speech> contenu;
 		private long timeStart;
 		private long timeStop;

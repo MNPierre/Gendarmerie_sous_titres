@@ -1,9 +1,17 @@
 package Subtitles;
 
 public class Speech {
-	
+
+	private static int globalId=0;
+	private int id;
 	private String text;
 	private String author;
+	
+	public Speech(String textInput, String authorInput) {
+		text = textInput;
+		author = authorInput;
+		id=globalId++;
+	}
 	
 	public String getText() {
 		return text;
@@ -20,10 +28,9 @@ public class Speech {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-
-	public Speech(String textInput, String authorInput) {
-		text = textInput;
-		author = authorInput;
+	
+	public int getId() {
+		return id;
 	}
 	
 	public String getXml() {

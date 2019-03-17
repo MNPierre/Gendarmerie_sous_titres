@@ -34,6 +34,10 @@ public class SubtitlesList {
 		res += "</subtitles>\n";
 		return res;
 	}
+	
+	public ArrayList<Style> getStyles(){
+		return styles;
+	}
 
 	public ArrayList<Subtitle> getSubtitles() {
 		return subtitles;

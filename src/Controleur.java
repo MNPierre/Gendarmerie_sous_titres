@@ -1,8 +1,15 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import javax.swing.event.ChangeEvent;
+
+import com.sun.javafx.scene.EventHandlerProperties;
 
 import Subtitles.Speech;
 import Subtitles.Style;
@@ -17,11 +24,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -30,7 +40,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -86,6 +98,7 @@ public class Controleur implements Initializable {
 	Image img_pause;
 	
 	MediaPlayer player;
+	MediaView video;
 	ImageView image_bouton;
 	
 	ComboBox<String> personneInput;
@@ -98,6 +111,11 @@ public class Controleur implements Initializable {
 	Rectangle fond_bouton;
 	Rectangle barre_fond;
     Rectangle barre_lecture;
+    
+    ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
+    Pane paneTextToShow;
+    
+    boolean asSetTime = false;
 	
 	@FXML
     void showEditSpeakers(ActionEvent event) {
@@ -164,25 +182,114 @@ public class Controleur implements Initializable {
 		Encoder encodeur = new Encoder(subtitles, "Final");
 
 	}
+	
+	private void updateVideo() {
+		double currentTime = player.getCurrentTime().toMillis();
+    	
+    	if(!asSetTime) {
+    		asSetTime=true;
+    		videoPlayEnd.setText(Subtitle.MillisecondsToString((long)player.getTotalDuration().toMillis()));
+    	}
+    	
+    	if(currentTime<Decoder.StringToMillisecond(videoPlayStart.textProperty().get()))
+    		player.seek( Duration.millis(Decoder.StringToMillisecond(videoPlayStart.textProperty().get())) );
+    	
+    	if(currentTime>Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())) {
+    		player.seek( Duration.millis(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())) );
+    		player.pause();
+    	}
+    	
+        barre_lecture.setWidth( (currentTime-Decoder.StringToMillisecond(videoPlayStart.textProperty().get())) /(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())-Decoder.StringToMillisecond(videoPlayStart.textProperty().get()))*barre_fond.getWidth());
+        videoTime.setText(Subtitle.MillisecondsToString((long)currentTime));
+        
+        //Affichage des soutitres
+        for(Subtitle sub:subtitles.getSubtitles()) {
+        	
+        	//Ajout des sous-titres a afficher
+        	if(sub.getTimeStart()<= currentTime && sub.getTimeStop()>currentTime) {
+        		if(!subtitlesToShow.contains(sub)) {
+        			subtitlesToShow.add(sub);
+        			for(Speech speech:sub.getContenu()) {
+        				Label text = new Label(speech.getText());
+        				text.setId(""+speech.getId());
+        				text.setScaleX(2);
+        				text.setScaleY(2);
+        				for(Style style:subtitles.getStyles()) {
+        					if(style.getNarrator().equals(speech.getAuthor())) {
+        						text.setStyle("-fx-text-fill : "+style.getColor()+"; -fx-alignment: center; -fx-background-color: none;");
+        						text.backgroundProperty().set(Background.EMPTY);
+        						break;
+        					}
+        				}
+        				
+        				paneTextToShow.getChildren().add(text);
+        			}
+        		}
+        	//Suppression des sous-titres a ne plus afficher
+        	}else {
+        		if(subtitlesToShow.contains(sub)) {
+        			subtitlesToShow.remove(sub);
+        			
+        			List<Node> nodeToRemove = new ArrayList<Node>();
+        			
+        			for(Node node:paneTextToShow.getChildren()) {
+        				boolean textExist=false;
+        				
+        				for(Speech speech:sub.getContenu()) {
+        					if(node.getId().equals(" "+speech.getId())) {
+        						textExist=true;
+        						break;
+        					}
+        				}
+        				
+        				if(!textExist) {
+        					nodeToRemove.add(node);
+        				}
+        			}
+        			
+        			for(Node node:nodeToRemove) {
+        				paneTextToShow.getChildren().remove(node);
+        			}
+        			
+        		}
+        	}
+        	
+        }
+        
+        //Edition de la position des sous-titres
+        int labelNum = 1;
+        for(Node node:paneTextToShow.getChildren()) {
+        	((Label)node).setLayoutX(0);
+        	((Label)node).setMinWidth(video.getFitWidth());
+        	((Label)node).setLayoutY(labelNum*25+paneTextToShow.getMinHeight()/2);
+        	labelNum++;
+        	
+        }
+	}
 
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-
+		
 		//D�clarations
 		//video.setMediaPlayer(value);
 		File path = new File("Sans titre.mp4");
 		System.out.println("test : "+path.getAbsoluteFile());
 		Media fichierVideo = new Media(path.toURI().toString());
 		player = new MediaPlayer(fichierVideo);
-		MediaView video = new MediaView(player);
+		video = new MediaView(player);
 		debutInput = new TextField();
 		panePrincipal.getChildren().add(video);
 		videoSlider = new Slider();
-		subtitles = new SubtitlesList();
+		subtitles = null;
+		try {
+			subtitles = Decoder.Decode("Final.xml");
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
 		PaneVideoControl = new Pane();
+		paneTextToShow = new Pane();
 		timeOutput = new Text();
 		videoTime = new Label();
 		videoTimeMax = new Label();
@@ -205,6 +312,7 @@ public class Controleur implements Initializable {
 		panePrincipal.getChildren().add(debutInput);
 		panePrincipal.getChildren().add(finInput);
 		panePrincipal.getChildren().add(subtitlesInput);
+		panePrincipal.getChildren().add(paneTextToShow);
 
 		video.setFitWidth(950);
 		video.setFitHeight(650);
@@ -212,6 +320,12 @@ public class Controleur implements Initializable {
 		video.setLayoutX(118);
 		video.getMediaPlayer().play();
 
+		paneTextToShow.setLayoutX(video.getLayoutX());
+		paneTextToShow.setLayoutY(video.getLayoutY());
+		
+		paneTextToShow.setMinWidth(video.getFitWidth());
+		paneTextToShow.setMinHeight(video.getFitHeight()-120);
+		
 		videoTime.setText("00:00:00");
 		videoTime.setLayoutX(video.getLayoutX());
 		videoTime.setLayoutY(570);
@@ -246,7 +360,8 @@ public class Controleur implements Initializable {
 		panePrincipal.getChildren().add(videoTime);
 		panePrincipal.getChildren().add(videoTimeMax);
 		
-		
+		videoPlayStart.setText("00:00:00.000");
+		videoPlayEnd.setText("00:00:01.000");
 
 
 		videoSlider.valueProperty().addListener(new InvalidationListener() {
@@ -288,7 +403,7 @@ public class Controleur implements Initializable {
 			});
 			
 			//Event clique sur la video
-	        video.setOnMouseClicked(new EventHandler<MouseEvent>(){
+			paneTextToShow.setOnMouseClicked(new EventHandler<MouseEvent>(){
 				public void handle(MouseEvent me){
 					playPauseVideo();
 				}
@@ -308,53 +423,52 @@ public class Controleur implements Initializable {
         
         barre_lecture.setFill(Color.BLUE);
         barre_fond.setFill(Color.BROWN);
-       // barre_lecture_supprimer1.setFill(Color.color(0.251, 0.251, 0.251, 0.5));
-       // barre_lecture_supprimer2.setFill(Color.color(0.251, 0.251, 0.251, 0.5));
         
         fonctions.getChildren().add(barres);
         barres.getChildren().add(barre_fond);
         barres.getChildren().add(barre_lecture);
         
-       
+        
 
-        //On ajuste la longueure de la barre de lecture au taux de lecture de la vidéo
+        //Listener du temps de la video
         player.currentTimeProperty().addListener(new ChangeListener(){
             @Override public void changed(ObservableValue o, Object oldVal, Object newVal){
-            	
-            	if(player.getCurrentTime().toMillis()<Decoder.StringToMillisecond(videoPlayStart.textProperty().get()))
-            		player.seek( Duration.millis(Decoder.StringToMillisecond(videoPlayStart.textProperty().get())) );
-            	
-            	if(player.getCurrentTime().toMillis()>Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())) {
-            		player.seek( Duration.millis(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())) );
-            		player.pause();
-            	}
-            	
-            	
-                barre_lecture.setWidth( (player.getCurrentTime().toMillis()-Decoder.StringToMillisecond(videoPlayStart.textProperty().get())) /(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get())-Decoder.StringToMillisecond(videoPlayStart.textProperty().get()))*barre_fond.getWidth());
-                videoTime.setText(Subtitle.MillisecondsToString((long)player.getCurrentTime().toMillis()));
-                
+            	updateVideo();
             }
         });
         
+        //Event Changement du temps de debut de la video
+        videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
+			@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
+				updateVideo();
+			}
+		});
         
+        //Event Changement du temps de fin de la video
+        videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
+			@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
+				updateVideo();
+			}
+		});
+        
+        //Event changement du temps de lecture de la video
         barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
             public void handle(MouseEvent me){
 
                 player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(Decoder.StringToMillisecond(videoPlayEnd.textProperty().get()) - Decoder.StringToMillisecond(videoPlayStart.textProperty().get()) ) ).add(Duration.millis( Decoder.StringToMillisecond(videoPlayStart.textProperty().get()) ) )  );
 
                 barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
-                
             }
         });
-        //debutInput.textProperty().bind((player.currentTimeProperty()).asString());
         
+        /*
         debutInput.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				debutInput.setText(videoTime.getText());
 			}
 		});
-        		
+        */
 	}
 
 }

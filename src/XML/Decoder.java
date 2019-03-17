@@ -3,6 +3,7 @@ package XML;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,7 +17,6 @@ import Subtitles.Speech;
 import Subtitles.Style;
 import Subtitles.Subtitle;
 import Subtitles.SubtitlesList;
-import javafx.scene.media.Media;
 
 public class Decoder {
 	
@@ -85,6 +85,30 @@ public class Decoder {
 				String speaker=node.getChildNodes().item(t).getAttributes().item(0).getNodeValue();
 				String textInput = node.getChildNodes().item(t).getTextContent();
 				
+				int numCharacterToCutText = 65;
+				
+				if(textInput.length()>numCharacterToCutText+10) {
+					String newText="";
+					int stringCharAt=0;
+
+					for(int charAt=stringCharAt;charAt<textInput.length();charAt++) {
+
+						if(charAt+10>=textInput.length()) {
+							newText=newText+textInput.substring(stringCharAt, textInput.length());
+							stringCharAt=textInput.length();
+							
+						}else if(charAt-stringCharAt>numCharacterToCutText && textInput.charAt(charAt) == ' ') {
+							System.out.println("New \n");
+							newText=newText+textInput.substring(stringCharAt, charAt)+"\n";
+							stringCharAt=charAt;
+							
+						}
+
+					}
+					textInput=newText;
+				}
+				
+				
 				subtitle.addSpeech(new Speech(textInput, speaker));
 			}
 			
@@ -111,7 +135,6 @@ public class Decoder {
 	public static long StringToMillisecond(String time) {
 		try {
 			String stringMilli = time.replaceAll("[^0123456789:.]", "");
-			System.out.println("Befor \""+time+"\" after \""+stringMilli+"\"");
 			String[] splitedTime = stringMilli.split(":");
 			int hours = splitedTime.length<1?0:Integer.parseInt(splitedTime[0]);
 			int minutes = splitedTime.length<2?0:Integer.parseInt(splitedTime[1]);
@@ -120,9 +143,10 @@ public class Decoder {
 			int milliseconds = Integer.parseInt(secAndMilliSec[1]);
 			return hours*1000*60*60 + minutes*1000*60 + seconds*1000 + milliseconds;
 		}catch(NumberFormatException e) {
-			System.out.println(e.getCause());
+			e.printStackTrace();
 			return 0;
 		}
+		
 	}
 	
 }
