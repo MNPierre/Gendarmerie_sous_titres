@@ -17,7 +17,6 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,6 +25,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -95,7 +95,7 @@ public class Controleur implements Initializable {
 	Image img_pause;
 
 	MediaPlayer player;
-	MediaView video;
+	public static MediaView video;
 	ImageView image_bouton;
 
 	ComboBox<String> personneInput;
@@ -110,6 +110,8 @@ public class Controleur implements Initializable {
 
 	ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
 	Pane paneTextToShow;
+	
+	public static Stage fileImportStage;
 
 	boolean asSetTime = false;
 
@@ -130,7 +132,19 @@ public class Controleur implements Initializable {
 
 	@FXML
 	void showFileImport(ActionEvent event) {
-
+		try {
+    		fileImportStage = new Stage();
+    		FXMLLoader loader = new FXMLLoader();
+    		URL url = new File("src/FileImport.fxml").toURI().toURL();
+    		loader.setLocation(url);
+    		Parent root = FXMLLoader.load(url);
+    		Scene scene = new Scene(root,349,241);
+    		fileImportStage.setScene(scene);
+    		fileImportStage.show();
+    		
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
 	}
 
 	@FXML
