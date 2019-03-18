@@ -43,6 +43,16 @@ public class Subtitle {
 			this.timeStop = timeStop;
 		}
 		
+		public Speech getSpeech(String author) {
+			Speech result = null;
+			for(Speech s : contenu) {
+				if(s.getAuthor().equals(author)) {
+					result = s;
+				}
+			}
+				return result;
+		}
+		
 		public static String MillisecondsToString(long time) {
 	        
 	        long milliseconds=time%1000; 

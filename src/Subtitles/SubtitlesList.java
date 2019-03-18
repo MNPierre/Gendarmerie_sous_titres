@@ -23,13 +23,12 @@ public class SubtitlesList {
 		}return result;
 	}
 	
-	public String searchColor(String name) {
-		String color = "#FFFFFF";
+	public Style searchColor(String name) {
 		for(Style s : styles) {
 			if(s.getNarrator().equals(name)) {
-				color = s.getColor();
+				return s;
 			}
-		}return color;
+		}return null;
 	}
 	
 	public void addStyle(Style style) {
@@ -70,6 +69,17 @@ public class SubtitlesList {
 
 	public ArrayList<Subtitle> getSubtitles() {
 		return subtitles;
+	}
+	
+	public void deleteByName(String name) {
+		Style result = null;
+		for(Style s : styles) {
+			if(s.getNarrator().equals(name)) {
+				result = s;
+			}
+		}
+		if(result != null)
+			styles.remove(result);
 	}
 	
 	/*

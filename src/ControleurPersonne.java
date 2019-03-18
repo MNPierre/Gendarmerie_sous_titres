@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -8,14 +9,17 @@ import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
+
 
 public class ControleurPersonne implements Initializable{
 
+	
 	@FXML
 	private ComboBox<String> modifPersonneInput;
 
@@ -29,38 +33,55 @@ public class ControleurPersonne implements Initializable{
 	private Button ajoutPersonneButton;
 
 	@FXML
-	private Button deletePersonneButton;
-
-	@FXML
 	private Button modifValiderPersonneButton;
 
-
-	@FXML
-	void addPersonneOnClick(ActionEvent event) {
-		Controleur.subtitles.addStyle(new Style(ajoutPersonneInput.getText(), "#FFFFFF"));
-		modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
-	}
-	
-	@FXML
-    void validerModifPersonne(ActionEvent event) {
-		Controleur.subtitles.changeColor(modifPersonneInput.getValue(), String.format("#%02X%02X%02X", 
-				((int)colorPersonneInput.getValue().getRed())*255,
-				((int)colorPersonneInput.getValue().getGreen())*255,
-				((int)colorPersonneInput.getValue().getBlue())*255
-				));
-		System.out.println(Controleur.subtitles.getStyles());
-    }
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
 		
 		modifPersonneInput.valueProperty().addListener(new InvalidationListener() {
-			
+
 			@Override
 			public void invalidated(Observable observable) {
-				colorPersonneInput.setValue(Color.web((Controleur.subtitles.searchColor(modifPersonneInput.getValue()))));
+				colorPersonneInput.setValue(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor()));
 			}
 		});
+		
+		
 	}
+	
+	@FXML
+	void addPersonneOnClick(ActionEvent event) {
+		if(Controleur.subtitles.getNarrators().contains(ajoutPersonneInput.getText())) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText("La personne existe déjà");
+			alert.show();
+		}else {			
+			Controleur.subtitles.addStyle(new Style(ajoutPersonneInput.getText(), "#FFFFFF"));
+			modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
+		}
+	}
+	
+	@FXML
+	void validerModifPersonne(ActionEvent event) {
+		//Controleur.subtitles.changeColor(modifPersonneInput.getValue(),toHexString(colorPersonneInput.getValue()));
+		//Controleur.subtitles.searchColor(modifPersonneInput.getValue()).setColor();
+		/*TODO*/
+	}
+	
+	@FXML
+    void supprimerPersonne(ActionEvent event) {
+		Controleur.subtitles.deleteByName(modifPersonneInput.getValue());
+		modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
+    }
+	
+	public final static String toHexString(Color colour) throws NullPointerException {
+		  String hexColour = Integer.toHexString(colour.getRGB() & 0xffffff);
+		  if (hexColour.length() < 6) {
+		    hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
+		  }
+		  return "#" + hexColour;
+		}
+
 }

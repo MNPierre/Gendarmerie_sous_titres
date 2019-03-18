@@ -6,7 +6,8 @@
 </styles>
 <subtitles>
 	<subtitle start="0:0:6.6" stop="0:0:9.0">
-		<text speaker="personne1">Computer scientiste, presente</text>
+		<text speaker="personne1">Computer scientiste, presentergergergreg</text>
+		<text speaker="personne2">test</text>
 	</subtitle>
 	<subtitle start="0:0:9.370" stop="0:0:14.6">
 		<text speaker="personne1">Introdusing the new Rafael, true 2018 edition</text>
@@ -15,7 +16,8 @@
 		<text speaker="personne1">He can perform codding in 7 diffrent programing languages</text>
 	</subtitle>
 	<subtitle start="0:0:26.2" stop="0:0:32.964">
-		<text speaker="personne1">He can produce java applications, prepare and manage databases, release(et pas relaouse) web platform</text>
+		<text speaker="personne1">He can produce java applications, prepare and manage databases, release(et
+ pas relaouse) web platform</text>
 	</subtitle>
 	<subtitle start="0:0:33.78" stop="0:0:34.5">
 		<text speaker="personne1">But wait</text>
@@ -24,10 +26,12 @@
 		<text speaker="personne1">There is more</text>
 	</subtitle>
 	<subtitle start="0:0:36.3" stop="0:0:43.2">
-		<text speaker="personne1">He's already made a little rpg game and a project managment web platform available on github</text>
+		<text speaker="personne1">He's already made a little rpg game and a project managment web platform
+ available on github</text>
 	</subtitle>
 	<subtitle start="0:0:43.5" stop="0:0:49.8">
-		<text speaker="personne1">When the Rafael is not programing he plays guitar, solve puzle, and of course, play fortnite</text>
+		<text speaker="personne1">When the Rafael is not programing he plays guitar, solve puzle, and
+ of course, play fortnite</text>
 	</subtitle>
 	<subtitle start="0:0:52.5" stop="0:0:57.6">
 		<text speaker="personne1">tournway(???) anymore, and order your Rafael by phone number or by email</text>

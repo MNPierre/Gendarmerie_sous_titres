@@ -28,6 +28,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -90,7 +92,7 @@ public class Controleur implements Initializable {
 
 	@FXML
 	private TextField videoPlayEnd;
-	
+
 
 	Image img_play;
 	Image img_pause;
@@ -102,50 +104,54 @@ public class Controleur implements Initializable {
 	ComboBox<String> personneInput;
 
 	File subtitleFile;
-	static SubtitlesList subtitles;
+	public static SubtitlesList subtitles;
 
 
 	Rectangle fond_bouton;
 	Rectangle barre_fond;
 	Rectangle barre_lecture;
 
-	ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
+	public static ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
 	Pane paneTextToShow;
-	
+
 	public static Stage fileImportStage;
 
 	boolean asSetTime = false;
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
+		if(player.getStatus() == Status.PLAYING) {
+			playPauseVideo();
+		}
 		try { 
-			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("modifPersonne.fxml")); 
+			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("modifPersonne.fxml").toURI().toURL()); 
 			Stage Ajouter = new Stage(); 
+			Ajouter.setTitle("Modifier Personnes");
 			Scene scene = new Scene(root, 640, 480); 
 			Ajouter.setScene(scene); 
 			Ajouter.show(); 
 		} 
 		catch (IOException e) {  
 			e.printStackTrace(); 
-			
+
 		}
 	}
 
 	@FXML
 	void showFileImport(ActionEvent event) {
 		try {
-    		fileImportStage = new Stage();
-    		FXMLLoader loader = new FXMLLoader();
-    		URL url = new File("src/FileImport.fxml").toURI().toURL();
-    		loader.setLocation(url);
-    		Parent root = FXMLLoader.load(url);
-    		Scene scene = new Scene(root,349,241);
-    		fileImportStage.setScene(scene);
-    		fileImportStage.show();
-    		
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
+			fileImportStage = new Stage();
+			FXMLLoader loader = new FXMLLoader();
+			URL url = new File("src/FileImport.fxml").toURI().toURL();
+			loader.setLocation(url);
+			Parent root = FXMLLoader.load(url);
+			Scene scene = new Scene(root,349,241);
+			fileImportStage.setScene(scene);
+			fileImportStage.show();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
@@ -201,6 +207,30 @@ public class Controleur implements Initializable {
 
 		Encoder encodeur = new Encoder(subtitles, "Final");
 
+	}
+
+	@FXML
+	void modifSousTitres(ActionEvent event) {
+		if(player.getStatus() == Status.PLAYING) {
+			playPauseVideo();
+		}
+		if(subtitlesToShow.size()==0) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText("Aucun sous-titres en ce moment");
+			alert.show();
+		}else {
+			try { 
+				AnchorPane root = (AnchorPane) FXMLLoader.load(new File("modifSubtitle.fxml").toURI().toURL()); 
+				Stage Ajouter = new Stage(); 
+				Scene scene = new Scene(root, 640, 480); 
+				Ajouter.setTitle("Modifier Sous-Titres");
+				Ajouter.setScene(scene); 
+				Ajouter.show(); 
+			} 
+			catch (IOException e) {  
+				e.printStackTrace(); 
+			}
+		}
 	}
 
 	private void updateVideo() {
@@ -314,12 +344,6 @@ public class Controleur implements Initializable {
 		videoTime = new Label();
 		videoTimeMax = new Label();
 		//long videoTimeValue;
-		for(Subtitle sub : Search.recherche("rafael", subtitles)){
-			for (Speech sp : sub.getContenu()) {
-				System.out.println("début : " + Subtitle.MillisecondsToString(sub.getTimeStart()) + " fin : " + Subtitle.MillisecondsToString(sub.getTimeStop()) + "\n" + sp.getText());
-			}
-			
-		}
 
 		debutInput = new TextField();
 		finInput = new TextField();
@@ -388,13 +412,13 @@ public class Controleur implements Initializable {
 		videoPlayEnd.setText("00:00:01.000");
 
 		subtitles.getStyles().addListener(new InvalidationListener() {
-			
+
 			@Override
 			public void invalidated(Observable observable) {
 				personneInput.setItems(subtitles.getNarrators());
 			}
 		});
-		
+
 		videoSlider.valueProperty().addListener(new InvalidationListener() {
 			public void invalidated(Observable ov) {
 				if (videoSlider.isValueChanging()) {
