@@ -84,7 +84,7 @@ public class Decoder {
 				String speaker=node.getChildNodes().item(t).getAttributes().item(0).getNodeValue();
 				String textInput = node.getChildNodes().item(t).getTextContent();
 				
-				int numCharacterToCutText = 65;
+				int numCharacterToCutText = 55;
 				
 				if(textInput.length()>numCharacterToCutText+10) {
 					String newText="";

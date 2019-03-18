@@ -45,6 +45,7 @@ public class ControleurPersonne implements Initializable{
 			@Override
 			public void invalidated(Observable observable) {
 				colorPersonneInput.setValue(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor()));
+				System.out.println(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor())+" :::: "+Controleur.subtitles.searchColor(modifPersonneInput.getValue().toString()));
 			}
 		});
 		
@@ -68,6 +69,14 @@ public class ControleurPersonne implements Initializable{
 		//Controleur.subtitles.changeColor(modifPersonneInput.getValue(),toHexString(colorPersonneInput.getValue()));
 		//Controleur.subtitles.searchColor(modifPersonneInput.getValue()).setColor();
 		/*TODO*/
+		
+		
+		for(Style style:Controleur.subtitles.getStyles()) {
+			if(modifPersonneInput.getValue().equals(style.getNarrator())) {
+				style.setColor("#"+colorPersonneInput.getValue().toString().substring(2, 8).toUpperCase());
+				System.out.println("#"+colorPersonneInput.getValue().toString().substring(2, 8).toUpperCase());
+			}
+		}
 	}
 	
 	@FXML
