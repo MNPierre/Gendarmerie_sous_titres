@@ -2,21 +2,50 @@ package Subtitles;
 
 import java.util.ArrayList;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+
 public class SubtitlesList {
 	
-	private ArrayList<Style>styles;
+	private ObservableList<Style>styles;
 	private ArrayList<Subtitle>subtitles;
 	
 	public SubtitlesList() {
-		styles = new ArrayList<>();
+		styles = FXCollections.observableArrayList();
 		subtitles = new ArrayList<>();
+	}
+	
+	public ObservableList<String> getNarrators(){
+		ObservableList<String> result = FXCollections.observableArrayList();
+		for(Style s : styles) {
+			result.add(s.getNarrator());
+		}return result;
+	}
+	
+	public String searchColor(String name) {
+		String color = "#FFFFFF";
+		for(Style s : styles) {
+			if(s.getNarrator().equals(name)) {
+				color = s.getColor();
+			}
+		}return color;
 	}
 	
 	public void addStyle(Style style) {
 		styles.add(style);
 	}
+	
 	public void addSubtitles(Subtitle subtitle) {
 		subtitles.add(subtitle);
+	}
+	
+	public void changeColor(String name, String color) {
+		for(Style s : styles) {
+			if(s.getNarrator().equals(name)) {
+				s.setColor(color);
+			}
+		}
 	}
 	
 	public String getXml() {
@@ -35,7 +64,7 @@ public class SubtitlesList {
 		return res;
 	}
 	
-	public ArrayList<Style> getStyles(){
+	public ObservableList<Style> getStyles(){
 		return styles;
 	}
 

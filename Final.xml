@@ -3,8 +3,6 @@
 <styles>
 	<style name="personne1" color="#5555FF"></style>
 	<style name="personne2" color="#55FF55"></style>
-	<style name="personne1" color="#FFFFFF"></style>
-	<style name="personne2" color="#FFFFFF"></style>
 </styles>
 <subtitles>
 	<subtitle start="0:0:6.6" stop="0:0:9.0">

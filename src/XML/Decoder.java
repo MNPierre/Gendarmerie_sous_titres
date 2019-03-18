@@ -53,7 +53,6 @@ public class Decoder {
 			}
 			
 			Style style = new Style(narratorInput, colorInput);
-			System.out.println(style);
 			subtitles.addStyle(style);
 		}
 		
@@ -98,7 +97,6 @@ public class Decoder {
 							stringCharAt=textInput.length();
 							
 						}else if(charAt-stringCharAt>numCharacterToCutText && textInput.charAt(charAt) == ' ') {
-							System.out.println("New \n");
 							newText=newText+textInput.substring(stringCharAt, charAt)+"\n";
 							stringCharAt=charAt;
 							
@@ -115,7 +113,6 @@ public class Decoder {
 			
 			
 			
-			System.out.println(subtitle);
 			subtitles.addSubtitles(subtitle);
 		}
 		
