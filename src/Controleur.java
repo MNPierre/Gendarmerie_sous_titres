@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import Subtitles.Search;
 import Subtitles.Speech;
 import Subtitles.Style;
 import Subtitles.Subtitle;
@@ -313,7 +314,12 @@ public class Controleur implements Initializable {
 		videoTime = new Label();
 		videoTimeMax = new Label();
 		//long videoTimeValue;
-
+		for(Subtitle sub : Search.recherche("rafael", subtitles)){
+			for (Speech sp : sub.getContenu()) {
+				System.out.println("début : " + Subtitle.MillisecondsToString(sub.getTimeStart()) + " fin : " + Subtitle.MillisecondsToString(sub.getTimeStop()) + "\n" + sp.getText());
+			}
+			
+		}
 
 		debutInput = new TextField();
 		finInput = new TextField();
