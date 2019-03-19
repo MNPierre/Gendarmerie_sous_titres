@@ -31,12 +31,12 @@ public class ControleurFileImport implements Initializable{
 
     @FXML
     void buttonImportFile(ActionEvent event) {
-		textFieldFile.setText(fileChooserMedia.showOpenDialog(Controleur.fileImportStage).getAbsolutePath());
+		textFieldFile.setText(fileChooserMedia.showOpenDialog(MainControler.fileImportStage).getAbsolutePath());
     }
 
     @FXML
     void buttonImportSubtitlesFile(ActionEvent event) {
-    	textFieldSubtitlesFile.setText(fileChooserSubtitles.showOpenDialog(Controleur.fileImportStage).getAbsoluteFile().toString());
+    	textFieldSubtitlesFile.setText(fileChooserSubtitles.showOpenDialog(MainControler.fileImportStage).getAbsoluteFile().toString());
     }
 
     @FXML
@@ -52,8 +52,8 @@ public class ControleurFileImport implements Initializable{
 			alert.setContentText("Le fichier \""+file+"\" est introuvable");
 			alert.show();
 		}else {
-			Controleur.setNewVideoXml(file, xmlFile);
-			Controleur.fileImportStage.close();
+			MainControler.setNewVideoXml(file, xmlFile);
+			MainControler.fileImportStage.close();
 		}
     	
     }

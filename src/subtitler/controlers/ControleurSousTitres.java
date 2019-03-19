@@ -30,14 +30,14 @@ public class ControleurSousTitres implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		speechToShow = new ArrayList<Speech>();
 		intiSpeechToShow();
-		if(Controleur.subtitles.getNarrators().isEmpty()) {
+		if(MainControler.subtitles.getNarrators().isEmpty()) {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setContentText("Il n'y a aucun commentaire à modifier !");
-			Controleur.modifySubtitlesStage.close();
+			MainControler.modifySubtitlesStage.close();
 		}
 		
-		personneChoix.setItems(Controleur.subtitles.getNarrators());
-		personneChoix.setValue(Controleur.subtitles.getNarrators().get(0));
+		personneChoix.setItems(MainControler.subtitles.getNarrators());
+		personneChoix.setValue(MainControler.subtitles.getNarrators().get(0));
 		actualSpeech = getSpeech(personneChoix.getValue());
 		
 		commentaireModifInput.setText(actualSpeech.getText());
@@ -53,7 +53,7 @@ public class ControleurSousTitres implements Initializable{
 	}
 	
 	public void intiSpeechToShow() {
-		for(Subtitle subtitle : Controleur.subtitlesToShow) {
+		for(Subtitle subtitle : MainControler.subtitlesToShow) {
 			for(Speech speech : subtitle.getContenu()) {
 				speechToShow.add(speech);
 			}
@@ -74,7 +74,7 @@ public class ControleurSousTitres implements Initializable{
 	@FXML
     void modifierSousTitresOnClick(ActionEvent event) {
 		actualSpeech.setText(commentaireModifInput.getText());
-		System.out.println(Controleur.subtitles.getSubtitles());
+		System.out.println(MainControler.subtitles.getSubtitles());
     }
 
 }

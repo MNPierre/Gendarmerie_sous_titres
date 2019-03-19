@@ -55,7 +55,8 @@ import subtitler.subtitles.Style;
 import subtitler.subtitles.Subtitle;
 import subtitler.subtitles.SubtitlesList;
 import subtitler.utils.ConversionStringMilli;
-public class Controleur implements Initializable {
+import subtitler.utils.SoundSpectrum;
+public class MainControler implements Initializable {
 
 
 	@FXML
@@ -124,7 +125,7 @@ public class Controleur implements Initializable {
 	static boolean asSetTime = false;
 	static boolean doVideoAlreadyBeanLoad = false;
 
-	protected static Controleur controleur;
+	protected static MainControler controleur;
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
@@ -212,8 +213,8 @@ public class Controleur implements Initializable {
 			//play
 		}else{
 			image_bouton.setImage(img_pause);
-			if(player.getCurrentTime().toMillis()>=ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) {
-				player.seek( new Duration(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) );
+			if(player.getCurrentTime().toMillis()>=ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) {
+				player.seek( new Duration(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) );
 			}
 			player.play();
 		}
@@ -257,22 +258,22 @@ public class Controleur implements Initializable {
 
 		if(!asSetTime) {
 			asSetTime=true;
-			Controleur.controleur.videoPlayEnd.setText(ConversionStringMilli.MillisecondsToString((long)player.getTotalDuration().toMillis()));
+			MainControler.controleur.videoPlayEnd.setText(ConversionStringMilli.MillisecondsToString((long)player.getTotalDuration().toMillis()));
 			playPauseVideo();
 			player.seek(Duration.millis(0));
 		}
 
-		if(currentTime<ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()))
-			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) );
+		if(currentTime<ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))
+			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) );
 
-		if(currentTime>ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) {
-			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) );
+		if(currentTime>ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) {
+			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) );
 			image_bouton.setImage(img_play);
 			player.pause();
 
 		}
 
-		barre_lecture.setWidth( (currentTime-ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) /(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())-ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()))*barre_fond.getWidth());
+		barre_lecture.setWidth( (currentTime-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) /(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))*barre_fond.getWidth());
 		videoTime.setText(ConversionStringMilli.MillisecondsToString((long)currentTime));
 
 		//Affichage des soutitres
@@ -390,20 +391,20 @@ public class Controleur implements Initializable {
 			//System.out.println(fichierVideo.getDuration());
 			videoTimeMax.setText("/ "+fichierVideo.getDuration().toMillis());
 			videoTimeMax.setLayoutX(video.getLayoutX()+75);
-			videoTimeMax.setLayoutY(Controleur.controleur.ajouterButton.getLayoutY()+570);
+			videoTimeMax.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+570);
 
-			personneInput.setLayoutX(Controleur.controleur.ajouterButton.getLayoutX()+298);
-			personneInput.setLayoutY(Controleur.controleur.ajouterButton.getLayoutY()+127);
+			personneInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX()+298);
+			personneInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+127);
 			personneInput.setItems(subtitles.getNarrators());
 
-			debutInput.setLayoutX(Controleur.controleur.ajouterButton.getLayoutX()+298);
-			debutInput.setLayoutY(Controleur.controleur.ajouterButton.getLayoutY()+62);
+			debutInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX()+298);
+			debutInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+62);
 
-			finInput.setLayoutX(Controleur.controleur.ajouterButton.getLayoutX()+298);
-			finInput.setLayoutY(Controleur.controleur.ajouterButton.getLayoutY()+95);
+			finInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX()+298);
+			finInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+95);
 
-			subtitlesInput.setLayoutX(Controleur.controleur.ajouterButton.getLayoutX());
-			subtitlesInput.setLayoutY(Controleur.controleur.ajouterButton.getLayoutY()+55);
+			subtitlesInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX());
+			subtitlesInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+55);
 			subtitlesInput.setPrefWidth(275);
 			subtitlesInput.setPrefHeight(96);
 
@@ -426,7 +427,7 @@ public class Controleur implements Initializable {
 			listenerVideoTime = new ChangeListener<Duration>(){
 				@Override
 				public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-					Controleur.updateVideo();
+					MainControler.updateVideo();
 				}
 			};
 			player.currentTimeProperty().addListener(listenerVideoTime);
@@ -479,14 +480,14 @@ public class Controleur implements Initializable {
 			barre_fond.setFill(Color.BROWN);
 
 			//Event Changement du temps de debut de la video
-			Controleur.controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
+			MainControler.controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
 				@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
 					updateVideo();
 				}
 			});
 
 			//Event Changement du temps de fin de la video
-			Controleur.controleur.videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
+			MainControler.controleur.videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
 				@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
 					updateVideo();
 				}
@@ -496,7 +497,7 @@ public class Controleur implements Initializable {
 			barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
 				public void handle(MouseEvent me){
 
-					player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get()) - ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()) ) )  );
+					player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get()) - ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) )  );
 
 					barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
 				}
@@ -507,11 +508,11 @@ public class Controleur implements Initializable {
 				doVideoAlreadyBeanLoad=true;
 
 				//ajout des textfiels plus ajout au pan
-				Controleur.controleur.panePrincipal.getChildren().add(personneInput);
-				Controleur.controleur.panePrincipal.getChildren().add(debutInput);
-				Controleur.controleur.panePrincipal.getChildren().add(finInput);
-				Controleur.controleur.panePrincipal.getChildren().add(subtitlesInput);
-				Controleur.controleur.panePrincipal.getChildren().add(paneTextToShow);
+				MainControler.controleur.panePrincipal.getChildren().add(personneInput);
+				MainControler.controleur.panePrincipal.getChildren().add(debutInput);
+				MainControler.controleur.panePrincipal.getChildren().add(finInput);
+				MainControler.controleur.panePrincipal.getChildren().add(subtitlesInput);
+				MainControler.controleur.panePrincipal.getChildren().add(paneTextToShow);
 
 				fonctions.getChildren().add(fond);
 				fonctions.getChildren().add(play_pause);
@@ -522,21 +523,35 @@ public class Controleur implements Initializable {
 				play_pause.getChildren().add(fond_bouton);
 				play_pause.getChildren().add(image_bouton);
 
-				Controleur.controleur.panePrincipal.getChildren().add(fonctions);
-				Controleur.controleur.panePrincipal.getChildren().add(videoTime);
-				Controleur.controleur.panePrincipal.getChildren().add(videoTimeMax);
+				MainControler.controleur.panePrincipal.getChildren().add(fonctions);
+				MainControler.controleur.panePrincipal.getChildren().add(videoTime);
+				MainControler.controleur.panePrincipal.getChildren().add(videoTimeMax);
 
-				Controleur.controleur.videoPlayStart.setText("00:00:00.000");
-				Controleur.controleur.videoPlayEnd.setText("00:00:01.000");
+				MainControler.controleur.videoPlayStart.setText("00:00:00.000");
+				MainControler.controleur.videoPlayEnd.setText("00:00:01.000");
 
 			}
 		}
+		//TODO
+		/*
+		SoundSpectrum ss = new SoundSpectrum(player, 0, 100000, 10, 100);
+		Pane sp = ss.getSpectrumPane();
+		controleur.panePrincipal.getChildren().add(sp);
+		
+		sp.setLayoutX(20);
+		sp.setLayoutY(300);
+		sp.setMinWidth(500);
+		sp.setMinHeight(280);
+		sp.setMaxWidth(500);
+		sp.setMaxHeight(280);
+		ss.makeAudioSpectrumGraph();
+		*/
 	}
 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		Controleur.controleur = this;
+		MainControler.controleur = this;
 		//D�clarations
 		//panePrincipal = new Pane();
 		try {

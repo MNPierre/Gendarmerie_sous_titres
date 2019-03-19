@@ -39,14 +39,14 @@ public class ControleurPersonne implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
+		modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
 		
 		modifPersonneInput.valueProperty().addListener(new InvalidationListener() {
 
 			@Override
 			public void invalidated(Observable observable) {
 				if(((SimpleObjectProperty)observable).getValue()!=null)
-					colorPersonneInput.setValue(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor()));
+					colorPersonneInput.setValue(javafx.scene.paint.Color.web(MainControler.subtitles.searchColor(modifPersonneInput.getValue()).getColor()));
 			}
 		});
 		
@@ -55,13 +55,13 @@ public class ControleurPersonne implements Initializable{
 	
 	@FXML
 	void addPersonneOnClick(ActionEvent event) {
-		if(Controleur.subtitles.getNarrators().contains(ajoutPersonneInput.getText())) {
+		if(MainControler.subtitles.getNarrators().contains(ajoutPersonneInput.getText())) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setContentText("La personne existe déjà");
 			alert.show();
 		}else {			
-			Controleur.subtitles.addStyle(new Style(ajoutPersonneInput.getText(), "#FFFFFF"));
-			modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
+			MainControler.subtitles.addStyle(new Style(ajoutPersonneInput.getText(), "#FFFFFF"));
+			modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
 			ajoutPersonneInput.setText("");
 		}
 	}
@@ -69,14 +69,14 @@ public class ControleurPersonne implements Initializable{
 	@FXML
 	void validerModifPersonne(ActionEvent event) {
 		String color = "#"+colorPersonneInput.getValue().toString().substring(2, 8).toUpperCase();
-		Controleur.subtitles.changeColor(modifPersonneInput.getValue(), color);
-		Controleur.subtitles.searchColor(modifPersonneInput.getValue()).setColor(color);
+		MainControler.subtitles.changeColor(modifPersonneInput.getValue(), color);
+		MainControler.subtitles.searchColor(modifPersonneInput.getValue()).setColor(color);
 	}
 	
 	@FXML
     void supprimerPersonne(ActionEvent event) {
-		Controleur.subtitles.deleteByName(modifPersonneInput.getValue());
-		modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
+		MainControler.subtitles.deleteByName(modifPersonneInput.getValue());
+		modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
     }
 
 }
