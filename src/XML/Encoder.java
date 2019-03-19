@@ -9,12 +9,13 @@ import Subtitles.SubtitlesList;
 
 public class Encoder {
 	
-	private SubtitlesList subtitles;
+	private static SubtitlesList subtitles;
 	
-	public Encoder(SubtitlesList subtitlesInput, String fileNameInput) throws IOException {
+	public static void encodeXML(SubtitlesList subtitlesInput, File xmlFile) throws IOException {
 		subtitles=subtitlesInput;
-		File xmlFile = new File(fileNameInput+".xml");
-		xmlFile.createNewFile();
+
+		if(!xmlFile.exists())
+			xmlFile.createNewFile();
 		BufferedWriter write = new BufferedWriter(new FileWriter(xmlFile));
 		write.write(encodageXML());
 		write.close();
@@ -22,7 +23,7 @@ public class Encoder {
 	
 	
 	
-	public String encodageXML() {
+	private static String encodageXML() {
 		String res = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 				"<USFSubtitles version=\"1.0\">\n";
 		

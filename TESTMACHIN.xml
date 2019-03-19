@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<USFSubtitles version="1.0">
+	<styles>
+		<style name="Gens 1" color="#B31A1A"></style>
+		<style name="Gens 2" color="#FFFF4D"></style>
+	</styles>
+	<subtitles>
+		<subtitle start="0:0:2.0" stop="0:0:4.532">
+			<text speaker="Gens 1">Yolo swag</text>
+		</subtitle>
+		<subtitle start="0:0:3.0" stop="0:0:4.0">
+			<text speaker="Gens 2">bal bal bla</text>
+		</subtitle>
+	</subtitles>
+</USFSubtitles>

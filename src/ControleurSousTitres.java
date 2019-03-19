@@ -10,6 +10,8 @@ import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
@@ -25,9 +27,14 @@ public class ControleurSousTitres implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		actualSpeech = null;
-		speechToShow = new ArrayList<>();
+		speechToShow = new ArrayList<Speech>();
 		intiSpeechToShow();
+		if(Controleur.subtitles.getNarrators().isEmpty()) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setContentText("Il n'y a aucun commentaire à modifier !");
+			Controleur.modifySubtitlesStage.close();
+		}
+		
 		personneChoix.setItems(Controleur.subtitles.getNarrators());
 		personneChoix.setValue(Controleur.subtitles.getNarrators().get(0));
 		actualSpeech = getSpeech(personneChoix.getValue());
@@ -59,7 +66,8 @@ public class ControleurSousTitres implements Initializable{
 			if(s.getAuthor().equals(author)) {
 				return s;
 			}
-		}return null;
+		}
+		return null;
 	}
 	
 	@FXML
