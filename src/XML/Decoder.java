@@ -135,9 +135,9 @@ public class Decoder {
 			String[] splitedTime = stringMilli.split(":");
 			int hours = splitedTime.length<1?0:Integer.parseInt(splitedTime[0]);
 			int minutes = splitedTime.length<2?0:Integer.parseInt(splitedTime[1]);
-			String[] secAndMilliSec = splitedTime.length<3?"00.000".split("[.]"):splitedTime[2].split("[.]");
-			int seconds = Integer.parseInt(secAndMilliSec[0]);
-			int milliseconds = Integer.parseInt(secAndMilliSec[1]);
+			String[] secAndMilliSec = splitedTime[2].split("[.]");
+			int seconds = Integer.parseInt( secAndMilliSec.length<2?splitedTime[2]:secAndMilliSec[0]);
+			int milliseconds = Integer.parseInt(secAndMilliSec.length<2 ?"00":secAndMilliSec[1]);
 			return hours*1000*60*60 + minutes*1000*60 + seconds*1000 + milliseconds;
 		}catch(NumberFormatException e) {
 			e.printStackTrace();

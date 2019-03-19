@@ -1,11 +1,11 @@
 
-import java.awt.Color;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import Subtitles.Style;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,8 +44,9 @@ public class ControleurPersonne implements Initializable{
 
 			@Override
 			public void invalidated(Observable observable) {
-				colorPersonneInput.setValue(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor()));
-				System.out.println(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor())+" :::: "+Controleur.subtitles.searchColor(modifPersonneInput.getValue().toString()));
+				System.out.println(observable);
+				if(((SimpleObjectProperty)observable).getValue()!=null)
+					colorPersonneInput.setValue(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor()));
 			}
 		});
 		
@@ -61,22 +62,15 @@ public class ControleurPersonne implements Initializable{
 		}else {			
 			Controleur.subtitles.addStyle(new Style(ajoutPersonneInput.getText(), "#FFFFFF"));
 			modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
+			ajoutPersonneInput.setText("");
 		}
 	}
 	
 	@FXML
 	void validerModifPersonne(ActionEvent event) {
-		//Controleur.subtitles.changeColor(modifPersonneInput.getValue(),toHexString(colorPersonneInput.getValue()));
-		//Controleur.subtitles.searchColor(modifPersonneInput.getValue()).setColor();
-		/*TODO*/
-		
-		
-		for(Style style:Controleur.subtitles.getStyles()) {
-			if(modifPersonneInput.getValue().equals(style.getNarrator())) {
-				style.setColor("#"+colorPersonneInput.getValue().toString().substring(2, 8).toUpperCase());
-				System.out.println("#"+colorPersonneInput.getValue().toString().substring(2, 8).toUpperCase());
-			}
-		}
+		String color = "#"+colorPersonneInput.getValue().toString().substring(2, 8).toUpperCase();
+		Controleur.subtitles.changeColor(modifPersonneInput.getValue(), color);
+		Controleur.subtitles.searchColor(modifPersonneInput.getValue()).setColor(color);
 	}
 	
 	@FXML
@@ -84,13 +78,5 @@ public class ControleurPersonne implements Initializable{
 		Controleur.subtitles.deleteByName(modifPersonneInput.getValue());
 		modifPersonneInput.setItems(Controleur.subtitles.getNarrators());
     }
-	
-	public final static String toHexString(Color colour) throws NullPointerException {
-		  String hexColour = Integer.toHexString(colour.getRGB() & 0xffffff);
-		  if (hexColour.length() < 6) {
-		    hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
-		  }
-		  return "#" + hexColour;
-		}
 
 }

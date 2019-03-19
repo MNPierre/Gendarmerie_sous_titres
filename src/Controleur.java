@@ -115,6 +115,7 @@ public class Controleur implements Initializable {
 	static Pane paneTextToShow;
 
 	static Stage fileImportStage;
+	static Stage modifySubtitlesStage;
 
 	static boolean asSetTime = false;
 	static boolean doVideoAlreadyBeanLoad = false;
@@ -128,11 +129,11 @@ public class Controleur implements Initializable {
 		}
 		try { 
 			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("modifPersonne.fxml").toURI().toURL()); 
-			Stage Ajouter = new Stage(); 
-			Ajouter.setTitle("Modifier Personnes");
+			modifySubtitlesStage = new Stage(); 
+			modifySubtitlesStage.setTitle("Modifier Personnes");
 			Scene scene = new Scene(root, 640, 480); 
-			Ajouter.setScene(scene); 
-			Ajouter.show(); 
+			modifySubtitlesStage.setScene(scene); 
+			modifySubtitlesStage.show();
 		} 
 		catch (IOException e) {  
 			e.printStackTrace(); 
@@ -169,7 +170,7 @@ public class Controleur implements Initializable {
 		try {
 			fileImportStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
-			URL url = new File("src/FileImport.fxml").toURI().toURL();
+			URL url = new File("FileImport.fxml").toURI().toURL();
 			loader.setLocation(url);
 			Parent root = FXMLLoader.load(url);
 			Scene scene = new Scene(root,349,241);
@@ -204,7 +205,7 @@ public class Controleur implements Initializable {
 			image_bouton.setImage(img_play);
 			player.pause();
 
-			//play
+		//play
 		}else{
 			image_bouton.setImage(img_pause);
 			player.play();
@@ -214,7 +215,9 @@ public class Controleur implements Initializable {
 	@FXML
 	void ajouterCommentaire(ActionEvent event) {
 		if(debutInput.getText().equals("") || finInput.getText().equals("") || personneInput.getValue() == null || subtitlesInput.getText().equals("")) {
-			throw new Error("Remplir tous les champs");
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setContentText("Veuillez remplire tous les champs.");
+			alert.show();
 		}
 
 		Subtitle sub = subtitles.createSubtitle(Decoder.StringToMillisecond(debutInput.getText()), Decoder.StringToMillisecond(finInput.getText()));
@@ -229,9 +232,6 @@ public class Controleur implements Initializable {
 	@FXML
 	//TODO CATCH ERROR
 	void sauvegarderOnClick(ActionEvent event) throws IOException{
-		for(String p : subtitles.getNarrators()) {
-			subtitles.addStyle(new Style(p, "#FFFFFF"));
-		}
 
 		Encoder encodeur = new Encoder(subtitles, "Final");
 
@@ -244,6 +244,8 @@ public class Controleur implements Initializable {
 		if(!asSetTime) {
 			asSetTime=true;
 			Controleur.controleur.videoPlayEnd.setText(Subtitle.MillisecondsToString((long)player.getTotalDuration().toMillis()));
+			playPauseVideo();
+			player.seek(Duration.millis(0));
 		}
 
 		if(currentTime<Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()))
@@ -261,9 +263,10 @@ public class Controleur implements Initializable {
 		for(Subtitle sub:subtitles.getSubtitles()) {
 
 			//Ajout des sous-titres a afficher
-			if(sub.getTimeStart()<= currentTime && sub.getTimeStop()>currentTime) {
+			if(sub.getTimeStart() <= currentTime && sub.getTimeStop() >= currentTime) {
 				if(!subtitlesToShow.contains(sub)) {
 					subtitlesToShow.add(sub);
+					
 					for(Speech speech:sub.getContenu()) {
 						Label text = new Label(speech.getText());
 						text.setId(""+speech.getId());

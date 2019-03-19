@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <USFSubtitles version="1.0">
 <styles>
-	<style name="Rafael" color="#FFFFFF"></style>
-	<style name="Rafael" color="#FFFFFF"></style>
+	<style name="azertyuiop" color="#661A33"></style>
+	<style name="1234RFTGYU" color="#990000"></style>
 </styles>
 <subtitles>
-	<subtitle start="0:0:7.2" stop="0:0:9.2">
-		<text speaker="Rafael">Computer scientiste preseny</text>
+	<subtitle start="0:0:0.5" stop="0:0:3.0">
+		<text speaker="azertyuiop"></text>
+		<wxcvbn></wxcvbn><text speaker="azertyuiop">azertyuioplkjhgfdsq</text>
+	</subtitle>
+	<subtitle start="0:0:3.0" stop="0:0:5.0">
+		<text speaker="1234RFTGYU">azertyuiop23456789</text>
 	</subtitle>
 </subtitles>
 </USFSubtitles>
