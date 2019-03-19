@@ -67,11 +67,11 @@ public class Subtitle {
 
 
 		public String getXml() {
-			String res = "\t<subtitle start=\""+MillisecondsToString(getTimeStart())+"\" stop=\""+MillisecondsToString(getTimeStop())+"\">\n";
+			String res = "\t\t<subtitle start=\""+MillisecondsToString(getTimeStart())+"\" stop=\""+MillisecondsToString(getTimeStop())+"\">\n";
 					for(Speech s : contenu) {
 						res += s.getXml();
 					}
-				res += "\t</subtitle>\n";
+				res += "\t\t</subtitle>\n";
 				return res;
 		}
 		

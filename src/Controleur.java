@@ -311,8 +311,6 @@ public class Controleur implements Initializable {
 			}
 		}
 
-		System.out.println(subtitlesToShow);
-
 		//Edition de la position des sous-titres
 		int labelNum = 1;
 		for(Node node:paneTextToShow.getChildren()) {
@@ -322,6 +320,7 @@ public class Controleur implements Initializable {
 			labelNum++;
 
 		}
+		
 	}
 
 	static ChangeListener<Duration> listenerVideoTime;

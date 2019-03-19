@@ -48,18 +48,18 @@ public class SubtitlesList {
 	}
 	
 	public String getXml() {
-		String res = "<styles>\n";
+		String res = "\t<styles>\n";
 		for(Style s : styles) {
 			res += s.getXml();
 		}
 		
-		res += "</styles>\n";
-		res += "<subtitles>\n";
+		res += "\t</styles>\n";
+		res += "\t<subtitles>\n";
 		
 		for(Subtitle sub : subtitles) {
 			res += sub.getXml();
 		}
-		res += "</subtitles>\n";
+		res += "\t</subtitles>\n";
 		return res;
 	}
 	
