@@ -1,4 +1,4 @@
-package XML;
+package subtitler.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,10 +13,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import Subtitles.Speech;
-import Subtitles.Style;
-import Subtitles.Subtitle;
-import Subtitles.SubtitlesList;
+import subtitler.subtitles.Speech;
+import subtitler.subtitles.Style;
+import subtitler.subtitles.Subtitle;
+import subtitler.subtitles.SubtitlesList;
+import subtitler.utils.ConversionStringMilli;
 
 public class Decoder {
 	
@@ -70,10 +71,10 @@ public class Decoder {
 				
 				switch(attribut.getNodeName()) {
 				case "start":
-					timeStartIntput = StringToMillisecond(attribut.getTextContent());
+					timeStartIntput = ConversionStringMilli.StringToMillisecond(attribut.getTextContent());
 					break;
 				case "stop":
-					timeStopInput = StringToMillisecond(attribut.getTextContent());
+					timeStopInput = ConversionStringMilli.StringToMillisecond(attribut.getTextContent());
 					break;
 				}
 			}
@@ -116,34 +117,12 @@ public class Decoder {
 			subtitles.addSubtitles(subtitle);
 		}
 		
-		
-		
-		
-		
-		
 		} catch (SAXException | IOException | ParserConfigurationException e) {
 			e.printStackTrace();
 		}
 		
 		
 		return subtitles;
-	}
-
-	public static long StringToMillisecond(String time) {
-		try {
-			String stringMilli = time.replaceAll("[^0123456789:.]", "");
-			String[] splitedTime = stringMilli.split(":");
-			int hours = splitedTime.length<1?0:Integer.parseInt(splitedTime[0]);
-			int minutes = splitedTime.length<2?0:Integer.parseInt(splitedTime[1]);
-			String[] secAndMilliSec = splitedTime[2].split("[.]");
-			int seconds = Integer.parseInt( secAndMilliSec.length<2?splitedTime[2]:secAndMilliSec[0]);
-			int milliseconds = Integer.parseInt(secAndMilliSec.length<2 ?"00":secAndMilliSec[1]);
-			return hours*1000*60*60 + minutes*1000*60 + seconds*1000 + milliseconds;
-		}catch(NumberFormatException e) {
-			e.printStackTrace();
-			return 0;
-		}
-		
 	}
 	
 }

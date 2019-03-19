@@ -1,10 +1,9 @@
+package subtitler.controlers;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import Subtitles.Speech;
-import Subtitles.Subtitle;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
@@ -12,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import subtitler.subtitles.Speech;
+import subtitler.subtitles.Subtitle;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 

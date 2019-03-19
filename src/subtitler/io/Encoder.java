@@ -1,11 +1,11 @@
-package XML;
+package subtitler.io;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import Subtitles.SubtitlesList;
+import subtitler.subtitles.SubtitlesList;
 
 public class Encoder {
 	

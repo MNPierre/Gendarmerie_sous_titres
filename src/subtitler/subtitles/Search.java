@@ -1,4 +1,4 @@
-package Subtitles;
+package subtitler.subtitles;
 
 import java.util.ArrayList;
 import java.util.List;

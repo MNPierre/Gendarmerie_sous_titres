@@ -1,8 +1,8 @@
+package subtitler.controlers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import Subtitles.Style;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import subtitler.subtitles.Style;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;

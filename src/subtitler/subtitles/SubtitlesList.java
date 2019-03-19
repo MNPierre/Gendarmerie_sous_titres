@@ -1,4 +1,4 @@
-package Subtitles;
+package subtitler.subtitles;
 
 import java.util.ArrayList;
 
@@ -82,13 +82,4 @@ public class SubtitlesList {
 			styles.remove(result);
 	}
 	
-	/*
-	 * Return a new Subtitle object with parmaters in it 
-	 * */
-	public Subtitle createSubtitle(Long debutInput, Long finInput) {
-		
-		Subtitle subNew = new Subtitle(debutInput, finInput);
-		addSubtitles(subNew);
-		return subNew;
-	}
 }

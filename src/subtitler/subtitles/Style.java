@@ -1,4 +1,4 @@
-package Subtitles;
+package subtitler.subtitles;
 
 public class Style {
 	

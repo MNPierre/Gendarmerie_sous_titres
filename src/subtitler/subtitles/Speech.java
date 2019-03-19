@@ -1,4 +1,6 @@
-package Subtitles;
+package subtitler.subtitles;
+
+import subtitler.utils.ConversionStringMilli;
 
 public class Speech {
 

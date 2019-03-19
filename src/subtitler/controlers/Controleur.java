@@ -1,3 +1,4 @@
+package subtitler.controlers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,13 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import Subtitles.Search;
-import Subtitles.Speech;
-import Subtitles.Style;
-import Subtitles.Subtitle;
-import Subtitles.SubtitlesList;
-import XML.Decoder;
-import XML.Encoder;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -52,6 +46,15 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import subtitler.Main;
+import subtitler.io.Decoder;
+import subtitler.io.Encoder;
+import subtitler.subtitles.Search;
+import subtitler.subtitles.Speech;
+import subtitler.subtitles.Style;
+import subtitler.subtitles.Subtitle;
+import subtitler.subtitles.SubtitlesList;
+import subtitler.utils.ConversionStringMilli;
 public class Controleur implements Initializable {
 
 
@@ -209,8 +212,8 @@ public class Controleur implements Initializable {
 			//play
 		}else{
 			image_bouton.setImage(img_pause);
-			if(player.getCurrentTime().toMillis()>=Decoder.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) {
-				player.seek( new Duration(Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) );
+			if(player.getCurrentTime().toMillis()>=ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) {
+				player.seek( new Duration(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) );
 			}
 			player.play();
 		}
@@ -224,7 +227,7 @@ public class Controleur implements Initializable {
 			alert.show();
 		}
 
-		Subtitle sub = subtitles.createSubtitle(Decoder.StringToMillisecond(debutInput.getText()), Decoder.StringToMillisecond(finInput.getText()));
+		Subtitle sub = new Subtitle(ConversionStringMilli.StringToMillisecond(debutInput.getText()), ConversionStringMilli.StringToMillisecond(finInput.getText()));
 		sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
 
 		debutInput.setText("");
@@ -234,16 +237,15 @@ public class Controleur implements Initializable {
 	}
 
 	@FXML
-	//TODO CATCH ERROR
 	void sauvegarderOnClick(ActionEvent event){
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.getExtensionFilters().add(
-				new FileChooser.ExtensionFilter("XML", "*.xml"));
-		File file = fileChooser.showSaveDialog(Main.primaryStage);
 		try {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.getExtensionFilters().add(
+					new FileChooser.ExtensionFilter("XML", "*.xml"));
+			File file = fileChooser.showSaveDialog(Main.primaryStage);
+
 			Encoder.encodeXML(subtitles, file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -255,23 +257,23 @@ public class Controleur implements Initializable {
 
 		if(!asSetTime) {
 			asSetTime=true;
-			Controleur.controleur.videoPlayEnd.setText(Subtitle.MillisecondsToString((long)player.getTotalDuration().toMillis()));
+			Controleur.controleur.videoPlayEnd.setText(ConversionStringMilli.MillisecondsToString((long)player.getTotalDuration().toMillis()));
 			playPauseVideo();
 			player.seek(Duration.millis(0));
 		}
 
-		if(currentTime<Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()))
-			player.seek( Duration.millis(Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) );
+		if(currentTime<ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()))
+			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) );
 
-		if(currentTime>Decoder.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) {
-			player.seek( Duration.millis(Decoder.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) );
+		if(currentTime>ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) {
+			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())) );
 			image_bouton.setImage(img_play);
 			player.pause();
 
 		}
 
-		barre_lecture.setWidth( (currentTime-Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) /(Decoder.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())-Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()))*barre_fond.getWidth());
-		videoTime.setText(Subtitle.MillisecondsToString((long)currentTime));
+		barre_lecture.setWidth( (currentTime-ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get())) /(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get())-ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()))*barre_fond.getWidth());
+		videoTime.setText(ConversionStringMilli.MillisecondsToString((long)currentTime));
 
 		//Affichage des soutitres
 		for(Subtitle sub:subtitles.getSubtitles()) {
@@ -320,7 +322,7 @@ public class Controleur implements Initializable {
 			labelNum++;
 
 		}
-		
+
 	}
 
 	static ChangeListener<Duration> listenerVideoTime;
@@ -494,7 +496,7 @@ public class Controleur implements Initializable {
 			barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
 				public void handle(MouseEvent me){
 
-					player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(Decoder.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get()) - Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( Decoder.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()) ) )  );
+					player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayEnd.textProperty().get()) - ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( ConversionStringMilli.StringToMillisecond(Controleur.controleur.videoPlayStart.textProperty().get()) ) )  );
 
 					barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
 				}
