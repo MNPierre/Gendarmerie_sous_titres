@@ -44,7 +44,6 @@ public class ControleurPersonne implements Initializable{
 
 			@Override
 			public void invalidated(Observable observable) {
-				System.out.println(observable);
 				if(((SimpleObjectProperty)observable).getValue()!=null)
 					colorPersonneInput.setValue(javafx.scene.paint.Color.web(Controleur.subtitles.searchColor(modifPersonneInput.getValue()).getColor()));
 			}
