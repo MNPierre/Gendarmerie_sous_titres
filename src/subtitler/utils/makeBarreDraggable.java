@@ -31,12 +31,12 @@ public class makeBarreDraggable {
 		if(otherBar.getLayoutX() - barre.getLayoutX() == 0) {
 			otherBar = MainControler.controleur.getSelectionBarre(1);
 		}*/
-		
+
 		EventHandler<MouseEvent> dragHandler = new EventHandler<MouseEvent>() {
-			
-			
+
+
 			public void handle(MouseEvent event) {
-				
+
 				if (event.getButton() == MouseButton.PRIMARY) {
 					// find the delta coordinates by subtracting the new mouse
 					// coordinates with the old.
@@ -45,8 +45,10 @@ public class makeBarreDraggable {
 					// add the delta coordinates to the node coordinates.
 					m_nX += deltaX;
 					if(m_nX >=0 && m_nX <= 888)
+						if(MainControler.controleur.getSelectedZone().getWidth() > 1 || (barre.getLayoutX() == MainControler.controleur.getSelectedZone().getLayoutX() && deltaX < 0)
+																					|| (barre.getLayoutX() == MainControler.controleur.getSelectedZone().getLayoutX() + MainControler.controleur.getSelectedZone().getWidth() && deltaX > 0))
 							barre.setLayoutX(m_nX);						
-
+				
 
 
 

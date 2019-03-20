@@ -713,9 +713,7 @@ public class MainControler implements Initializable {
 		barre.setOnMouseDragged(makeBarreDraggable.getEventDragMouse(barre));
 	}
 
-	public Group getSelectionBarre(int i) {
-		if(i == 0) {
-			return MainControler.controleur.barreDeSelection1;
-		}return MainControler.controleur.barreDeSelection2;
+	public Rectangle getSelectedZone() {
+		return selectedZone;
 	}
 }
