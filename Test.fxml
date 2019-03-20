@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -26,5 +27,6 @@
       <TextField fx:id="videoPlayEnd" layoutX="579.0" layoutY="571.0" prefHeight="25.0" prefWidth="106.0" />
       <Label layoutX="556.0" layoutY="576.0" text="fin:" textFill="#f5f0f0" />
       <Button layoutX="314.0" layoutY="645.0" mnemonicParsing="false" onAction="#modifSousTitres" style="-fx-background-color: #302a24; -fx-border-color: #656b6d; -fx-border-radius: 3;" text="Modifier sous-titres" textFill="#f5f3f3" />
+      <CheckBox fx:id="zoomCheckBox" layoutX="745.0" layoutY="575.0" mnemonicParsing="false" text="Zoom" textFill="WHITE" />
    </children>
 </Pane>

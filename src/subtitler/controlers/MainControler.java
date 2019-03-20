@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.beans.InvalidationListener;
@@ -13,6 +12,7 @@ import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,13 +23,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -41,8 +42,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -55,7 +57,7 @@ import subtitler.subtitles.Style;
 import subtitler.subtitles.Subtitle;
 import subtitler.subtitles.SubtitlesList;
 import subtitler.utils.ConversionStringMilli;
-import subtitler.utils.SoundSpectrum;
+import subtitler.utils.makeBarreDraggable;
 public class MainControler implements Initializable {
 
 
@@ -78,6 +80,15 @@ public class MainControler implements Initializable {
 	private static Label videoTimeMax;
 
 	@FXML
+	private Group barreDeSelection1;
+
+	@FXML
+	private CheckBox zoomCheckBox;
+
+	@FXML
+	private Group barreDeSelection2;
+
+	@FXML
 	private Button ajouterButton;
 
 	@FXML
@@ -93,6 +104,7 @@ public class MainControler implements Initializable {
 	private TextField videoPlayEnd;
 
 
+
 	static Image img_play;
 	static Image img_pause;
 
@@ -106,10 +118,15 @@ public class MainControler implements Initializable {
 	static File subtitleFile;
 	static SubtitlesList subtitles;
 
-
+	static Rectangle selectedZone;
 	static Rectangle fond_bouton;
 	static Rectangle barre_fond;
 	static Rectangle barre_lecture;
+	static Rectangle corpsBarreSelection1;
+	static Rectangle corpsBarreSelection2;
+
+	static Circle teteBarreSelection1;
+	static Circle teteBarreSelection2;
 
 	static Group fonctions ;
 	static Group barres ;
@@ -125,7 +142,7 @@ public class MainControler implements Initializable {
 	static boolean asSetTime = false;
 	static boolean doVideoAlreadyBeanLoad = false;
 
-	protected static MainControler controleur;
+	public static MainControler controleur;
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
@@ -273,7 +290,12 @@ public class MainControler implements Initializable {
 
 		}
 
-		barre_lecture.setWidth( (currentTime-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) /(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))*barre_fond.getWidth());
+		if(MainControler.controleur.zoomCheckBox.isSelected()) {
+			barre_lecture.setWidth( (currentTime-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) /(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))*barre_fond.getWidth());
+		}else {
+			barre_lecture.setWidth( (currentTime / player.getTotalDuration().toMillis())*barre_fond.getWidth());
+
+		}
 		videoTime.setText(ConversionStringMilli.MillisecondsToString((long)currentTime));
 
 		//Affichage des soutitres
@@ -411,9 +433,61 @@ public class MainControler implements Initializable {
 			fond = new Rectangle(video.getFitWidth(),30);
 			fond.setOpacity(0.5);
 			fond.setLayoutX(video.getLayoutX());
-			fond.setLayoutY(538);
+			fond.setLayoutY(538); 
 
+			MainControler.controleur.barreDeSelection1.setLayoutX(barre_lecture.getLayoutX());
+			MainControler.controleur.barreDeSelection1.setLayoutY(barre_lecture.getLayoutY()-48);
 
+			MainControler.controleur.barreDeSelection2.setLayoutX(barre_lecture.getLayoutX()+888);
+			MainControler.controleur.barreDeSelection2.setLayoutY(barre_lecture.getLayoutY()-48);
+
+			MainControler.controleur.barreDeSelection1.setOpacity(0.32);
+			MainControler.controleur.barreDeSelection2.setOpacity(0.32);
+
+			MainControler.controleur.barreDeSelection1.setOnMouseEntered(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event event) {
+					MainControler.controleur.barreDeSelection1.setOpacity(1);
+				}
+			});
+
+			MainControler.controleur.barreDeSelection2.setOnMouseEntered(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event event) {
+					MainControler.controleur.barreDeSelection2.setOpacity(1);
+				}
+			});
+
+			MainControler.controleur.barreDeSelection1.setOnMouseExited(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event event) {
+					MainControler.controleur.barreDeSelection1.setOpacity(0.32);
+				}
+			});
+
+			MainControler.controleur.barreDeSelection2.setOnMouseExited(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event event) {
+					MainControler.controleur.barreDeSelection2.setOpacity(0.32);
+				}
+			});
+
+			makeBarreDragable(MainControler.controleur.barreDeSelection1);
+			makeBarreDragable(MainControler.controleur.barreDeSelection2);
+
+			MainControler.controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+					MainControler.controleur.barreDeSelection1.setVisible(!newValue);
+					MainControler.controleur.barreDeSelection2.setVisible(!newValue);
+					selectedZone.setVisible(!newValue);
+				}
+			});
 
 			subtitles.getStyles().addListener(new InvalidationListener() {
 
@@ -441,6 +515,25 @@ public class MainControler implements Initializable {
 				}
 			});
 
+			MainControler.controleur.barreDeSelection1.layoutXProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					MainControler.controleur.videoPlayStart.setText(ConversionStringMilli.MillisecondsToString((long)(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.getText())+(newValue.longValue()-oldValue.longValue())*(player.getTotalDuration().toMillis()/barre_fond.getWidth()))));
+					selectedZone.setLayoutX(MainControler.controleur.barreDeSelection1.getLayoutX());
+					selectedZone.setWidth(MainControler.controleur.barreDeSelection2.getLayoutX() - MainControler.controleur.barreDeSelection1.getLayoutX());
+				}
+			});
+
+			MainControler.controleur.barreDeSelection2.layoutXProperty().addListener(new ChangeListener<Number>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					MainControler.controleur.videoPlayEnd.setText(ConversionStringMilli.MillisecondsToString((long)(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.getText())+(newValue.longValue()-oldValue.longValue())*(player.getTotalDuration().toMillis()/barre_fond.getWidth()))));
+					selectedZone.setLayoutX(MainControler.controleur.barreDeSelection1.getLayoutX());
+					selectedZone.setWidth(MainControler.controleur.barreDeSelection2.getLayoutX() - MainControler.controleur.barreDeSelection1.getLayoutX());
+				}
+			});
 
 			//création du bouton play/pause
 			fond_bouton = new Rectangle(30,30);
@@ -497,9 +590,15 @@ public class MainControler implements Initializable {
 			barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
 				public void handle(MouseEvent me){
 
-					player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get()) - ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) )  );
+					if(MainControler.controleur.zoomCheckBox.isSelected()) {
+						player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get()) - ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) )  );
 
-					barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
+						barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
+					}else {
+						player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*player.getTotalDuration().toMillis()  )  );
+
+						barre_lecture.setWidth( (player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis())*barre_fond.getWidth());
+					}
 				}
 			});
 
@@ -514,11 +613,22 @@ public class MainControler implements Initializable {
 				MainControler.controleur.panePrincipal.getChildren().add(subtitlesInput);
 				MainControler.controleur.panePrincipal.getChildren().add(paneTextToShow);
 
+				selectedZone = new Rectangle();
+				selectedZone.setFill(Paint.valueOf("#000000"));
+				selectedZone.setHeight(barre_fond.getHeight());
+				selectedZone.setWidth(MainControler.controleur.barreDeSelection2.getLayoutX()-MainControler.controleur.barreDeSelection1.getLayoutX());
+				selectedZone.setLayoutX(MainControler.controleur.barreDeSelection1.getLayoutX());
+				selectedZone.setLayoutY(MainControler.controleur.barreDeSelection1.getLayoutY()+48);
+				selectedZone.setOpacity(0.3);
+
 				fonctions.getChildren().add(fond);
 				fonctions.getChildren().add(play_pause);
 				fonctions.getChildren().add(barres);
 				barres.getChildren().add(barre_fond);
 				barres.getChildren().add(barre_lecture);
+				barres.getChildren().add(MainControler.controleur.barreDeSelection1);
+				barres.getChildren().add(MainControler.controleur.barreDeSelection2);
+				barres.getChildren().add(selectedZone);
 
 				play_pause.getChildren().add(fond_bouton);
 				play_pause.getChildren().add(image_bouton);
@@ -537,7 +647,7 @@ public class MainControler implements Initializable {
 		SoundSpectrum ss = new SoundSpectrum(player, 0, 100000, 10, 100);
 		Pane sp = ss.getSpectrumPane();
 		controleur.panePrincipal.getChildren().add(sp);
-		
+
 		sp.setLayoutX(20);
 		sp.setLayoutY(300);
 		sp.setMinWidth(500);
@@ -545,7 +655,7 @@ public class MainControler implements Initializable {
 		sp.setMaxWidth(500);
 		sp.setMaxHeight(280);
 		ss.makeAudioSpectrumGraph();
-		*/
+		 */
 	}
 
 
@@ -578,8 +688,34 @@ public class MainControler implements Initializable {
 		barre_lecture = new Rectangle(0, 22);
 		image_bouton = new ImageView(img_pause);
 
+		barreDeSelection1 = new Group();
+		barreDeSelection2 = new Group();
+		corpsBarreSelection1 = new Rectangle(2, 70);
+		corpsBarreSelection2 = new Rectangle(2, 70);
+		teteBarreSelection1 = new Circle();	
+		teteBarreSelection2 = new Circle();
+		teteBarreSelection1.setRadius(5);
+		teteBarreSelection2.setRadius(5);
+		teteBarreSelection1.setLayoutX(1);
+		teteBarreSelection2.setLayoutX(1);
+		barreDeSelection1.getChildren().addAll(corpsBarreSelection1, teteBarreSelection1);
+		barreDeSelection2.getChildren().addAll(corpsBarreSelection2, teteBarreSelection2);
+		teteBarreSelection1.setFill(Paint.valueOf("#ff1f1f"));
+		corpsBarreSelection1.setFill(Paint.valueOf("#ccff1f"));
+		teteBarreSelection2.setFill(Paint.valueOf("#ff1f1f"));
+		corpsBarreSelection2.setFill(Paint.valueOf("#ccff1f"));
 		//setNewVideoAndXml("Sans titre.mp4", "Final.xml");
 
 	}
 
+	public static void makeBarreDragable(Group barre){
+		barre.setOnMousePressed(makeBarreDraggable.getEventOnMousePressed(barre));
+		barre.setOnMouseDragged(makeBarreDraggable.getEventDragMouse(barre));
+	}
+
+	public Group getSelectionBarre(int i) {
+		if(i == 0) {
+			return MainControler.controleur.barreDeSelection1;
+		}return MainControler.controleur.barreDeSelection2;
+	}
 }

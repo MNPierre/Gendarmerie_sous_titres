@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<USFSubtitles version="1.0">
+	<styles>
+		<style name="Rebeca" color="#001A80"></style>
+	</styles>
+	<subtitles>
+		<subtitle start="0:0:1.0" stop="0:0:5.0">
+			<text speaker="Rebeca">Bla, Bla, BLa modification</text>
+		</subtitle>
+	</subtitles>
+</USFSubtitles>
