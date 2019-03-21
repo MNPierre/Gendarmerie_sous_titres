@@ -44,11 +44,11 @@ public class ControleurFileImport implements Initializable{
     	String xmlFile = textFieldSubtitlesFile.getText();
     	String file = textFieldFile.getText();
     	
-    	if(!(new File(xmlFile).exists())) {
+    	if(!(new File(xmlFile).exists()) ) {
     		xmlFile = null;
 		}
     	
-    	if(!(new File(file).exists())) {
+    	if(!(new File(file).exists()) ) {
 			alert.setContentText("Le fichier \""+file+"\" est introuvable");
 			alert.show();
 		}else {
