@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -277,14 +278,14 @@ public class MainControler implements Initializable {
 		if(currentTime<ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))
 			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) );
 
-		if(currentTime-100>ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) {
+		if(currentTime-120>ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) {
 			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) );
 			image_bouton.setImage(img_play);
 			player.pause();
 
 		}
 
-		if(MainControler.controleur.zoomCheckBox.isSelected()) {
+		if(controleur.zoomCheckBox.isSelected()) {
 			barre_lecture.setWidth( (currentTime-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) /(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())-ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))*barre_fond.getWidth());
 		}else {
 			barre_lecture.setWidth( (currentTime /
@@ -448,6 +449,15 @@ public class MainControler implements Initializable {
 					}
 				}
 			});
+			
+			controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
+
+				@Override
+				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+					//TODO
+				}
+				
+			});
 
 			//création du bouton play/pause
 			fond_bouton = new Rectangle(30,30);
@@ -515,9 +525,6 @@ public class MainControler implements Initializable {
 					}
 				}
 			});		
-
-			selectedZone.setLayoutX(video.getLayoutX()+35);
-			selectedZone.setWidth(video.getLayoutX()+35+barre_fond.getWidth());
 			
 			pin1.setBounding(video.getLayoutX()+35, video.getLayoutX()+35+barre_fond.getWidth());
 			pin2.setBounding(video.getLayoutX()+35, video.getLayoutX()+35+barre_fond.getWidth());
@@ -533,6 +540,9 @@ public class MainControler implements Initializable {
 			
 			pin1.setLayoutX(video.getLayoutX()+35);
 			pin2.setLayoutX(video.getLayoutX()+35+barre_fond.getWidth());
+			
+			selectedZone.setLayoutX(pin1.getLayoutX()-(video.getLayoutX()+35));
+			selectedZone.setWidth(pin2.getLayoutX()-pin1.getLayoutX());
 
 			if(!doVideoAlreadyBeanLoad) {
 

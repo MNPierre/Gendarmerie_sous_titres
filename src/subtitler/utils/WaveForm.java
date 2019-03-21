@@ -54,6 +54,10 @@ public class WaveForm {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM, AMPLITUDES;
 	}
 	
+	public void setBounds() {
+		//TODO
+	}
+	
 	/**
 	 * Constructor.
 	 */
@@ -74,21 +78,15 @@ public class WaveForm {
 			}
 		}
 		
-		for(double i=startAt;i<wavAmplitudes.length;i++) {
+		for(double i=0;i<wavAmplitudes.length;i++) {
 			Pane rec = new Pane();
 			rec.setStyle("-fx-background-color: red;");
-			rec.setLayoutX((i-startAt)*(pane.getPrefWidth()/wavAmplitudes.length));
+			rec.setLayoutX(i*(pane.getPrefWidth()/wavAmplitudes.length));
 			rec.setPrefWidth(2);
-			rec.setPrefHeight((wavAmplitudes[(int)(i)]/maxVal)*pane.getPrefHeight());
-			rec.setLayoutY(pane.getPrefHeight()-(wavAmplitudes[(int) (i-startAt)]/maxVal)*pane.getPrefHeight());
+			rec.setPrefHeight((wavAmplitudes[(int)i]/maxVal)*pane.getPrefHeight());
+			rec.setLayoutY(pane.getPrefHeight()-(wavAmplitudes[(int) i]/maxVal)*pane.getPrefHeight());
 			pane.getChildren().add(rec);
 		}
-		Pane rec = new Pane();
-		rec.setPrefSize(10, 100);
-		rec.setLayoutX(pane.getLayoutX());
-		rec.setLayoutY(pane.getLayoutY());
-		rec.setStyle("-fx-background-color: red;");
-		pane.getChildren().add(rec);
 	}
 	
 	public Pane getPane() {
