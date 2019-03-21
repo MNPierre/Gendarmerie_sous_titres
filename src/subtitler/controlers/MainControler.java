@@ -57,6 +57,7 @@ import subtitler.subtitles.Style;
 import subtitler.subtitles.Subtitle;
 import subtitler.subtitles.SubtitlesList;
 import subtitler.utils.ConversionStringMilli;
+import subtitler.utils.WaveForm;
 import subtitler.utils.makeBarreDraggable;
 public class MainControler implements Initializable {
 
@@ -143,6 +144,7 @@ public class MainControler implements Initializable {
 	static boolean doVideoAlreadyBeanLoad = false;
 
 	public static MainControler controleur;
+	static WaveForm wf;
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
@@ -368,7 +370,8 @@ public class MainControler implements Initializable {
 			asSetTime = false;
 
 			fichierVideo = new Media( new File(file).toURI().toString() );
-
+			wf = new WaveForm(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM, 10);
+			
 			if(listenerVideoTime != null) {
 				player.currentTimeProperty().removeListener(listenerVideoTime);
 			}
@@ -564,23 +567,23 @@ public class MainControler implements Initializable {
 			});
 
 			barres.setTranslateX(video.getLayoutX() + 35);
-			barres.setTranslateY(541);
+			barres.setLayoutY(541);
 			barres.setCursor(Cursor.HAND);
 			barre_fond = new Rectangle(video.getFitWidth()-60, 22);
 
 
 			barre_lecture.setFill(Color.BLUE);
-			barre_fond.setFill(Color.BROWN);
+			barre_fond.setFill(Color.GREY);
 
 			//Event Changement du temps de debut de la video
-			MainControler.controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
+			controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
 				@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
 					updateVideo();
 				}
 			});
 
 			//Event Changement du temps de fin de la video
-			MainControler.controleur.videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
+			controleur.videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
 				@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
 					updateVideo();
 				}
@@ -600,9 +603,8 @@ public class MainControler implements Initializable {
 						barre_lecture.setWidth( (player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis())*barre_fond.getWidth());
 					}
 				}
-			});
-
-
+			});		
+			
 			if(!doVideoAlreadyBeanLoad) {
 				doVideoAlreadyBeanLoad=true;
 
@@ -626,36 +628,33 @@ public class MainControler implements Initializable {
 				fonctions.getChildren().add(barres);
 				barres.getChildren().add(barre_fond);
 				barres.getChildren().add(barre_lecture);
-				barres.getChildren().add(MainControler.controleur.barreDeSelection1);
-				barres.getChildren().add(MainControler.controleur.barreDeSelection2);
+				barres.getChildren().add(controleur.barreDeSelection1);
+				barres.getChildren().add(controleur.barreDeSelection2);
 				barres.getChildren().add(selectedZone);
 
 				play_pause.getChildren().add(fond_bouton);
 				play_pause.getChildren().add(image_bouton);
 
-				MainControler.controleur.panePrincipal.getChildren().add(fonctions);
-				MainControler.controleur.panePrincipal.getChildren().add(videoTime);
-				MainControler.controleur.panePrincipal.getChildren().add(videoTimeMax);
+				controleur.panePrincipal.getChildren().add(fonctions);
+				controleur.panePrincipal.getChildren().add(videoTime);
+				controleur.panePrincipal.getChildren().add(videoTimeMax);
 
-				MainControler.controleur.videoPlayStart.setText("00:00:00.000");
-				MainControler.controleur.videoPlayEnd.setText("00:00:01.000");
+				controleur.videoPlayStart.setText("00:00:00.000");
+				controleur.videoPlayEnd.setText("00:00:01.000");
 
 			}
-		}
-		//TODO
-		/*
-		SoundSpectrum ss = new SoundSpectrum(player, 0, 100000, 10, 100);
-		Pane sp = ss.getSpectrumPane();
-		controleur.panePrincipal.getChildren().add(sp);
+			
 
-		sp.setLayoutX(20);
-		sp.setLayoutY(300);
-		sp.setMinWidth(500);
-		sp.setMinHeight(280);
-		sp.setMaxWidth(500);
-		sp.setMaxHeight(280);
-		ss.makeAudioSpectrumGraph();
-		 */
+			wf.getPane().setPrefWidth(barre_fond.getWidth());
+			wf.getPane().setPrefHeight(barre_fond.getHeight());
+			wf.getPane().setLayoutX(video.getLayoutX()+35);
+			wf.getPane().setLayoutY(barres.getLayoutY());
+			wf.getPane().setDisable(true);
+			controleur.panePrincipal.getChildren().add(wf.getPane());
+			wf.makeWaveForm();
+		}
+		
+		
 	}
 
 
