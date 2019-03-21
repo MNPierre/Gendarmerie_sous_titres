@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<USFSubtitles version="1.0">
+<styles>
+	<style name="Gens1" color="#993300"></style>
+	<style name="Gens2" color="#E6E64D"></style>
+	<style name="Gens3" color="#336633"></style>
+</styles>
+<subtitles>
+	<subtitle start="0:0:0.0" stop="0:0:8.0">
+		<text speaker="Gens1">HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</text>
+		<text speaker="Gens3">Commentaire de 0 a 8sec</text>
+	</subtitle>
+	<subtitle start="0:0:5.0" stop="0:0:15.0">
+		<text speaker="Gens2">Un autre HAAAAAAAAAAAAAAAAA</text>
+	</subtitle>
+</subtitles>
+</USFSubtitles>

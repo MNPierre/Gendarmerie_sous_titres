@@ -74,7 +74,8 @@ public class ControleurSousTitres implements Initializable{
 	@FXML
     void modifierSousTitresOnClick(ActionEvent event) {
 		actualSpeech.setText(commentaireModifInput.getText());
-		System.out.println(MainControler.subtitles.getSubtitles());
+		MainControler.controleur.updatebarreSubtitle();
+		//System.out.println(MainControler.subtitles.getSubtitles());
     }
 
 }

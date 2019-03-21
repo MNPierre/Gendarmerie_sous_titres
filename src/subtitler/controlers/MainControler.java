@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -125,6 +124,7 @@ public class MainControler implements Initializable {
 	static Group fonctions ;
 	static Group barres ;
 	static Group play_pause ;
+	static Group barresSubtitles;
 	static Rectangle fond;
 
 	static ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
@@ -215,6 +215,45 @@ public class MainControler implements Initializable {
 		//saveSubtitles(subtitleFile);
 	}
 
+	public static void updatebarreSubtitle() {
+		for(Subtitle s : subtitles.getSubtitles()) {
+			for(Speech sp : s.getContenu()) {
+				Rectangle r = new Rectangle((s.getTimeStop()-s.getTimeStart())*(barre_fond.getWidth()/player.getTotalDuration().toMillis()),4);
+				r.setCursor(Cursor.HAND);
+				r.setOnMouseEntered(new EventHandler<MouseEvent>(){
+					public void handle(MouseEvent me){
+						r.setHeight(5);
+						r.setTranslateY(r.getTranslateY()-2);
+					}
+				});
+				r.setOnMouseExited(new EventHandler<MouseEvent>(){
+					public void handle(MouseEvent me){
+						r.setHeight(2);
+						r.setTranslateY(r.getTranslateY()+2);
+					}
+				});
+				for(Style st : subtitles.getStyles()) {
+					if(st != null) {
+						if(st.getNarrator().equals(sp.getAuthor())) {
+							r.setFill(Paint.valueOf(st.getColor()));
+						}
+					}
+				}
+				r.setTranslateX(s.getTimeStart()*(barre_fond.getWidth()/player.getTotalDuration().toMillis()));
+				//r.setTranslateY(50);
+				for(Node n :barresSubtitles.getChildren()) {
+					Rectangle rec = (Rectangle)n;
+					if(rec.getTranslateY()+rec.getWidth() >= r.getTranslateY() && !(r.equals(rec))) {
+						r.setTranslateY((rec.getTranslateY()-1.3*rec.getHeight()));
+					}
+					
+				}
+				r.setLayoutY(0);
+				barresSubtitles.getChildren().add(r);
+				//MainControler.controleur.panePrincipal.getChildren().add(r);
+			}
+		}
+	}
 
 	private static void playPauseVideo() {
 		//pause
@@ -238,6 +277,7 @@ public class MainControler implements Initializable {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("Veuillez remplire tous les champs.");
 			alert.show();
+			updatebarreSubtitle();
 		}
 
 		Subtitle sub = new Subtitle(ConversionStringMilli.StringToMillisecond(debutInput.getText()), ConversionStringMilli.StringToMillisecond(finInput.getText()));
@@ -449,16 +489,15 @@ public class MainControler implements Initializable {
 					}
 				}
 			});
-			
+
 			controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
 
 				@Override
 				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
 					//TODO
 				}
-				
-			});
 
+			});
 			//création du bouton play/pause
 			fond_bouton = new Rectangle(30,30);
 			fond_bouton.setArcHeight(5);
@@ -492,6 +531,8 @@ public class MainControler implements Initializable {
 			barres.setCursor(Cursor.HAND);
 			barre_fond = new Rectangle(video.getFitWidth()-60, 22);
 
+			barresSubtitles.setLayoutY(530);
+			barresSubtitles.setTranslateX(video.getLayoutX() + 35);
 
 			barre_lecture.setFill(Color.BLUE);
 			barre_fond.setFill(Color.GREY);
@@ -525,7 +566,7 @@ public class MainControler implements Initializable {
 					}
 				}
 			});		
-			
+
 			pin1.setBounding(video.getLayoutX()+35, video.getLayoutX()+35+barre_fond.getWidth());
 			pin2.setBounding(video.getLayoutX()+35, video.getLayoutX()+35+barre_fond.getWidth());
 
@@ -537,10 +578,10 @@ public class MainControler implements Initializable {
 
 			pin1.setTimeField(controleur.videoPlayStart);
 			pin2.setTimeField(controleur.videoPlayEnd);
-			
+
 			pin1.setLayoutX(video.getLayoutX()+35);
 			pin2.setLayoutX(video.getLayoutX()+35+barre_fond.getWidth());
-			
+
 			selectedZone.setLayoutX(pin1.getLayoutX()-(video.getLayoutX()+35));
 			selectedZone.setWidth(pin2.getLayoutX()-pin1.getLayoutX());
 
@@ -553,7 +594,7 @@ public class MainControler implements Initializable {
 				MainControler.controleur.panePrincipal.getChildren().add(subtitlesInput);
 				MainControler.controleur.panePrincipal.getChildren().add(paneTextToShow);
 
-				
+
 				selectedZone.setFill(Paint.valueOf("#000000"));
 				selectedZone.setHeight(barre_fond.getHeight());
 				selectedZone.setOpacity(0.3);
@@ -561,12 +602,13 @@ public class MainControler implements Initializable {
 				fonctions.getChildren().add(fond);
 				fonctions.getChildren().add(play_pause);
 				fonctions.getChildren().add(barres);
+				fonctions.getChildren().add(barresSubtitles);
 				barres.getChildren().add(barre_fond);
-		//	}
-			
-			
-			
-		//	if(!doVideoAlreadyBeanLoad) {
+				//	}
+
+
+
+				//	if(!doVideoAlreadyBeanLoad) {
 				doVideoAlreadyBeanLoad=true;
 				barres.getChildren().add(barre_lecture);
 				barres.getChildren().add(selectedZone);
@@ -586,7 +628,7 @@ public class MainControler implements Initializable {
 
 				pin1.setPlayableZone(selectedZone);
 				pin2.setPlayableZone(selectedZone);
-				
+
 				pin1.addListener();
 				pin2.addListener();
 			}
@@ -618,42 +660,43 @@ public class MainControler implements Initializable {
 		}
 
 		debutInput = new TextField();
-		
+
 		videoSlider = new Slider();
-		
+
 		subtitles = null;
-		
+
 		paneTextToShow = new Pane();
 		paneTextToShow.setStyle("-fx-background-color: black;");
-		
+
 		videoTime = new Label();
 		videoTimeMax = new Label();
-		
+
 		debutInput = new TextField();
 		finInput = new TextField();
-		
+
 		subtitlesInput = new TextArea();
-		
+
 		personneInput = new ComboBox<>();
-		
+
 		fonctions = new Group();
-		
+
 		barres = new Group();
-		
+
 		play_pause = new Group();
-		
+
+		barresSubtitles = new Group();
+
 		barre_lecture = new Rectangle(0, 22);
-		
+
 		image_bouton = new ImageView(img_pause);
-		
+
 		selectedZone = new Rectangle();
-		
+
 		pin1 = new Pin(Mode.START);
 		pin2 = new Pin(Mode.END);
-		
+
 		pin1.setSiblingPin(pin2);
 		pin2.setSiblingPin(pin1);
-
 	}
 
 	public static Pane getPanPrincipale() {
