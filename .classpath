@@ -3,5 +3,27 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="jave-1.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/svg-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/svg-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/styled-xml-parser-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/styled-xml-parser-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/sign-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/sign-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/pdftest-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/pdftest-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/pdfa-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/pdfa-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/layout-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/layout-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/kernel-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/kernel-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/io-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/io-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/hyph-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/forms-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/forms-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/font-asian-7.1.5.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/barcodes-7.1.5-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/etudiants/info/rtiquetduriez/Téléchargements/iText/barcodes-7.1.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

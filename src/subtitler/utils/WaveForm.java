@@ -41,31 +41,23 @@ public class WaveForm {
 	int width;
 	Pane pane;
 	
-	int startAt=0;
-	int endAt;
+	double startAt=0;
+	double endAt;
 	
-	/**
-	 * Wave Service type of Job ( not boob job ... )
-	 * 
-	 * @author GOXR3PLUSSTUDIO
-	 *
-	 */
 	public enum WaveFormJob {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM, AMPLITUDES;
 	}
 	
-	public void setBounds() {
-		//TODO
+	
+	public void setBounds(double startAt, double endAt) {
+		this.startAt=startAt;
+		this.endAt=endAt;
 	}
 	
-	/**
-	 * Constructor.
-	 */
 	public WaveForm(String fileAbsolutePath, WaveFormJob waveFormJob, int width) {
 		pane = new Pane();
 		this.width =width;
 		startService(fileAbsolutePath, waveFormJob);
-		//makeWaveForm();
 	}
 	
 	public void makeWaveForm() {
@@ -78,7 +70,10 @@ public class WaveForm {
 			}
 		}
 		
-		for(double i=0;i<wavAmplitudes.length;i++) {
+		double start=startAt*(wavAmplitudes.length/pane.getPrefWidth());
+		double stop=endAt*(wavAmplitudes.length/pane.getPrefWidth());
+		
+		for(double i=start;i<wavAmplitudes.length && i<stop;i++) {
 			Pane rec = new Pane();
 			rec.setStyle("-fx-background-color: red;");
 			rec.setLayoutX(i*(pane.getPrefWidth()/wavAmplitudes.length));
