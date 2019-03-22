@@ -132,12 +132,15 @@ public class MainControler implements Initializable {
 
 	static Stage fileImportStage;
 	static Stage modifySubtitlesStage;
+	static Stage modifOneSubtitleStage;
 
 	static boolean asSetTime = false;
 	static boolean doVideoAlreadyBeanLoad = false;
 
 	public static MainControler controleur;
 	static WaveForm wf;
+
+	public static Subtitle selectedSubtitle;
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
@@ -163,23 +166,18 @@ public class MainControler implements Initializable {
 		if(player.getStatus() == Status.PLAYING) {
 			playPauseVideo();
 		}
-		if(subtitlesToShow.size()==0) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setContentText("Aucun sous-titres en ce moment");
-			alert.show();
-		}else {
-			try { 
-				AnchorPane root = (AnchorPane) FXMLLoader.load(new File("modifSubtitle.fxml").toURI().toURL()); 
-				Stage Ajouter = new Stage(); 
-				Scene scene = new Scene(root, 640, 480); 
-				Ajouter.setTitle("Modifier Sous-Titres");
-				Ajouter.setScene(scene); 
-				Ajouter.show(); 
-			} 
-			catch (IOException e) {  
-				e.printStackTrace(); 
-			}
+		try { 
+			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("modifSubtitle.fxml").toURI().toURL()); 
+			Stage Ajouter = new Stage(); 
+			Scene scene = new Scene(root, 640, 480); 
+			Ajouter.setTitle("Modifier Sous-Titres");
+			Ajouter.setScene(scene); 
+			Ajouter.show(); 
+		} 
+		catch (IOException e) {  
+			e.printStackTrace(); 
 		}
+
 	}
 
 	@FXML
@@ -233,6 +231,23 @@ public class MainControler implements Initializable {
 							public void handle(MouseEvent me){
 								r.setHeight(3);
 								r.setTranslateY(r.getTranslateY()+2);
+							}
+						});
+						r.setOnMouseClicked(new EventHandler<MouseEvent>(){
+							public void handle(MouseEvent me){
+								AnchorPane root;
+								try {
+									selectedSubtitle = s;
+									root = (AnchorPane) FXMLLoader.load(new File("modifOneSubtitle.fxml").toURI().toURL());
+									modifOneSubtitleStage = new Stage(); 
+									Scene scene = new Scene(root, 640, 380); 
+									modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
+									modifOneSubtitleStage.setScene(scene); 
+									modifOneSubtitleStage.show();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} 
 							}
 						});
 						for(Style st : subtitles.getStyles()) {
