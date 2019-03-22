@@ -52,8 +52,9 @@ public class ControleurFileImport implements Initializable{
 			alert.setContentText("Le fichier \""+file+"\" est introuvable");
 			alert.show();
 		}else {
-			MainControler.setNewVideoXml(file, xmlFile);
 			MainControler.fileImportStage.close();
+			MainControler.setNewVideoXml(file, xmlFile);
+			
 		}
     	
     }

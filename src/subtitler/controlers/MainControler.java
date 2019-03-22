@@ -197,7 +197,7 @@ public class MainControler implements Initializable {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@FXML
 	void EditerPersonnes(ActionEvent event) {
 		System.out.println("Ouverture fenêtre\n");
@@ -419,6 +419,11 @@ public class MainControler implements Initializable {
 			asSetTime = false;
 
 			fichierVideo = new Media( new File(file).toURI().toString() );
+			
+			if(wf != null && wf.getPane() != null) {
+				controleur.panePrincipal.getChildren().remove(wf.getPane());
+			}
+			
 			wf = new WaveForm(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM, 10);
 
 			if(listenerVideoTime != null) {
@@ -508,7 +513,7 @@ public class MainControler implements Initializable {
 
 				@Override
 				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-					//TODO
+					wf.setBounds(MainControler.pin1.getLayoutX(), MainControler.pin2.getLayoutX());
 				}
 
 			});
