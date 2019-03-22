@@ -216,41 +216,37 @@ public class MainControler implements Initializable {
 	}
 
 	public static void updatebarreSubtitle() {
-		for(Subtitle s : subtitles.getSubtitles()) {
-			for(Speech sp : s.getContenu()) {
-				Rectangle r = new Rectangle((s.getTimeStop()-s.getTimeStart())*(barre_fond.getWidth()/player.getTotalDuration().toMillis()),4);
-				r.setCursor(Cursor.HAND);
-				r.setOnMouseEntered(new EventHandler<MouseEvent>(){
-					public void handle(MouseEvent me){
-						r.setHeight(5);
-						r.setTranslateY(r.getTranslateY()-2);
-					}
-				});
-				r.setOnMouseExited(new EventHandler<MouseEvent>(){
-					public void handle(MouseEvent me){
-						r.setHeight(2);
-						r.setTranslateY(r.getTranslateY()+2);
-					}
-				});
-				for(Style st : subtitles.getStyles()) {
-					if(st != null) {
-						if(st.getNarrator().equals(sp.getAuthor())) {
-							r.setFill(Paint.valueOf(st.getColor()));
+		barresSubtitles.getChildren().clear();
+		for(int i = 0; i < subtitles.getNarrators().size(); i++) {
+			for(Subtitle s : subtitles.getSubtitles()) {
+				for(Speech sp : s.getContenu()) {
+					if(sp.getAuthor().equals(subtitles.getNarrators().get(i))) {
+						Rectangle r = new Rectangle((s.getTimeStop()-s.getTimeStart())*(barre_fond.getWidth()/player.getTotalDuration().toMillis()),3);
+						r.setCursor(Cursor.HAND);
+						r.setOnMouseEntered(new EventHandler<MouseEvent>(){
+							public void handle(MouseEvent me){
+								r.setHeight(5);
+								r.setTranslateY(r.getTranslateY()-2);
+							}
+						});
+						r.setOnMouseExited(new EventHandler<MouseEvent>(){
+							public void handle(MouseEvent me){
+								r.setHeight(3);
+								r.setTranslateY(r.getTranslateY()+2);
+							}
+						});
+						for(Style st : subtitles.getStyles()) {
+							if(st != null) {
+								if(st.getNarrator().equals(sp.getAuthor())) {
+									r.setFill(Paint.valueOf(st.getColor()));
+								}
+							}
 						}
+						r.setTranslateX(s.getTimeStart()*(barre_fond.getWidth()/player.getTotalDuration().toMillis()));
+						r.setTranslateY(i*-4);
+						barresSubtitles.getChildren().add(r);
 					}
 				}
-				r.setTranslateX(s.getTimeStart()*(barre_fond.getWidth()/player.getTotalDuration().toMillis()));
-				//r.setTranslateY(50);
-				for(Node n :barresSubtitles.getChildren()) {
-					Rectangle rec = (Rectangle)n;
-					if(rec.getTranslateY()+rec.getWidth() >= r.getTranslateY() && !(r.equals(rec))) {
-						r.setTranslateY((rec.getTranslateY()-1.3*rec.getHeight()));
-					}
-					
-				}
-				r.setLayoutY(0);
-				barresSubtitles.getChildren().add(r);
-				//MainControler.controleur.panePrincipal.getChildren().add(r);
 			}
 		}
 	}
@@ -277,16 +273,18 @@ public class MainControler implements Initializable {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("Veuillez remplire tous les champs.");
 			alert.show();
+		}else {
+
+			Subtitle sub = new Subtitle(ConversionStringMilli.StringToMillisecond(debutInput.getText()), ConversionStringMilli.StringToMillisecond(finInput.getText()));
+			sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
+			subtitles.addSubtitles(sub);
+			debutInput.setText("");
+			finInput.setText("");
+			subtitlesInput.setText("");
+			personneInput.setValue(null);
 			updatebarreSubtitle();
+			updateVideo();
 		}
-
-		Subtitle sub = new Subtitle(ConversionStringMilli.StringToMillisecond(debutInput.getText()), ConversionStringMilli.StringToMillisecond(finInput.getText()));
-		sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
-
-		debutInput.setText("");
-		finInput.setText("");
-		subtitlesInput.setText("");
-		personneInput.setValue(null);
 	}
 
 	@FXML
@@ -313,6 +311,7 @@ public class MainControler implements Initializable {
 			MainControler.controleur.videoPlayEnd.setText(ConversionStringMilli.MillisecondsToString((long)player.getTotalDuration().toMillis()));
 			playPauseVideo();
 			player.seek(Duration.millis(0));
+			updatebarreSubtitle();
 		}
 
 		if(currentTime<ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))
