@@ -369,7 +369,7 @@ public class MainControler implements Initializable {
 		paneTextToShow.getChildren().clear();
 		for(Subtitle sub:subtitlesToShow) {
 			for(Speech speech:sub.getContenu()) {
-				Label text = new Label(speech.getText());
+				Label text = new Label(speech.getAuthor()+" : "+speech.getText());
 				text.setId(""+speech.getId());
 				text.setScaleX(2);
 				text.setScaleY(2);
@@ -420,12 +420,14 @@ public class MainControler implements Initializable {
 
 			fichierVideo = new Media( new File(file).toURI().toString() );
 			
-			if(wf != null && wf.getPane() != null) {
-				controleur.panePrincipal.getChildren().remove(wf.getPane());
-			}
+			if(wf != null) {
+				wf.setFileAbsolutePath(file);
+				if(wf.getPane() != null)
+					controleur.panePrincipal.getChildren().remove(wf.getPane());
+			}else
+				wf = new WaveForm(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM, 10);
 			
-			wf = new WaveForm(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM, 10);
-
+			
 			if(listenerVideoTime != null) {
 				player.currentTimeProperty().removeListener(listenerVideoTime);
 			}
@@ -638,10 +640,12 @@ public class MainControler implements Initializable {
 				controleur.panePrincipal.getChildren().add(fonctions);
 				controleur.panePrincipal.getChildren().add(videoTime);
 				controleur.panePrincipal.getChildren().add(videoTimeMax);
-
 				controleur.videoPlayStart.setText("00:00:00.000");
 				controleur.videoPlayEnd.setText("00:00:01.000");
 
+				controleur.panePrincipal.getChildren().add(wf.getPane());
+
+				
 				pin1.addToPane(controleur.panePrincipal);
 				pin2.addToPane(controleur.panePrincipal);
 
@@ -651,13 +655,14 @@ public class MainControler implements Initializable {
 				pin1.addListener();
 				pin2.addListener();
 			}
-			controleur.panePrincipal.getChildren().add(wf.getPane());
+			
 			wf.getPane().setOpacity(0.5);
 			wf.getPane().setPrefWidth(barre_fond.getWidth());
 			wf.getPane().setPrefHeight(barre_fond.getHeight());
 			wf.getPane().setLayoutX(video.getLayoutX()+35);
 			wf.getPane().setLayoutY(barres.getLayoutY());
 			wf.getPane().setDisable(true);
+			wf.setBounds(0, barre_fond.getWidth());
 
 			wf.makeWaveForm();
 		}

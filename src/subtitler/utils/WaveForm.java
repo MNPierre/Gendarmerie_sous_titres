@@ -72,7 +72,7 @@ public class WaveForm {
 		
 		double start=startAt*(wavAmplitudes.length/pane.getPrefWidth());
 		double stop=endAt*(wavAmplitudes.length/pane.getPrefWidth());
-		
+		System.out.println(start+" ,, "+stop);
 		for(double i=start;i<wavAmplitudes.length && i<stop;i++) {
 			Pane rec = new Pane();
 			rec.setStyle("-fx-background-color: red;");
