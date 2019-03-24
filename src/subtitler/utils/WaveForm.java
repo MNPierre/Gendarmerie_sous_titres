@@ -43,11 +43,15 @@ public class WaveForm {
 	
 	double startAt=0;
 	double endAt;
+	double timeMax;
 	
 	public enum WaveFormJob {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM, AMPLITUDES;
 	}
 	
+	public void setTImeMax(double timeMax) {
+		this.timeMax=timeMax;
+	}
 	
 	public void setBounds(double startAt, double endAt) {
 		this.startAt=startAt;
@@ -70,16 +74,16 @@ public class WaveForm {
 			}
 		}
 		
-		double start=startAt*(wavAmplitudes.length/pane.getPrefWidth());
-		double stop=endAt*(wavAmplitudes.length/pane.getPrefWidth());
+		double start=startAt*(wavAmplitudes.length/timeMax);
+		double stop=endAt*(wavAmplitudes.length/timeMax);
 		System.out.println(start+" ,, "+stop);
-		for(double i=start;i<wavAmplitudes.length && i<stop;i++) {
+		for(double i=start;i<stop;i++) {
 			Pane rec = new Pane();
 			rec.setStyle("-fx-background-color: red;");
-			rec.setLayoutX(i*(pane.getPrefWidth()/wavAmplitudes.length));
-			rec.setPrefWidth(2);
-			rec.setPrefHeight((wavAmplitudes[(int)i]/maxVal)*pane.getPrefHeight());
-			rec.setLayoutY(pane.getPrefHeight()-(wavAmplitudes[(int) i]/maxVal)*pane.getPrefHeight());
+			rec.setLayoutX((i-start)*(pane.getPrefWidth()/(stop-start)));
+			rec.setPrefWidth(1);
+			rec.setPrefHeight( (pane.getPrefHeight()/maxVal)*wavAmplitudes[(int)(i-start)] );
+			rec.setLayoutY(pane.getPrefHeight()-(wavAmplitudes[(int) (i-start)]/maxVal)*pane.getPrefHeight());
 			pane.getChildren().add(rec);
 		}
 	}

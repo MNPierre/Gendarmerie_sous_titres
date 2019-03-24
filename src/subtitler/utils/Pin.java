@@ -92,10 +92,11 @@ public class Pin {
 	public void setVisibility(boolean visibility) {
 		head.setOpacity(visibility?1:0);
 		body.setOpacity(visibility?1:0);
-		head.setDisable(visibility);
-		head.setDisable(visibility);
+		head.setDisable(!visibility);
+		head.setDisable(!visibility);
 		isActivate=visibility;
 		isMoving = false;
+		selectedZone.setVisible(visibility);
 	}
 
 	public double getLayoutX() {

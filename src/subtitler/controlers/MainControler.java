@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -63,26 +64,6 @@ public class MainControler implements Initializable {
 	@FXML
 	private Pane panePrincipal;
 
-	private static Slider videoSlider;
-
-
-	private static TextArea subtitlesInput;
-
-
-	private static TextField debutInput;
-
-
-	private static TextField finInput;
-
-	private static Label videoTime;
-
-	private static Label videoTimeMax;
-
-
-	@FXML
-	private CheckBox zoomCheckBox;
-
-
 	@FXML
 	private Button ajouterButton;
 
@@ -90,7 +71,13 @@ public class MainControler implements Initializable {
 	private Button sauvegarderButton;
 
 	@FXML
+	private Button buttonEditSpeakers;
+
+	@FXML
 	private TextField wordToSearchBox;
+
+	@FXML
+	private Button buttonSearchKeyWord;
 
 	@FXML
 	private TextField videoPlayStart;
@@ -98,8 +85,34 @@ public class MainControler implements Initializable {
 	@FXML
 	private TextField videoPlayEnd;
 
+	@FXML
+	private Button buttonEditSubtitles;
+
+	@FXML
+	private CheckBox zoomCheckBox;
+
+	@FXML
+	private Slider volumeBarre;
+
+	@FXML
+	private Label volumeText;
 
 
+	static Slider videoSlider;
+
+
+	static TextArea subtitlesInput;
+
+
+	static TextField debutInput;
+
+
+	static TextField finInput;
+
+	static Label videoTime;
+
+	static Label videoTimeMax;
+	
 	static Image img_play;
 	static Image img_pause;
 
@@ -141,6 +154,11 @@ public class MainControler implements Initializable {
 	static WaveForm wf;
 
 	public static Subtitle selectedSubtitle;
+	
+	@FXML
+    void searchKeyWord(ActionEvent event) {
+		//TODO
+    }
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
@@ -197,20 +215,10 @@ public class MainControler implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@FXML
 	void EditerPersonnes(ActionEvent event) {
 		System.out.println("Ouverture fenêtre\n");
-	}
-
-	@FXML
-	void validSubititlesOnClick(ActionEvent event) throws IOException {
-		//addSubtitles(subtitlesInput.getText());
-	}
-
-	@FXML
-	void saveSubtitlesOnClick(ActionEvent event) throws IOException {
-		//saveSubtitles(subtitleFile);
 	}
 
 	public static void updatebarreSubtitle() {
@@ -322,11 +330,16 @@ public class MainControler implements Initializable {
 		double currentTime = player.getCurrentTime().toMillis();
 
 		if(!asSetTime) {
+			player.setVolume(1);
 			asSetTime=true;
 			MainControler.controleur.videoPlayEnd.setText(ConversionStringMilli.MillisecondsToString((long)player.getTotalDuration().toMillis()));
 			playPauseVideo();
 			player.seek(Duration.millis(0));
 			updatebarreSubtitle();
+			wf.setBounds(0, player.getTotalDuration().toMillis());
+			wf.setTImeMax(player.getTotalDuration().toMillis());
+			wf.makeWaveForm();
+			controleur.setVideoToolsSetDisable(false);
 		}
 
 		if(currentTime<ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))
@@ -401,6 +414,8 @@ public class MainControler implements Initializable {
 
 	static ChangeListener<Duration> listenerVideoTime;
 
+	static double barreSize=70;
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void setNewVideoXml(String file, String xmlFile) {
 
@@ -415,19 +430,17 @@ public class MainControler implements Initializable {
 		}
 
 		if(file != null) {
-
 			asSetTime = false;
 
 			fichierVideo = new Media( new File(file).toURI().toString() );
-			
+
 			if(wf != null) {
-				wf.setFileAbsolutePath(file);
-				if(wf.getPane() != null)
-					controleur.panePrincipal.getChildren().remove(wf.getPane());
+				wf.startService(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
+
 			}else
 				wf = new WaveForm(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM, 10);
-			
-			
+
+
 			if(listenerVideoTime != null) {
 				player.currentTimeProperty().removeListener(listenerVideoTime);
 			}
@@ -445,7 +458,7 @@ public class MainControler implements Initializable {
 				paneTextToShow.getChildren().clear();
 
 			video.setFitWidth(950);
-			video.setFitHeight(650);
+			video.setFitHeight(600);
 			video.setLayoutY(4);
 			video.setLayoutX(118);
 			video.getMediaPlayer().play();
@@ -480,10 +493,10 @@ public class MainControler implements Initializable {
 			subtitlesInput.setPrefWidth(275);
 			subtitlesInput.setPrefHeight(96);
 
-			fond = new Rectangle(video.getFitWidth(),30);
+			fond = new Rectangle(video.getFitWidth(),barreSize);
 			fond.setOpacity(0.5);
 			fond.setLayoutX(video.getLayoutX());
-			fond.setLayoutY(538);
+			fond.setLayoutY(488);
 
 			subtitles.getStyles().addListener(new InvalidationListener() {
 
@@ -511,26 +524,18 @@ public class MainControler implements Initializable {
 				}
 			});
 
-			controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
-
-				@Override
-				public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-					wf.setBounds(MainControler.pin1.getLayoutX(), MainControler.pin2.getLayoutX());
-				}
-
-			});
 			//création du bouton play/pause
-			fond_bouton = new Rectangle(30,30);
+			fond_bouton = new Rectangle(30,barreSize);
 			fond_bouton.setArcHeight(5);
 			fond_bouton.setArcWidth(5);
 
-			image_bouton.setFitWidth(22);;
+			image_bouton.setFitWidth(22);
 			image_bouton.setLayoutX(4);
 			image_bouton.setLayoutY(4);
 			image_bouton.setFitHeight(22);
 
 			play_pause.setTranslateX(video.getLayoutX());
-			play_pause.setTranslateY(538);
+			play_pause.setTranslateY(488);
 			play_pause.setCursor(Cursor.HAND);
 
 			//Quand on clique sur le bouton play/pause, on démarre ou on arrête la vidéo
@@ -548,11 +553,11 @@ public class MainControler implements Initializable {
 			});
 
 			barres.setTranslateX(video.getLayoutX() + 35);
-			barres.setLayoutY(541);
+			barres.setLayoutY(494);
 			barres.setCursor(Cursor.HAND);
-			barre_fond = new Rectangle(video.getFitWidth()-60, 22);
+			barre_fond = new Rectangle(video.getFitWidth()-60, (2.2/3)*barreSize);
 
-			barresSubtitles.setLayoutY(530);
+			barresSubtitles.setLayoutY(480);
 			barresSubtitles.setTranslateX(video.getLayoutX() + 35);
 
 			barre_lecture.setFill(Color.BLUE);
@@ -609,11 +614,11 @@ public class MainControler implements Initializable {
 			if(!doVideoAlreadyBeanLoad) {
 
 				//ajout des textfiels plus ajout au pan
-				MainControler.controleur.panePrincipal.getChildren().add(personneInput);
-				MainControler.controleur.panePrincipal.getChildren().add(debutInput);
-				MainControler.controleur.panePrincipal.getChildren().add(finInput);
-				MainControler.controleur.panePrincipal.getChildren().add(subtitlesInput);
-				MainControler.controleur.panePrincipal.getChildren().add(paneTextToShow);
+				controleur.panePrincipal.getChildren().add(personneInput);
+				controleur.panePrincipal.getChildren().add(debutInput);
+				controleur.panePrincipal.getChildren().add(finInput);
+				controleur.panePrincipal.getChildren().add(subtitlesInput);
+				controleur.panePrincipal.getChildren().add(paneTextToShow);
 
 
 				selectedZone.setFill(Paint.valueOf("#000000"));
@@ -625,12 +630,7 @@ public class MainControler implements Initializable {
 				fonctions.getChildren().add(barres);
 				fonctions.getChildren().add(barresSubtitles);
 				barres.getChildren().add(barre_fond);
-				//	}
 
-
-
-				//	if(!doVideoAlreadyBeanLoad) {
-				doVideoAlreadyBeanLoad=true;
 				barres.getChildren().add(barre_lecture);
 				barres.getChildren().add(selectedZone);
 
@@ -642,10 +642,8 @@ public class MainControler implements Initializable {
 				controleur.panePrincipal.getChildren().add(videoTimeMax);
 				controleur.videoPlayStart.setText("00:00:00.000");
 				controleur.videoPlayEnd.setText("00:00:01.000");
-
 				controleur.panePrincipal.getChildren().add(wf.getPane());
 
-				
 				pin1.addToPane(controleur.panePrincipal);
 				pin2.addToPane(controleur.panePrincipal);
 
@@ -654,17 +652,47 @@ public class MainControler implements Initializable {
 
 				pin1.addListener();
 				pin2.addListener();
+
+				controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
+
+					@Override
+					public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+
+						if(controleur.zoomCheckBox.isSelected()) {
+							wf.setBounds(ConversionStringMilli.StringToMillisecond(controleur.videoPlayStart.getText()), ConversionStringMilli.StringToMillisecond(controleur.videoPlayEnd.getText()));
+
+							pin1.setVisibility(false);
+							pin2.setVisibility(false);
+
+						}else {
+							wf.setBounds(0, player.getTotalDuration().toMillis());
+
+							pin1.setVisibility(true);
+							pin2.setVisibility(true);
+						}
+						wf.makeWaveForm();
+					}
+
+				});
+
+				controleur.volumeBarre.valueProperty().addListener(new ChangeListener<Number>() {
+					@Override
+					public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+						player.setVolume(newValue.doubleValue()/100);
+						controleur.volumeText.setText((int)newValue.doubleValue()+"%");
+					}
+
+				});;
+
+				doVideoAlreadyBeanLoad=true;
 			}
-			
+			player.setVolume(0);
 			wf.getPane().setOpacity(0.5);
 			wf.getPane().setPrefWidth(barre_fond.getWidth());
 			wf.getPane().setPrefHeight(barre_fond.getHeight());
 			wf.getPane().setLayoutX(video.getLayoutX()+35);
 			wf.getPane().setLayoutY(barres.getLayoutY());
 			wf.getPane().setDisable(true);
-			wf.setBounds(0, barre_fond.getWidth());
-
-			wf.makeWaveForm();
 		}
 
 
@@ -675,7 +703,6 @@ public class MainControler implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		MainControler.controleur = this;
 		//D�clarations
-		//panePrincipal = new Pane();
 		try {
 			img_play = new Image(new File("PLAY.png").toURI().toURL().toString());
 			img_pause = new Image(new File("PAUSE.png").toURI().toURL().toString());
@@ -710,7 +737,7 @@ public class MainControler implements Initializable {
 
 		barresSubtitles = new Group();
 
-		barre_lecture = new Rectangle(0, 22);
+		barre_lecture = new Rectangle(0, (2.2/3)*barreSize);
 
 		image_bouton = new ImageView(img_pause);
 
@@ -721,6 +748,21 @@ public class MainControler implements Initializable {
 
 		pin1.setSiblingPin(pin2);
 		pin2.setSiblingPin(pin1);
+
+		setVideoToolsSetDisable(true);
+	}
+
+	public void setVideoToolsSetDisable(boolean value) {
+		zoomCheckBox.setDisable(value);
+		ajouterButton.setDisable(value);
+		sauvegarderButton.setDisable(value);
+		wordToSearchBox.setDisable(value);
+		videoPlayStart.setDisable(value);
+		videoPlayEnd.setDisable(value);
+		volumeBarre.setDisable(value);
+		buttonSearchKeyWord.setDisable(value);
+		buttonEditSpeakers.setDisable(value);
+		buttonEditSubtitles.setDisable(value);
 	}
 
 	public static Pane getPanPrincipale() {
