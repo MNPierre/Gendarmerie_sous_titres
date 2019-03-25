@@ -382,7 +382,7 @@ public class MainControler implements Initializable {
 
 	}
 
-	private static void updateVideo() {
+	public static void updateVideo() {
 
 		double currentTime = player.getCurrentTime().toMillis();
 
