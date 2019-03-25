@@ -2,16 +2,29 @@ package subtitler.subtitles;
 
 import java.util.ArrayList;
 
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import subtitler.utils.ConversionStringMilli;
+
 public class Subtitle {
 
 	private ArrayList<Speech> contenu;
 	private long timeStart;
 	private long timeStop;
+	
+	private StringProperty timeStartProperty;
+	private StringProperty timeStopProperty;
 
 	public Subtitle(long timeStartIntput, long timeStopInput) {
-		contenu = new ArrayList<>();
+		contenu = new ArrayList<Speech>();
 		timeStart = timeStartIntput;
 		timeStop = timeStopInput;
+		timeStartProperty = new SimpleStringProperty(ConversionStringMilli.MillisecondsToString(timeStart));
+		timeStopProperty = new SimpleStringProperty(ConversionStringMilli.MillisecondsToString(timeStop));
 	}
 
 	public void addSpeech(Speech speech) {
@@ -32,14 +45,24 @@ public class Subtitle {
 
 	public void setTimeStart(long timeStart) {
 		this.timeStart = timeStart;
+		this.timeStartProperty.set(ConversionStringMilli.MillisecondsToString(timeStart));
 	}
 
 	public long getTimeStop() {
 		return timeStop;
 	}
+	
+	public StringProperty getTimeStartProperty() {
+		return timeStartProperty;
+	}
+	
+	public StringProperty getTimeStopProperty() {
+		return timeStopProperty;
+	}
 
 	public void setTimeStop(long timeStop) {
 		this.timeStop = timeStop;
+		this.timeStopProperty.set(ConversionStringMilli.MillisecondsToString(timeStop));
 	}
 
 	public Speech getSpeech(String author) {
@@ -50,6 +73,10 @@ public class Subtitle {
 			}
 		}
 		return result;
+	}
+	
+	public ObservableList<Speech> getAuthors(){
+		return FXCollections.observableArrayList(contenu);
 	}
 
 	public static String MillisecondsToString(long time) {

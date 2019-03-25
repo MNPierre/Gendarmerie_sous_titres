@@ -8,10 +8,15 @@
 <subtitles>
 	<subtitle start="0:0:0.0" stop="0:0:8.0">
 		<text speaker="Gens1">HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</text>
+	</subtitle>
+	<subtitle start="0:0:0.0" stop="0:0:8.0">
 		<text speaker="Gens3">Commentaire de 0 a 8sec</text>
 	</subtitle>
 	<subtitle start="0:0:3.0" stop="0:0:5.0">
 		<text speaker="Gens2">Un autre HAAAAAAAAAAAAAAAAA</text>
+	</subtitle>
+	<subtitle start="0:0:10.0" stop="0:0:18.0">
+		<text speaker="Gens1">HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</text>
 	</subtitle>
 </subtitles>
 </USFSubtitles>

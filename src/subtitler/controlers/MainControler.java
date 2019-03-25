@@ -9,9 +9,10 @@ import java.util.ResourceBundle;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -58,6 +59,7 @@ import subtitler.utils.ConversionStringMilli;
 import subtitler.utils.Pin;
 import subtitler.utils.Pin.Mode;
 import subtitler.utils.WaveForm;
+import subtitler.utils.modifSubtitleUtils;
 public class MainControler implements Initializable {
 
 
@@ -140,12 +142,12 @@ public class MainControler implements Initializable {
 	static Group barresSubtitles;
 	static Rectangle fond;
 
-	static ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
+	//static ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
+	static ObservableList<Subtitle> subtitlesToShow = FXCollections.observableArrayList();
 	static Pane paneTextToShow;
 
 	static Stage fileImportStage;
 	static Stage modifySubtitlesStage;
-	static Stage modifOneSubtitleStage;
 
 	static boolean asSetTime = false;
 	static boolean doVideoAlreadyBeanLoad = false;
@@ -153,7 +155,7 @@ public class MainControler implements Initializable {
 	public static MainControler controleur;
 	static WaveForm wf;
 
-	public static Subtitle selectedSubtitle;
+
 	
 	@FXML
     void searchKeyWord(ActionEvent event) {
@@ -245,13 +247,13 @@ public class MainControler implements Initializable {
 							public void handle(MouseEvent me){
 								AnchorPane root;
 								try {
-									selectedSubtitle = s;
+									modifSubtitleUtils.selectedSubtitle = s;
 									root = (AnchorPane) FXMLLoader.load(new File("modifOneSubtitle.fxml").toURI().toURL());
-									modifOneSubtitleStage = new Stage(); 
+									modifSubtitleUtils.modifOneSubtitleStage = new Stage(); 
 									Scene scene = new Scene(root, 640, 380); 
-									modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
-									modifOneSubtitleStage.setScene(scene); 
-									modifOneSubtitleStage.show();
+									modifSubtitleUtils.modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
+									modifSubtitleUtils.modifOneSubtitleStage.setScene(scene); 
+									modifSubtitleUtils.modifOneSubtitleStage.show();
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();

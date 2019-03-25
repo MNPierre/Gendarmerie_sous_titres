@@ -66,6 +66,10 @@ public class SubtitlesList {
 	public ObservableList<Style> getStyles(){
 		return styles;
 	}
+	
+	public ObservableList<Subtitle> getObservableSubtitles(){
+		return FXCollections.observableArrayList(subtitles);
+	}
 
 	public ArrayList<Subtitle> getSubtitles() {
 		return subtitles;

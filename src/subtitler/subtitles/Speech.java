@@ -1,34 +1,44 @@
 package subtitler.subtitles;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import subtitler.utils.ConversionStringMilli;
 
 public class Speech {
 
 	private static int globalId=0;
 	private int id;
-	private String text;
-	private String author;
+	private StringProperty text;
+	private StringProperty author;
 	
 	public Speech(String textInput, String authorInput) {
-		text = textInput;
-		author = authorInput;
+		text = new SimpleStringProperty(textInput);
+		author = new SimpleStringProperty(authorInput);
 		id=globalId++;
 	}
 	
 	public String getText() {
-		return text;
+		return text.getValue();
 	}
 
 	public void setText(String text) {
-		this.text = text;
+		this.text.setValue(text);
 	}
 
 	public String getAuthor() {
+		return author.getValue();
+	}
+	
+	public StringProperty getTextProperty() {
+		return text;
+	}
+	
+	public StringProperty getAuthorProperty() {
 		return author;
 	}
 
 	public void setAuthor(String author) {
-		this.author = author;
+		this.author.setValue(author);
 	}
 	
 	public int getId() {

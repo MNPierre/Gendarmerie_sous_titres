@@ -4,15 +4,19 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="subtitler.controlers.ControleurSousTitres">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="subtitler.controlers.ControleurSousTitres">
    <children>
-      <Pane prefHeight="408.0" prefWidth="607.0">
+      <Pane prefHeight="480.0" prefWidth="640.0">
          <children>
-            <TextArea fx:id="commentaireModifInput" layoutX="14.0" layoutY="144.0" prefHeight="140.0" prefWidth="340.0" />
-            <ComboBox fx:id="personneChoix" layoutX="416.0" layoutY="144.0" prefWidth="150.0" />
-            <Button layoutX="416.0" layoutY="204.0" mnemonicParsing="false" text="Supprimer le sous-titre" />
-            <Button layoutX="416.0" layoutY="258.0" mnemonicParsing="false" onAction="#modifierSousTitresOnClick" text="Valider" />
+            <TableView fx:id="subtitlesView" layoutX="6.0" layoutY="4.0" prefHeight="439.0" prefWidth="628.0">
+              <columns>
+                <TableColumn fx:id="auteurView" prefWidth="139.0" text="Auteur" />
+                <TableColumn fx:id="speechView" prefWidth="319.0" text="Discours" />
+                  <TableColumn fx:id="timeStart" prefWidth="81.0" text="Start" />
+                  <TableColumn fx:id="timeStop" prefWidth="87.0" text="Stop" />
+              </columns>
+            </TableView>
+            <Button layoutX="289.0" layoutY="448.0" mnemonicParsing="false" onAction="#modifierOnClick" text="Modifier" />
          </children>
       </Pane>
    </children>
