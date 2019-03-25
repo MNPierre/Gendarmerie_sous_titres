@@ -23,6 +23,7 @@ import it.sauronsoftware.jave.EncoderProgressListener;
 import it.sauronsoftware.jave.EncodingAttributes;
 import it.sauronsoftware.jave.MultimediaInfo;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class WaveForm {
@@ -67,23 +68,23 @@ public class WaveForm {
 	public void makeWaveForm() {
 		pane.getChildren().clear();
 		
+		double start=(wavAmplitudes.length*startAt)/timeMax;
+		double stop=(wavAmplitudes.length*endAt)/timeMax;
+		
 		double maxVal=0;
-		for(int i:wavAmplitudes) {
-			if(i>maxVal) {
-				maxVal=i;
+		for(double i=start;i<stop;i++) {
+			if(wavAmplitudes[(int) i]>maxVal) {
+				maxVal=wavAmplitudes[(int) i];
 			}
 		}
 		
-		double start=startAt*(wavAmplitudes.length/timeMax);
-		double stop=endAt*(wavAmplitudes.length/timeMax);
-		System.out.println(start+" ,, "+stop);
 		for(double i=start;i<stop;i++) {
-			Pane rec = new Pane();
-			rec.setStyle("-fx-background-color: red;");
+			Rectangle rec = new Rectangle();
+			rec.setFill(Color.RED);
+			rec.setWidth(1);
+			rec.setHeight( pane.getPrefHeight()*(wavAmplitudes[(int)i]/maxVal) );
 			rec.setLayoutX((i-start)*(pane.getPrefWidth()/(stop-start)));
-			rec.setPrefWidth(1);
-			rec.setPrefHeight( (pane.getPrefHeight()/maxVal)*wavAmplitudes[(int)(i-start)] );
-			rec.setLayoutY(pane.getPrefHeight()-(wavAmplitudes[(int) (i-start)]/maxVal)*pane.getPrefHeight());
+			rec.setLayoutY(pane.getPrefHeight()-(wavAmplitudes[(int)i]/maxVal)*pane.getPrefHeight());
 			pane.getChildren().add(rec);
 		}
 	}
@@ -241,8 +242,6 @@ public class WaveForm {
 	 * @throws IOException
 	 */
 	private int[] getWavAmplitudes(File file) throws UnsupportedAudioFileException , IOException {
-		System.out.println("Calculting WAV amplitudes");
-		
 		//Get Audio input stream
 		try (AudioInputStream input = AudioSystem.getAudioInputStream(file)) {
 			AudioFormat baseFormat = input.getFormat();
@@ -318,8 +317,6 @@ public class WaveForm {
 	 * @return An array with amplitudes
 	 */
 	private float[] processAmplitudes(int[] sourcePcmData) {
-		System.out.println("Processing WAV amplitudes");
-		
 		//The width of the resulting waveform panel
 		float[] waveData = new float[width];
 		int samplesPerPixel = sourcePcmData.length / width;

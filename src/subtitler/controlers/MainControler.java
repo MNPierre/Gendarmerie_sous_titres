@@ -7,8 +7,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import javax.swing.plaf.PanelUI;
-
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -16,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -356,10 +355,10 @@ public class MainControler implements Initializable {
 		if(currentTime<ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()))
 			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get())) );
 
-		if(currentTime-120>ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) {
+		else if(currentTime-120>ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get()) || currentTime>ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) {
+			player.pause();
 			player.seek( Duration.millis(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get())) );
 			image_bouton.setImage(img_play);
-			player.pause();
 
 		}
 
@@ -573,37 +572,7 @@ public class MainControler implements Initializable {
 			barresSubtitles.setTranslateX(video.getLayoutX() + 35);
 
 			barre_lecture.setFill(Color.BLUE);
-			barre_fond.setFill(Color.GREY);
-
-			//Event Changement du temps de debut de la video
-			controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
-				@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
-					updateVideo();
-				}
-			});
-
-			//Event Changement du temps de fin de la video
-			controleur.videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
-				@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
-					updateVideo();
-				}
-			});
-
-			//Event changement du temps de lecture de la video
-			barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
-				public void handle(MouseEvent me){
-
-					if(MainControler.controleur.zoomCheckBox.isSelected()) {
-						player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get()) - ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) )  );
-
-						barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
-					}else {
-						player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*player.getTotalDuration().toMillis()  )  );
-
-						barre_lecture.setWidth( (player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis())*barre_fond.getWidth());
-					}
-				}
-			});		
+			barre_fond.setFill(Color.GREY);	
 
 			pin1.setBounding(video.getLayoutX()+35, video.getLayoutX()+35+barre_fond.getWidth());
 			pin2.setBounding(video.getLayoutX()+35, video.getLayoutX()+35+barre_fond.getWidth());
@@ -622,6 +591,7 @@ public class MainControler implements Initializable {
 
 			selectedZone.setLayoutX(pin1.getLayoutX()-(video.getLayoutX()+35));
 			selectedZone.setWidth(pin2.getLayoutX()-pin1.getLayoutX());
+			
 			fillListePersonne();
 
 			if(!doVideoAlreadyBeanLoad) {
@@ -665,7 +635,6 @@ public class MainControler implements Initializable {
 
 				pin1.addListener();
 				pin2.addListener();
-				
 
 				controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
 
@@ -674,20 +643,51 @@ public class MainControler implements Initializable {
 
 						if(controleur.zoomCheckBox.isSelected()) {
 							wf.setBounds(ConversionStringMilli.StringToMillisecond(controleur.videoPlayStart.getText()), ConversionStringMilli.StringToMillisecond(controleur.videoPlayEnd.getText()));
-
 							pin1.setVisibility(false);
 							pin2.setVisibility(false);
 
 						}else {
 							wf.setBounds(0, player.getTotalDuration().toMillis());
-
 							pin1.setVisibility(true);
 							pin2.setVisibility(true);
+							
 						}
+						
 						wf.makeWaveForm();
+						updateVideo();
 					}
 
 				});
+				
+				//Event Changement du temps de debut de la video
+				controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
+					@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
+						updateVideo();
+					}
+				});
+
+				//Event Changement du temps de fin de la video
+				controleur.videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
+					@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
+						updateVideo();
+					}
+				});
+
+				//Event changement du temps de lecture de la video
+				barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
+					public void handle(MouseEvent me){
+
+						if(MainControler.controleur.zoomCheckBox.isSelected()) {
+							player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*(ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.textProperty().get()) - ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) ).add(Duration.millis( ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.textProperty().get()) ) )  );
+
+							barre_lecture.setWidth((me.getX()/barre_fond.getWidth()*fichierVideo.getDuration().toMillis()) / (player.getTotalDuration().toMillis())*barre_fond.getWidth());
+						}else {
+							player.seek( Duration.millis(me.getX()/barre_fond.getWidth()*player.getTotalDuration().toMillis()  )  );
+
+							barre_lecture.setWidth( (player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis())*barre_fond.getWidth());
+						}
+					}
+				});	
 
 				controleur.volumeBarre.valueProperty().addListener(new ChangeListener<Number>() {
 					@Override
@@ -697,7 +697,6 @@ public class MainControler implements Initializable {
 					}
 
 				});;
-				
 
 				doVideoAlreadyBeanLoad=true;
 			}
@@ -712,8 +711,7 @@ public class MainControler implements Initializable {
 
 
 	}
-
-
+	
 	public static void fillListePersonne() {
 		for(int i = 0; i < MainControler.subtitles.getStyles().size(); i++) {
 			Group g = new Group();
@@ -730,6 +728,7 @@ public class MainControler implements Initializable {
 			MainControler.controleur.paneListePersonne.getChildren().add(g);
 		}
 	}
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
