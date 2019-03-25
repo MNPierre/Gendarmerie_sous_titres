@@ -31,9 +31,6 @@ public class ControleurPersonne implements Initializable{
 	private TextField ajoutPersonneInput;
 
 	@FXML
-	private Button ajoutPersonneButton;
-
-	@FXML
 	private Button modifValiderPersonneButton;
 
 
@@ -53,10 +50,6 @@ public class ControleurPersonne implements Initializable{
 
 	}
 
-	@FXML
-	void addPersonneOnClick(ActionEvent event) {
-
-	}
 
 	@FXML
 	void validerModifPersonne(ActionEvent event) {
@@ -65,7 +58,12 @@ public class ControleurPersonne implements Initializable{
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setContentText("La personne existe déjà");
 				alert.show();
-			}else {			
+			}else if (ajoutPersonneInput.getText().replaceAll("[ ]", "").equals("")) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setContentText("La personne n'a pas de nom");
+				alert.show();
+			}
+			else {			
 				MainControler.subtitles.addStyle(new Style(ajoutPersonneInput.getText(), "#"+colorPersonneInput.getValue().toString().substring(2, 8).toUpperCase()));
 				modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
 				ajoutPersonneInput.setText("");
@@ -80,8 +78,25 @@ public class ControleurPersonne implements Initializable{
 
 	@FXML
 	void supprimerPersonne(ActionEvent event) {
-		MainControler.subtitles.deleteByName(modifPersonneInput.getValue());
-		modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
+		if(modifPersonneInput.getValue() != null) {
+			MainControler.subtitles.deleteByName(modifPersonneInput.getValue());
+			modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
+
+			/*for (Subtitle sub : MainControler.controleur.subtitles.getSubtitles()) {
+				for(int i=0; i <sub.getAuthors().size(); i++) {
+					if(sub.getAuthors().get(i).getAuthor().equals(modifPersonneInput.getValue())) {
+						MainControler.controleur.subtitles.getSubtitles().remove(modifSubtitleUtils.selectedSubtitle);
+						MainControler.controleur.subtitlesToShow.remove(modifSubtitleUtils.selectedSubtitle);
+					}
+				}
+			}*/
+			// TODO effacer les sous-titres en fonction de la personne supprimée
+
+			MainControler.controleur.updatebarreSubtitle();
+			MainControler.controleur.updateVideo();
+		}
+
+		System.out.println(MainControler.controleur.subtitles.getXml());
 	}
 
 }
