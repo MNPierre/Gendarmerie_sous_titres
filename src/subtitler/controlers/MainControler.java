@@ -7,11 +7,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javax.swing.plaf.PanelUI;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -98,6 +101,12 @@ public class MainControler implements Initializable {
 
 	@FXML
 	private Label volumeText;
+
+    @FXML
+    private Pane paneListePersonne;
+
+    @FXML
+    private Slider sliderPaneListePersonne;
 
 
 	static Slider videoSlider;
@@ -500,12 +509,13 @@ public class MainControler implements Initializable {
 			fond.setLayoutX(video.getLayoutX());
 			fond.setLayoutY(488);
 
-			subtitles.getStyles().addListener(new InvalidationListener() {
-
+			subtitles.getStyles().addListener(new ListChangeListener(){
 				@Override
-				public void invalidated(Observable observable) {
+				public void onChanged(Change c) {
 					personneInput.setItems(subtitles.getNarrators());
+					fillListePersonne();
 				}
+				
 			});
 
 			//Listener du temps de la video
@@ -612,6 +622,7 @@ public class MainControler implements Initializable {
 
 			selectedZone.setLayoutX(pin1.getLayoutX()-(video.getLayoutX()+35));
 			selectedZone.setWidth(pin2.getLayoutX()-pin1.getLayoutX());
+			fillListePersonne();
 
 			if(!doVideoAlreadyBeanLoad) {
 
@@ -654,6 +665,7 @@ public class MainControler implements Initializable {
 
 				pin1.addListener();
 				pin2.addListener();
+				
 
 				controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
 
@@ -685,6 +697,7 @@ public class MainControler implements Initializable {
 					}
 
 				});;
+				
 
 				doVideoAlreadyBeanLoad=true;
 			}
@@ -700,6 +713,23 @@ public class MainControler implements Initializable {
 
 	}
 
+
+	public static void fillListePersonne() {
+		for(int i = 0; i < MainControler.subtitles.getStyles().size(); i++) {
+			Group g = new Group();
+			g.prefWidth(MainControler.controleur.paneListePersonne.getPrefWidth());
+			g.prefHeight(20);
+			g.setLayoutY(i*20);
+			Label author = new Label(MainControler.subtitles.getStyles().get(i).getNarrator());
+			author.setTextFill(Paint.valueOf("#FFFFFF"));
+			author.setLayoutX(20);
+			Rectangle color = new Rectangle(10, 10, Paint.valueOf(MainControler.subtitles.getStyles().get(i).getColor()));
+			color.setLayoutX(5);
+			color.setLayoutY(5);
+			g.getChildren().addAll(author, color);
+			MainControler.controleur.paneListePersonne.getChildren().add(g);
+		}
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
