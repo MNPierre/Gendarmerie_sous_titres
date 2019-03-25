@@ -18,14 +18,11 @@ public class SubtitlesToPDF {
 	
 	public static void MakePDF(SubtitlesList subtitles, File out) {
 		try {
-			
-			PdfWriter pdfWriter = new PdfWriter(out);
-			PdfDocument pdf = new PdfDocument(pdfWriter);
-			Document doc = new Document(pdf);
-			
-			
-			doc.add(new Paragraph("Petit test"));
-			doc.close();
+			PdfWriter writer = new PdfWriter(out);
+			PdfDocument pdf = new PdfDocument(writer);
+			Document document = new Document(pdf);
+			document.add(new Paragraph("Hello World!"));
+			document.close();
 			
 		} catch ( IOException e) {
 			e.printStackTrace();

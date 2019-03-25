@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jave-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/barcodes-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/font-asian-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/forms-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/hyph-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/io-7.1.5.jar"/>
+	<classpathentry kind="lib" path="lib/jave-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/kernel-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/layout-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/pdfa-7.1.5.jar"/>
@@ -15,5 +15,8 @@
 	<classpathentry kind="lib" path="lib/sign-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/styled-xml-parser-7.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/svg-7.1.5.jar"/>
+	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="lib_V2/slf4j-api-1.7.26.jar"/>
+	<classpathentry kind="lib" path="lib_V2/slf4j-nop-1.7.26.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
