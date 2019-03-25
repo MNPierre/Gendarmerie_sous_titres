@@ -53,6 +53,7 @@ import javafx.util.Duration;
 import subtitler.Main;
 import subtitler.io.Decoder;
 import subtitler.io.Encoder;
+import subtitler.subtitles.Search;
 import subtitler.subtitles.Speech;
 import subtitler.subtitles.Style;
 import subtitler.subtitles.Subtitle;
@@ -65,7 +66,13 @@ import subtitler.utils.modifSubtitleUtils;
 public class MainControler implements Initializable {
 
 
-	@FXML
+    @FXML
+    private Pane paneListePersonne;
+
+    @FXML
+    private Slider sliderPaneListePersonne;
+
+    @FXML
 	private Pane panePrincipal;
 
 	@FXML
@@ -100,29 +107,26 @@ public class MainControler implements Initializable {
 
 	@FXML
 	private Label volumeText;
+	
+    @FXML
+    private TextField debutInput;
 
     @FXML
-    private Pane paneListePersonne;
+    private TextField finInput;
 
     @FXML
-    private Slider sliderPaneListePersonne;
+    private ComboBox<String> personneInput;
+
+    @FXML
+    private TextArea subtitlesInput;
 
 
 	static Slider videoSlider;
 
-
-	static TextArea subtitlesInput;
-
-
-	static TextField debutInput;
-
-
-	static TextField finInput;
-
 	static Label videoTime;
 
 	static Label videoTimeMax;
-	
+
 	static Image img_play;
 	static Image img_pause;
 
@@ -130,8 +134,6 @@ public class MainControler implements Initializable {
 	static MediaView video;
 	static Media fichierVideo;
 	static ImageView image_bouton;
-
-	static ComboBox<String> personneInput;
 
 	static File subtitleFile;
 	static SubtitlesList subtitles;
@@ -148,14 +150,15 @@ public class MainControler implements Initializable {
 	static Group barres ;
 	static Group play_pause ;
 	static Group barresSubtitles;
+	static Group barresRecherche;
 	static Rectangle fond;
 
-	//static ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
-	static ObservableList<Subtitle> subtitlesToShow = FXCollections.observableArrayList();
+	static ArrayList<Subtitle> subtitlesToShow = new ArrayList<Subtitle>();
 	static Pane paneTextToShow;
 
 	static Stage fileImportStage;
 	static Stage modifySubtitlesStage;
+	static Stage modifOneSubtitleStage;
 
 	static boolean asSetTime = false;
 	static boolean doVideoAlreadyBeanLoad = false;
@@ -163,12 +166,51 @@ public class MainControler implements Initializable {
 	public static MainControler controleur;
 	static WaveForm wf;
 
+	public static Subtitle selectedSubtitle;
+
 
 	
 	@FXML
-    void searchKeyWord(ActionEvent event) {
-		//TODO
-    }
+	void searchKeyWord(ActionEvent event) {
+		barresRecherche.getChildren().clear();
+
+		SubtitlesList res = Search.recherche(wordToSearchBox.getText(), MainControler.subtitles);
+		if(res != null) {
+			for(Subtitle sub: res.getSubtitles()) {
+				for(Speech sp: sub.getContenu()) {
+					for(int i = 0; i<subtitles.getNarrators().size(); i++) {
+						System.out.println(sp.getText());
+						if(sp.getAuthor().equals(subtitles.getNarrators().get(i)) && sp.getText().toUpperCase().contains(wordToSearchBox.getText().toUpperCase())) {
+							Rectangle r = new Rectangle((sub.getTimeStop()-sub.getTimeStart())*(barre_fond.getWidth()/player.getTotalDuration().toMillis()),5);
+							r.setCursor(Cursor.HAND);
+							r.setOnMouseEntered(new EventHandler<MouseEvent>(){
+								public void handle(MouseEvent me){
+									r.setHeight(10);
+								}
+							});
+							r.setOnMouseExited(new EventHandler<MouseEvent>(){
+								public void handle(MouseEvent me){
+									r.setHeight(5);
+								}
+							});
+							for(Style st : subtitles.getStyles()) {
+								if(st != null) {
+									if(st.getNarrator().equals(sp.getAuthor())) {
+										r.setFill(Paint.valueOf(st.getColor()));
+									}
+								}
+							}
+							r.setTranslateX(sub.getTimeStart()*(barre_fond.getWidth()/player.getTotalDuration().toMillis()));
+							r.setTranslateY(i*-4);
+							barresRecherche.getChildren().add(r);
+						}
+
+					}
+				}
+
+			}
+		}
+	}
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
@@ -302,19 +344,24 @@ public class MainControler implements Initializable {
 
 	@FXML
 	void ajouterCommentaire(ActionEvent event) {
-		if(debutInput.getText().equals("") || finInput.getText().equals("") || personneInput.getValue() == null || subtitlesInput.getText().equals("")) {
+		System.out.println("debut : " + controleur.debutInput.getText());
+		System.out.println("fin: " + controleur.finInput.getText());
+		System.out.println("personne : " + controleur.personneInput.getValue());
+		System.out.println("text : " + controleur.subtitlesInput.getText());
+
+		if(controleur.debutInput.getText().equals("") || controleur.finInput.getText().equals("") || controleur.personneInput.getValue() == null || controleur.subtitlesInput.getText().equals("")) {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("Veuillez remplire tous les champs.");
 			alert.show();
 		}else {
 
 			Subtitle sub = new Subtitle(ConversionStringMilli.StringToMillisecond(debutInput.getText()), ConversionStringMilli.StringToMillisecond(finInput.getText()));
-			sub.addSpeech(new Speech(subtitlesInput.getText(), personneInput.getValue()));
+			sub.addSpeech(new Speech(subtitlesInput.getText(), controleur.personneInput.getValue()));
 			subtitles.addSubtitles(sub);
-			debutInput.setText("");
-			finInput.setText("");
-			subtitlesInput.setText("");
-			personneInput.setValue(null);
+			controleur.debutInput.setText("");
+			controleur.finInput.setText("");
+			controleur.subtitlesInput.setText("");
+			controleur.personneInput.setValue(null);
 			updatebarreSubtitle();
 			updateVideo();
 		}
@@ -488,20 +535,7 @@ public class MainControler implements Initializable {
 			videoTimeMax.setLayoutX(video.getLayoutX()+75);
 			videoTimeMax.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+570);
 
-			personneInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX()+298);
-			personneInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+127);
-			personneInput.setItems(subtitles.getNarrators());
-
-			debutInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX()+298);
-			debutInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+62);
-
-			finInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX()+298);
-			finInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+95);
-
-			subtitlesInput.setLayoutX(MainControler.controleur.ajouterButton.getLayoutX());
-			subtitlesInput.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+55);
-			subtitlesInput.setPrefWidth(275);
-			subtitlesInput.setPrefHeight(96);
+			controleur.personneInput.setItems(subtitles.getNarrators());
 
 			fond = new Rectangle(video.getFitWidth(),barreSize);
 			fond.setOpacity(0.5);
@@ -511,7 +545,7 @@ public class MainControler implements Initializable {
 			subtitles.getStyles().addListener(new ListChangeListener(){
 				@Override
 				public void onChanged(Change c) {
-					personneInput.setItems(subtitles.getNarrators());
+					controleur.personneInput.setItems(subtitles.getNarrators());
 					fillListePersonne();
 				}
 				
@@ -570,7 +604,10 @@ public class MainControler implements Initializable {
 
 			barresSubtitles.setLayoutY(480);
 			barresSubtitles.setTranslateX(video.getLayoutX() + 35);
-
+			
+			barresRecherche.setLayoutY(495+ barre_fond.getHeight());
+			barresRecherche.setTranslateX(video.getLayoutX() + 35);
+			
 			barre_lecture.setFill(Color.BLUE);
 			barre_fond.setFill(Color.GREY);	
 
@@ -597,10 +634,6 @@ public class MainControler implements Initializable {
 			if(!doVideoAlreadyBeanLoad) {
 
 				//ajout des textfiels plus ajout au pan
-				controleur.panePrincipal.getChildren().add(personneInput);
-				controleur.panePrincipal.getChildren().add(debutInput);
-				controleur.panePrincipal.getChildren().add(finInput);
-				controleur.panePrincipal.getChildren().add(subtitlesInput);
 				controleur.panePrincipal.getChildren().add(paneTextToShow);
 
 
@@ -612,8 +645,9 @@ public class MainControler implements Initializable {
 				fonctions.getChildren().add(play_pause);
 				fonctions.getChildren().add(barres);
 				fonctions.getChildren().add(barresSubtitles);
+				fonctions.getChildren().add(barresRecherche);
+				
 				barres.getChildren().add(barre_fond);
-
 				barres.getChildren().add(barre_lecture);
 				barres.getChildren().add(selectedZone);
 
@@ -741,8 +775,6 @@ public class MainControler implements Initializable {
 			e.printStackTrace();
 		}
 
-		debutInput = new TextField();
-
 		videoSlider = new Slider();
 
 		subtitles = null;
@@ -753,18 +785,13 @@ public class MainControler implements Initializable {
 		videoTime = new Label();
 		videoTimeMax = new Label();
 
-		debutInput = new TextField();
-		finInput = new TextField();
-
-		subtitlesInput = new TextArea();
-
-		personneInput = new ComboBox<>();
-
 		fonctions = new Group();
 
 		barres = new Group();
 
 		play_pause = new Group();
+		
+		barresRecherche = new Group();
 
 		barresSubtitles = new Group();
 
