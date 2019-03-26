@@ -36,7 +36,6 @@
       <ComboBox fx:id="personneInput" layoutX="196.0" layoutY="764.0" prefHeight="26.0" prefWidth="153.0" />
       <TextArea fx:id="subtitlesInput" layoutX="387.0" layoutY="691.0" prefHeight="102.0" prefWidth="297.0" />
       <ScrollBar layoutX="1180.0" orientation="VERTICAL" prefHeight="851.0" prefWidth="17.0" />
-      <Pane fx:id="paneListePersonne" layoutX="793.0" layoutY="618.0" prefHeight="200.0" prefWidth="213.0" />
-      <Slider fx:id="sliderPaneListePersonne" layoutX="1007.0" layoutY="618.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="15.0" />
+      <Pane fx:id="paneListePersonne" layoutX="793.0" layoutY="618.0" prefHeight="200.0" prefWidth="365.0" />
    </children>
 </Pane>

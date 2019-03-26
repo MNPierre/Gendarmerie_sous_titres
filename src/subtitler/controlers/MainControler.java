@@ -747,11 +747,14 @@ public class MainControler implements Initializable {
 	}
 	
 	public static void fillListePersonne() {
+		int nbCol = MainControler.subtitles.getStyles().size()/8;
+		MainControler.controleur.paneListePersonne.setPrefWidth(144*nbCol);
 		for(int i = 0; i < MainControler.subtitles.getStyles().size(); i++) {
 			Group g = new Group();
+			g.setLayoutX((i/8)*124);
 			g.prefWidth(MainControler.controleur.paneListePersonne.getPrefWidth());
 			g.prefHeight(20);
-			g.setLayoutY(i*20);
+			g.setLayoutY((i%8)*25);
 			Label author = new Label(MainControler.subtitles.getStyles().get(i).getNarrator());
 			author.setTextFill(Paint.valueOf("#FFFFFF"));
 			author.setLayoutX(20);
