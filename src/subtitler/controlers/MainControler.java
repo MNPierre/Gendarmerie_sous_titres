@@ -495,7 +495,7 @@ public class MainControler implements Initializable {
 
 	static ChangeListener<Duration> listenerVideoTime;
 
-	static double barreSize=70;
+	static double barreSize=40;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void setNewVideoXml(String file, String xmlFile) {
@@ -537,11 +537,10 @@ public class MainControler implements Initializable {
 
 			if(paneTextToShow != null)
 				paneTextToShow.getChildren().clear();
-
-			//			video.setFitWidth(950);
-			//			video.setFitHeight(600);
-			//			video.setLayoutY(4);
-			//			video.setLayoutX(118);
+						controleur.video.setFitWidth(900);
+						controleur.video.setFitHeight(550);
+						controleur.video.setLayoutY(4);
+						controleur.video.setLayoutX(118);
 			controleur.video.getMediaPlayer().play();
 
 			paneTextToShow.setLayoutX(controleur.video.getLayoutX());
@@ -552,7 +551,7 @@ public class MainControler implements Initializable {
 
 			videoTime.setText("00:00:00");
 			videoTime.setLayoutX(controleur.video.getLayoutX());
-			videoTime.setLayoutY(570);
+			videoTime.setLayoutY(controleur.video.getLayoutY()+500);
 
 			//System.out.println(fichierVideo.getDuration());
 			//			videoTimeMax.setText("/ "+fichierVideo.getDuration().toMillis());
@@ -564,7 +563,7 @@ public class MainControler implements Initializable {
 			fond = new Rectangle(controleur.video.getFitWidth(),barreSize);
 			fond.setOpacity(0.5);
 			fond.setLayoutX(controleur.video.getLayoutX());
-			fond.setLayoutY(controleur.video.getLayoutY() + controleur.video.getFitHeight()+10);
+			fond.setLayoutY(controleur.video.getLayoutY() + controleur.video.getFitHeight()-100);
 
 			subtitles.getStyles().addListener(new ListChangeListener(){
 				@Override
@@ -604,7 +603,7 @@ public class MainControler implements Initializable {
 			image_bouton.setFitHeight(22);
 
 			play_pause.setTranslateX(controleur.video.getLayoutX());
-			play_pause.setTranslateY(controleur.video.getLayoutY() + controleur.video.getFitHeight() + 10);
+			play_pause.setTranslateY(controleur.video.getLayoutY() + controleur.video.getFitHeight() -100);
 			play_pause.setCursor(Cursor.HAND);
 
 			//Quand on clique sur le bouton play/pause, on démarre ou on arrête la vidéo
@@ -622,9 +621,9 @@ public class MainControler implements Initializable {
 			});
 
 			barres.setTranslateX(controleur.video.getLayoutX() + 35);
-			barres.setLayoutY(controleur.video.getLayoutY()+ controleur.video.getFitHeight() +10);
+			barres.setLayoutY(controleur.video.getLayoutY()+ controleur.video.getFitHeight() -100);
 			barres.setCursor(Cursor.HAND);
-			barre_fond = new Rectangle(controleur.video.getFitWidth()-60, (2.2/3)*barreSize);
+			barre_fond = new Rectangle(controleur.video.getFitWidth()-60, (2.3/3)*barreSize);
 			barresSubtitles.setLayoutY(barres.getLayoutY());
 			barresSubtitles.setTranslateX(controleur.video.getLayoutX() + 35);
 
