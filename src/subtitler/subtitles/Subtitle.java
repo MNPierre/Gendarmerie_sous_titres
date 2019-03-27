@@ -10,12 +10,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import subtitler.utils.ConversionStringMilli;
 
-public class Subtitle {
+public class Subtitle implements Comparable<Subtitle>{
 
 	private ArrayList<Speech> contenu;
 	private long timeStart;
 	private long timeStop;
-	
+
 	private StringProperty timeStartProperty;
 	private StringProperty timeStopProperty;
 
@@ -51,11 +51,11 @@ public class Subtitle {
 	public long getTimeStop() {
 		return timeStop;
 	}
-	
+
 	public StringProperty getTimeStartProperty() {
 		return timeStartProperty;
 	}
-	
+
 	public StringProperty getTimeStopProperty() {
 		return timeStopProperty;
 	}
@@ -74,7 +74,7 @@ public class Subtitle {
 		}
 		return result;
 	}
-	
+
 	public ObservableList<Speech> getAuthors(){
 		return FXCollections.observableArrayList(contenu);
 	}
@@ -91,6 +91,21 @@ public class Subtitle {
 		return (hours+":"+minutes+":"+seconds+"."+milliseconds);
 	}
 
+	public int compareTo(Subtitle o) {
+		if(timeStart<o.timeStart) {
+			return -1;
+		}else if(timeStart==o.timeStart){
+			
+			if(timeStop<o.timeStop) {
+				return -1;
+			}else{
+				return 1;
+			}
+			
+		}else {
+			return 1;
+		}
+	}
 
 	public String getXml() {
 		String res = "\t\t<subtitle start=\""+MillisecondsToString(getTimeStart())+"\" stop=\""+MillisecondsToString(getTimeStop())+"\">\n";
