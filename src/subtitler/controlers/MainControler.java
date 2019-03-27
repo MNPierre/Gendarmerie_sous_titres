@@ -124,6 +124,12 @@ public class MainControler implements Initializable {
 	@FXML
 	private MediaView video;
 
+	@FXML
+	private Button prendreValeurButton;
+	
+	@FXML
+    private Button clearButton;
+
 	static Slider videoSlider;
 
 	static Label videoTime;
@@ -170,50 +176,21 @@ public class MainControler implements Initializable {
 	static WaveForm wf;
 
 	public static Subtitle selectedSubtitle;
+	public static SubtitlesList wordSearchResult;
 
 
 
 	@FXML
 	void searchKeyWord(ActionEvent event) {
-		barresRecherche.getChildren().clear();
-
-		SubtitlesList res = Search.recherche(wordToSearchBox.getText(), MainControler.subtitles);
-		if(res != null) {
-			for(Subtitle sub: res.getSubtitles()) {
-				for(Speech sp: sub.getContenu()) {
-					for(int i = 0; i<subtitles.getNarrators().size(); i++) {
-						System.out.println(sp.getText());
-						if(sp.getAuthor().equals(subtitles.getNarrators().get(i)) && sp.getText().toUpperCase().contains(wordToSearchBox.getText().toUpperCase())) {
-							Rectangle r = new Rectangle((sub.getTimeStop()-sub.getTimeStart())*(barre_fond.getWidth()/player.getTotalDuration().toMillis()),5);
-							r.setCursor(Cursor.HAND);
-							r.setOnMouseEntered(new EventHandler<MouseEvent>(){
-								public void handle(MouseEvent me){
-									r.setHeight(10);
-								}
-							});
-							r.setOnMouseExited(new EventHandler<MouseEvent>(){
-								public void handle(MouseEvent me){
-									r.setHeight(5);
-								}
-							});
-							for(Style st : subtitles.getStyles()) {
-								if(st != null) {
-									if(st.getNarrator().equals(sp.getAuthor())) {
-										r.setFill(Paint.valueOf(st.getColor()));
-									}
-								}
-							}
-							r.setTranslateX(sub.getTimeStart()*(barre_fond.getWidth()/player.getTotalDuration().toMillis()));
-							r.setTranslateY(i*-4);
-							barresRecherche.getChildren().add(r);
-						}
-
-					}
-				}
-
-			}
-		}
+		wordSearchResult = Search.recherche(wordToSearchBox.getText(), MainControler.subtitles);
+		updatebarreSubtitle();
 	}
+
+	@FXML
+    void clearSearch(ActionEvent event) {
+		wordToSearchBox.setText("");
+		updatebarreSubtitle();
+    }
 
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
@@ -232,6 +209,12 @@ public class MainControler implements Initializable {
 			e.printStackTrace(); 
 
 		}
+	}
+
+	@FXML
+	void prendreValeurs(ActionEvent event) {
+		debutInput.setText(videoPlayStart.getText());
+		finInput.setText(videoPlayEnd.getText());
 	}
 
 	@FXML
@@ -269,11 +252,6 @@ public class MainControler implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@FXML
-	void EditerPersonnes(ActionEvent event) {
-		System.out.println("Ouverture fenêtre\n");
 	}
 
 	public static void updatebarreSubtitle() {
@@ -341,12 +319,16 @@ public class MainControler implements Initializable {
 								}
 							}
 						}
+						if((!wordSearchResult.getSubtitles().contains(s)) && wordSearchResult.getSubtitles().size() > 0) {
+							r.setOpacity(0);
+						}
 						r.setTranslateY(i*-4);
 						barresSubtitles.getChildren().add(r);
 					}
 				}
 			}
 		}
+		wordSearchResult.getSubtitles().clear();
 	}
 
 
@@ -442,7 +424,7 @@ public class MainControler implements Initializable {
 
 		}
 		videoTime.setText(ConversionStringMilli.MillisecondsToString((long)currentTime));
-
+		subtitlesToShow.clear();
 		//Affichage des soutitres
 		for(Subtitle sub:subtitles.getSubtitles()) {
 
@@ -537,10 +519,10 @@ public class MainControler implements Initializable {
 
 			if(paneTextToShow != null)
 				paneTextToShow.getChildren().clear();
-						controleur.video.setFitWidth(900);
-						controleur.video.setFitHeight(550);
-						controleur.video.setLayoutY(4);
-						controleur.video.setLayoutX(118);
+			controleur.video.setFitWidth(900);
+			controleur.video.setFitHeight(500);
+			controleur.video.setLayoutY(4);
+			controleur.video.setLayoutX(118);
 			controleur.video.getMediaPlayer().play();
 
 			paneTextToShow.setLayoutX(controleur.video.getLayoutX());
@@ -548,10 +530,11 @@ public class MainControler implements Initializable {
 
 			paneTextToShow.setMinWidth(controleur.video.getFitWidth());
 			paneTextToShow.setMinHeight(controleur.video.getFitHeight()-120);
+			paneTextToShow.setStyle("-fx-background-color : none");
 
 			videoTime.setText("00:00:00");
-			videoTime.setLayoutX(controleur.video.getLayoutX());
-			videoTime.setLayoutY(controleur.video.getLayoutY()+500);
+			videoTime.setLayoutX(controleur.video.getLayoutX()+controleur.video.getFitWidth());
+			videoTime.setLayoutY(controleur.video.getLayoutY()+520);
 
 			//System.out.println(fichierVideo.getDuration());
 			//			videoTimeMax.setText("/ "+fichierVideo.getDuration().toMillis());
@@ -560,10 +543,10 @@ public class MainControler implements Initializable {
 
 			controleur.personneInput.setItems(subtitles.getNarrators());
 
-			fond = new Rectangle(controleur.video.getFitWidth(),barreSize);
+			fond = new Rectangle(controleur.video.getFitWidth()-11,barreSize);
 			fond.setOpacity(0.5);
 			fond.setLayoutX(controleur.video.getLayoutX());
-			fond.setLayoutY(controleur.video.getLayoutY() + controleur.video.getFitHeight()-100);
+			fond.setLayoutY(controleur.video.getLayoutY() + controleur.video.getFitHeight());
 
 			subtitles.getStyles().addListener(new ListChangeListener(){
 				@Override
@@ -603,7 +586,7 @@ public class MainControler implements Initializable {
 			image_bouton.setFitHeight(22);
 
 			play_pause.setTranslateX(controleur.video.getLayoutX());
-			play_pause.setTranslateY(controleur.video.getLayoutY() + controleur.video.getFitHeight() -100);
+			play_pause.setTranslateY(fond.getLayoutY());
 			play_pause.setCursor(Cursor.HAND);
 
 			//Quand on clique sur le bouton play/pause, on démarre ou on arrête la vidéo
@@ -621,10 +604,10 @@ public class MainControler implements Initializable {
 			});
 
 			barres.setTranslateX(controleur.video.getLayoutX() + 35);
-			barres.setLayoutY(controleur.video.getLayoutY()+ controleur.video.getFitHeight() -100);
+			barres.setLayoutY(fond.getLayoutY());
 			barres.setCursor(Cursor.HAND);
 			barre_fond = new Rectangle(controleur.video.getFitWidth()-60, (2.3/3)*barreSize);
-			barresSubtitles.setLayoutY(barres.getLayoutY());
+			barresSubtitles.setLayoutY(barres.getLayoutY()-5);
 			barresSubtitles.setTranslateX(controleur.video.getLayoutX() + 35);
 
 			barresRecherche.setLayoutY(barres.getLayoutY() + barre_fond.getHeight());
@@ -772,12 +755,12 @@ public class MainControler implements Initializable {
 	public static void fillListePersonne() {
 		int nbCol = MainControler.subtitles.getStyles().size()/8;
 		MainControler.controleur.paneListePersonne.setPrefWidth(144*nbCol);
+		MainControler.controleur.paneListePersonne.getChildren().clear();
 		for(int i = 0; i < MainControler.subtitles.getStyles().size(); i++) {
 			Group g = new Group();
-			g.setLayoutX((i/8)*124);
 			g.prefWidth(MainControler.controleur.paneListePersonne.getPrefWidth());
 			g.prefHeight(20);
-			g.setLayoutY((i%8)*25);
+			g.setLayoutY(i*25);
 			Label author = new Label(MainControler.subtitles.getStyles().get(i).getNarrator());
 			author.setTextFill(Paint.valueOf("#FFFFFF"));
 			author.setLayoutX(20);
@@ -827,6 +810,8 @@ public class MainControler implements Initializable {
 
 		selectedZone = new Rectangle();
 
+		wordSearchResult = new SubtitlesList();
+
 		pin1 = new Pin(Mode.START);
 		pin2 = new Pin(Mode.END);
 
@@ -847,6 +832,8 @@ public class MainControler implements Initializable {
 		buttonSearchKeyWord.setDisable(value);
 		buttonEditSpeakers.setDisable(value);
 		buttonEditSubtitles.setDisable(value);
+		prendreValeurButton.setDisable(value);
+		clearButton.setDisable(value);
 	}
 
 	public static Pane getPanPrincipale() {

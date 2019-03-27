@@ -76,14 +76,15 @@ public class SubtitlesList {
 	}
 	
 	public void deleteByName(String name) {
-		Style result = null;
 		for(int i = 0; i < styles.size(); i++) {
 			if(styles.get(i).getNarrator().equals(name)) {
 				styles.remove(i);
 			}
 		}
-		for(Subtitle s : subtitles) {
-			
+		for(int i =0; i < subtitles.size();i++) {
+			if(subtitles.get(i).getContenu().get(0).getAuthor().equals(name)) {
+				subtitles.remove(i);
+			}
 		}
 	}
 	

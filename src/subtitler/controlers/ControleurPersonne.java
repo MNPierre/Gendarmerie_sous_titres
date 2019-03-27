@@ -33,7 +33,6 @@ public class ControleurPersonne implements Initializable{
 	@FXML
 	private Button modifValiderPersonneButton;
 
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
@@ -50,7 +49,8 @@ public class ControleurPersonne implements Initializable{
 
 	}
 
-
+	
+	
 	@FXML
 	void validerModifPersonne(ActionEvent event) {
 		if(modifPersonneInput.getValue() == null) {
@@ -82,22 +82,9 @@ public class ControleurPersonne implements Initializable{
 		if(modifPersonneInput.getValue() != null) {
 			MainControler.subtitles.deleteByName(modifPersonneInput.getValue());
 			modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
-
-			/*for (Subtitle sub : MainControler.controleur.subtitles.getSubtitles()) {
-				for(int i=0; i <sub.getAuthors().size(); i++) {
-					if(sub.getAuthors().get(i).getAuthor().equals(modifPersonneInput.getValue())) {
-						MainControler.controleur.subtitles.getSubtitles().remove(modifSubtitleUtils.selectedSubtitle);
-						MainControler.controleur.subtitlesToShow.remove(modifSubtitleUtils.selectedSubtitle);
-					}
-				}
-			}*/
-			// TODO effacer les sous-titres en fonction de la personne supprimée
-
 			MainControler.controleur.updatebarreSubtitle();
 			MainControler.controleur.updateVideo();
 		}
-
-		System.out.println(MainControler.controleur.subtitles.getXml());
 	}
 
 }
