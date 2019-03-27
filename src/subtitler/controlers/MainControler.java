@@ -66,13 +66,13 @@ import subtitler.utils.modifSubtitleUtils;
 public class MainControler implements Initializable {
 
 
-    @FXML
-    private Pane paneListePersonne;
+	@FXML
+	private Pane paneListePersonne;
 
-    @FXML
-    private Slider sliderPaneListePersonne;
+	@FXML
+	private Slider sliderPaneListePersonne;
 
-    @FXML
+	@FXML
 	private Pane panePrincipal;
 
 	@FXML
@@ -107,18 +107,18 @@ public class MainControler implements Initializable {
 
 	@FXML
 	private Label volumeText;
-	
-    @FXML
-    private TextField debutInput;
 
-    @FXML
-    private TextField finInput;
+	@FXML
+	private TextField debutInput;
 
-    @FXML
-    private ComboBox<String> personneInput;
+	@FXML
+	private TextField finInput;
 
-    @FXML
-    private TextArea subtitlesInput;
+	@FXML
+	private ComboBox<String> personneInput;
+
+	@FXML
+	private TextArea subtitlesInput;
 
 
 	static Slider videoSlider;
@@ -169,7 +169,7 @@ public class MainControler implements Initializable {
 	public static Subtitle selectedSubtitle;
 
 
-	
+
 	@FXML
 	void searchKeyWord(ActionEvent event) {
 		barresRecherche.getChildren().clear();
@@ -279,47 +279,68 @@ public class MainControler implements Initializable {
 			for(Subtitle s : subtitles.getSubtitles()) {
 				for(Speech sp : s.getContenu()) {
 					if(sp.getAuthor().equals(subtitles.getNarrators().get(i))) {
-						Rectangle r = new Rectangle((s.getTimeStop()-s.getTimeStart())*(barre_fond.getWidth()/player.getTotalDuration().toMillis()),3);
-						r.setCursor(Cursor.HAND);
-						r.setOnMouseEntered(new EventHandler<MouseEvent>(){
-							public void handle(MouseEvent me){
-								r.setHeight(5);
-								r.setTranslateY(r.getTranslateY()-2);
+						Rectangle r;
+						if(MainControler.controleur.zoomCheckBox.isSelected()) {							
+							long sampleStart = ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.getText());
+							long sampleStop = ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.getText());;
+							if(!(s.getTimeStop() < sampleStart || s.getTimeStart() > sampleStop)) {					
+								r = new Rectangle((s.getTimeStop()-s.getTimeStart())*(barre_fond.getWidth()/(sampleStop - sampleStart)),3);
+								r.setTranslateX((s.getTimeStart()-sampleStart)*(barre_fond.getWidth()/(sampleStop-sampleStart)));									
+								if(s.getTimeStart() < sampleStart) {
+									r.setWidth(r.getWidth()-(sampleStart-s.getTimeStart())*(barre_fond.getWidth()/(sampleStop - sampleStart)));
+									r.setTranslateX(0);
+								}if(s.getTimeStop() > sampleStop) {
+									r.setWidth(r.getWidth()-(s.getTimeStop()-sampleStop)*(barre_fond.getWidth()/(sampleStop - sampleStart)));
+								}
+
+							}else {
+								r = new Rectangle(0,0);
 							}
-						});
-						r.setOnMouseExited(new EventHandler<MouseEvent>(){
-							public void handle(MouseEvent me){
-								r.setHeight(3);
-								r.setTranslateY(r.getTranslateY()+2);
-							}
-						});
-						r.setOnMouseClicked(new EventHandler<MouseEvent>(){
-							public void handle(MouseEvent me){
-								AnchorPane root;
-								try {
-									modifSubtitleUtils.selectedSubtitle = s;
-									root = (AnchorPane) FXMLLoader.load(new File("modifOneSubtitle.fxml").toURI().toURL());
-									modifSubtitleUtils.modifOneSubtitleStage = new Stage(); 
-									Scene scene = new Scene(root, 640, 380); 
-									modifSubtitleUtils.modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
-									modifSubtitleUtils.modifOneSubtitleStage.setScene(scene); 
-									modifSubtitleUtils.modifOneSubtitleStage.show();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} 
-							}
-						});
-						for(Style st : subtitles.getStyles()) {
-							if(st != null) {
-								if(st.getNarrator().equals(sp.getAuthor())) {
-									r.setFill(Paint.valueOf(st.getColor()));
+						}else {	
+
+							r = new Rectangle((s.getTimeStop()-s.getTimeStart())*(barre_fond.getWidth()/player.getTotalDuration().toMillis()),3);
+							r.setTranslateX(s.getTimeStart()*(barre_fond.getWidth()/player.getTotalDuration().toMillis()));
+
+							r.setCursor(Cursor.HAND);
+							r.setOnMouseEntered(new EventHandler<MouseEvent>(){
+								public void handle(MouseEvent me){
+									r.setHeight(5);
+									r.setTranslateY(r.getTranslateY()-2);
+								}
+							});
+							r.setOnMouseExited(new EventHandler<MouseEvent>(){
+								public void handle(MouseEvent me){
+									r.setHeight(3);
+									r.setTranslateY(r.getTranslateY()+2);
+								}
+							});
+							r.setOnMouseClicked(new EventHandler<MouseEvent>(){
+								public void handle(MouseEvent me){
+									AnchorPane root;
+									try {
+										modifSubtitleUtils.selectedSubtitle = s;
+										root = (AnchorPane) FXMLLoader.load(new File("modifOneSubtitle.fxml").toURI().toURL());
+										modifSubtitleUtils.modifOneSubtitleStage = new Stage(); 
+										Scene scene = new Scene(root, 640, 380); 
+										modifSubtitleUtils.modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
+										modifSubtitleUtils.modifOneSubtitleStage.setScene(scene); 
+										modifSubtitleUtils.modifOneSubtitleStage.show();
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} 
+								}
+							});
+							for(Style st : subtitles.getStyles()) {
+								if(st != null) {
+									if(st.getNarrator().equals(sp.getAuthor())) {
+										r.setFill(Paint.valueOf(st.getColor()));
+									}
 								}
 							}
+							r.setTranslateY(i*-4);
+							barresSubtitles.getChildren().add(r);
 						}
-						r.setTranslateX(s.getTimeStart()*(barre_fond.getWidth()/player.getTotalDuration().toMillis()));
-						r.setTranslateY(i*-4);
-						barresSubtitles.getChildren().add(r);
 					}
 				}
 			}
@@ -548,7 +569,7 @@ public class MainControler implements Initializable {
 					controleur.personneInput.setItems(subtitles.getNarrators());
 					fillListePersonne();
 				}
-				
+
 			});
 
 			//Listener du temps de la video
@@ -604,10 +625,10 @@ public class MainControler implements Initializable {
 
 			barresSubtitles.setLayoutY(480);
 			barresSubtitles.setTranslateX(video.getLayoutX() + 35);
-			
+
 			barresRecherche.setLayoutY(495+ barre_fond.getHeight());
 			barresRecherche.setTranslateX(video.getLayoutX() + 35);
-			
+
 			barre_lecture.setFill(Color.BLUE);
 			barre_fond.setFill(Color.GREY);	
 
@@ -628,7 +649,7 @@ public class MainControler implements Initializable {
 
 			selectedZone.setLayoutX(pin1.getLayoutX()-(video.getLayoutX()+35));
 			selectedZone.setWidth(pin2.getLayoutX()-pin1.getLayoutX());
-			
+
 			fillListePersonne();
 
 			if(!doVideoAlreadyBeanLoad) {
@@ -646,7 +667,7 @@ public class MainControler implements Initializable {
 				fonctions.getChildren().add(barres);
 				fonctions.getChildren().add(barresSubtitles);
 				fonctions.getChildren().add(barresRecherche);
-				
+
 				barres.getChildren().add(barre_fond);
 				barres.getChildren().add(barre_lecture);
 				barres.getChildren().add(selectedZone);
@@ -684,15 +705,16 @@ public class MainControler implements Initializable {
 							wf.setBounds(0, player.getTotalDuration().toMillis());
 							pin1.setVisibility(true);
 							pin2.setVisibility(true);
-							
+
 						}
-						
+
 						wf.makeWaveForm();
 						updateVideo();
+						updatebarreSubtitle();
 					}
 
 				});
-				
+
 				//Event Changement du temps de debut de la video
 				controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
 					@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
@@ -745,7 +767,7 @@ public class MainControler implements Initializable {
 
 
 	}
-	
+
 	public static void fillListePersonne() {
 		int nbCol = MainControler.subtitles.getStyles().size()/8;
 		MainControler.controleur.paneListePersonne.setPrefWidth(144*nbCol);
@@ -793,7 +815,7 @@ public class MainControler implements Initializable {
 		barres = new Group();
 
 		play_pause = new Group();
-		
+
 		barresRecherche = new Group();
 
 		barresSubtitles = new Group();

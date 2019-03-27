@@ -74,6 +74,7 @@ public class ControleurPersonne implements Initializable{
 			MainControler.subtitles.searchColor(modifPersonneInput.getValue()).setColor(color);
 		}
 		MainControler.fillListePersonne();
+		MainControler.updatebarreSubtitle();
 	}
 
 	@FXML
