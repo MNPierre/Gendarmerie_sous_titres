@@ -1,7 +1,7 @@
 package subtitler.subtitles;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javafx.collections.FXCollections;
@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 public class SubtitlesList {
 	
 	private ObservableList<Style>styles;
-	private SortedSet<Subtitle>subtitles;
+	private Collection<Subtitle>subtitles;
 	
 	public SubtitlesList() {
 		styles = FXCollections.observableArrayList();
@@ -83,11 +83,13 @@ public class SubtitlesList {
 				styles.remove(i);
 			}
 		}
-		for(int i =0; i < subtitles.size();i++) {
-			if(subtitles.get(i).getContenu().get(0).getAuthor().equals(name)) {
-				subtitles.remove(i);
+		ArrayList<Subtitle> subtitlesToRemove = new ArrayList<>();
+		for(Subtitle sub:subtitles) {
+			if(sub.getContenu().get(0).getAuthor().equals(name)) {
+				subtitlesToRemove.add(sub);
 			}
 		}
+		subtitles.removeAll(subtitlesToRemove);
 	}
 	
 }

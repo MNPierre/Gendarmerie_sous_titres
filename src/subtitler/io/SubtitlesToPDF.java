@@ -1,4 +1,4 @@
-package subtitler.utils;
+package subtitler.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,15 +9,14 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 
-import subtitler.io.Decoder;
 import subtitler.subtitles.Speech;
 import subtitler.subtitles.Subtitle;
 import subtitler.subtitles.SubtitlesList;
+import subtitler.utils.ConversionStringMilli;
 
 public class SubtitlesToPDF {
 
-	public static void MakePDF(SubtitlesList subtitles, File out) {
-		try {
+	public static void MakePDF(SubtitlesList subtitles, File out) throws FileNotFoundException {
 			PdfWriter writer = new PdfWriter(out);
 			PdfDocument pdf = new PdfDocument(writer);
 			Document document = new Document(pdf);
@@ -52,10 +51,6 @@ public class SubtitlesToPDF {
 			}
 
 			document.close();
-
-		} catch ( IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

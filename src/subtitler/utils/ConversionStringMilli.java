@@ -7,8 +7,8 @@ public class ConversionStringMilli {
 		try {
 			String stringMilli = time.replaceAll("[^0123456789:.]", "");
 			String[] splitedTime = stringMilli.split(":");
-			int hours = splitedTime.length<1?0:Integer.parseInt(splitedTime[0]);
-			int minutes = splitedTime.length<2?0:Integer.parseInt(splitedTime[1]);
+			int hours = splitedTime.length<1?00:Integer.parseInt(splitedTime[0]);
+			int minutes = splitedTime.length<2?00:Integer.parseInt(splitedTime[1]);
 			String[] secAndMilliSec = splitedTime[2].split("[.]");
 			int seconds = Integer.parseInt( secAndMilliSec.length<2?splitedTime[2]:secAndMilliSec[0]);
 			int milliseconds = Integer.parseInt(secAndMilliSec.length<2 ?"00":secAndMilliSec[1]);
@@ -29,7 +29,7 @@ public class ConversionStringMilli {
         long minutes=time%60; 
          time=time/60; 
         long hours=time;
-        return (hours+":"+minutes+":"+seconds+"."+milliseconds);
+        return ((hours<10?"0"+hours:hours)+":"+(minutes<10?"0"+minutes:minutes)+":"+(seconds<10?"0"+seconds:seconds)+"."+milliseconds);
     }
 	
 }
