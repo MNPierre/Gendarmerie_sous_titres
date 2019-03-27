@@ -1,6 +1,8 @@
 package subtitler.subtitles;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,11 +11,11 @@ import javafx.collections.ObservableList;
 public class SubtitlesList {
 	
 	private ObservableList<Style>styles;
-	private ArrayList<Subtitle>subtitles;
+	private SortedSet<Subtitle>subtitles;
 	
 	public SubtitlesList() {
 		styles = FXCollections.observableArrayList();
-		subtitles = new ArrayList<>();
+		subtitles = new TreeSet<Subtitle>();
 	}
 	
 	public ObservableList<String> getNarrators(){
@@ -71,7 +73,7 @@ public class SubtitlesList {
 		return FXCollections.observableArrayList(subtitles);
 	}
 
-	public ArrayList<Subtitle> getSubtitles() {
+	public Collection<Subtitle> getSubtitles() {
 		return subtitles;
 	}
 	
