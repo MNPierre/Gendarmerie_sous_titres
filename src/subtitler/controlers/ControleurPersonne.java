@@ -81,6 +81,7 @@ public class ControleurPersonne implements Initializable{
 	void supprimerPersonne(ActionEvent event) {
 		if(modifPersonneInput.getValue() != null) {
 			MainControler.subtitles.deleteByName(modifPersonneInput.getValue());
+			// TODO fonction Remove ne marche pas sur les Collections. On ne peut pas supprimer de sous-titres.
 			modifPersonneInput.setItems(MainControler.subtitles.getNarrators());
 			MainControler.controleur.updatebarreSubtitle();
 			MainControler.controleur.updateVideo();

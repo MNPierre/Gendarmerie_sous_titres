@@ -12,8 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import subtitler.subtitles.Subtitle;
@@ -70,8 +72,9 @@ public class ControleurSousTitres implements Initializable{
 			modifSubtitleUtils.modifOneSubtitleStage.show();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText("Vous n'avez pas sélectionné de ligne.");
+			alert.show();
 		} 
     }
 		

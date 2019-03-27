@@ -1,6 +1,7 @@
 package subtitler.controlers;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -8,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import subtitler.subtitles.Subtitle;
 import subtitler.utils.ConversionStringMilli;
 import subtitler.utils.modifSubtitleUtils;
 
@@ -24,7 +26,9 @@ public class ControleurModifOneSubtitle implements Initializable{
 
 	@FXML
 	void supprimerModifierOneSubtitle(ActionEvent event) {
+		
 		MainControler.controleur.subtitles.getSubtitles().remove(modifSubtitleUtils.selectedSubtitle);
+		// TODO fonction Remove ne marche pas sur les Collections. On ne peut pas supprimer de sous-titres.
 		MainControler.controleur.subtitlesToShow.remove(modifSubtitleUtils.selectedSubtitle);
 		MainControler.controleur.updatebarreSubtitle();
 		MainControler.controleur.updateVideo();

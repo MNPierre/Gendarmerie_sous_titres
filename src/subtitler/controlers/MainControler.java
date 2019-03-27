@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -319,7 +321,13 @@ public class MainControler implements Initializable {
 								}
 							}
 						}
-						if((!wordSearchResult.getSubtitles().contains(s)) && wordSearchResult.getSubtitles().size() > 0) {
+	
+						ArrayList<Subtitle> subtitlesToCheck = new ArrayList<>();
+						for(Subtitle sub:wordSearchResult.getSubtitles()) {
+								subtitlesToCheck.add(sub);
+						}
+						if((!(subtitlesToCheck.contains(s)) && wordSearchResult.getSubtitles().size() > 0)) {
+							
 							r.setOpacity(0);
 						}
 						r.setTranslateY(i*-4);
@@ -350,15 +358,18 @@ public class MainControler implements Initializable {
 
 	@FXML
 	void ajouterCommentaire(ActionEvent event) {
-		System.out.println("debut : " + controleur.debutInput.getText());
-		System.out.println("fin: " + controleur.finInput.getText());
-		System.out.println("personne : " + controleur.personneInput.getValue());
-		System.out.println("text : " + controleur.subtitlesInput.getText());
 
 		if(controleur.debutInput.getText().equals("") || controleur.finInput.getText().equals("") || controleur.personneInput.getValue() == null || controleur.subtitlesInput.getText().equals("")) {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setContentText("Veuillez remplire tous les champs.");
 			alert.show();
+		}
+		
+		else if(Pattern.matches("[^0-9]", controleur.debutInput.getText()) || Pattern.matches("[^0-9]", controleur.finInput.getText())) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setContentText("Entrer des valeurs cohérente");
+				alert.show();
+				// TODO finir expression regex pour ne pas mettre de lettres dans le time
 		}else {
 
 			Subtitle sub = new Subtitle(ConversionStringMilli.StringToMillisecond(debutInput.getText()), ConversionStringMilli.StringToMillisecond(finInput.getText()));
