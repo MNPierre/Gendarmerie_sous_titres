@@ -6,17 +6,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -38,6 +34,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -54,7 +52,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import subtitler.Main;
 import subtitler.io.Decoder;
-import subtitler.io.Encoder;
 import subtitler.io.Saver;
 import subtitler.subtitles.Search;
 import subtitler.subtitles.Speech;
@@ -485,7 +482,7 @@ public class MainControler implements Initializable {
 		for(Node node:paneTextToShow.getChildren()) {
 			((Label)node).setLayoutX(0);
 			((Label)node).setMinWidth(controleur.video.getFitWidth());
-			((Label)node).setLayoutY(labelNum*25+3*paneTextToShow.getPrefHeight()/4);
+			((Label)node).setLayoutY(labelNum*25+3*paneTextToShow.getPrefHeight()/4-6);
 			labelNum++;
 
 		}
@@ -726,20 +723,6 @@ public class MainControler implements Initializable {
 
 				});
 
-				//Event Changement du temps de debut de la video
-				controleur.videoPlayStart.onKeyPressedProperty().addListener(new ChangeListener(){
-					@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
-						updateVideo();
-					}
-				});
-
-				//Event Changement du temps de fin de la video
-				controleur.videoPlayEnd.onKeyPressedProperty().addListener(new ChangeListener(){
-					@Override public void changed(ObservableValue o, Object oldVal, Object newVal){
-						updateVideo();
-					}
-				});
-
 				//Event changement du temps de lecture de la video
 				barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
 					public void handle(MouseEvent me){
@@ -764,7 +747,27 @@ public class MainControler implements Initializable {
 					}
 
 				});;
+				
+				controleur.videoPlayStart.setOnKeyPressed(new EventHandler<KeyEvent>() {
+					@Override
+					public void handle(KeyEvent event) {
+						if(event.getCode() == KeyCode.ENTER) {
+							pin1.update();
+							updateVideo();
+						}
+					}
+				});
 
+				controleur.videoPlayEnd.setOnKeyPressed(new EventHandler<KeyEvent>() {
+					@Override
+					public void handle(KeyEvent event) {
+						if(event.getCode() == KeyCode.ENTER) {
+							pin2.update();
+							updateVideo();
+						}
+					}
+				});
+				
 				doVideoAlreadyBeanLoad=true;
 			}
 			player.setVolume(0);

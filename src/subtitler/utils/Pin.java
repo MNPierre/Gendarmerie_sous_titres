@@ -122,6 +122,29 @@ public class Pin {
 		pane.getChildren().add(body);
 		pane.getChildren().add(head);
 	}
+	
+	public void update() {
+		if(isActivate ) {
+
+			switch(mode) {
+			case START:
+				if( ConversionStringMilli.StringToMillisecond(timeText.getText())<ConversionStringMilli.StringToMillisecond(siblingPin.timeText.getText()) ) {
+					setLayoutX(boundingStart+ConversionStringMilli.StringToMillisecond(timeText.getText())*(MainControler.barre_fond.getWidth()/MainControler.player.getTotalDuration().toMillis()));
+					selectedZone.setWidth(siblingPin.getLayoutX()-getLayoutX());
+					selectedZone.setLayoutX(getLayoutX()-boundingStart);
+				}
+				break;
+
+			case END:
+				if( ConversionStringMilli.StringToMillisecond(timeText.getText())>ConversionStringMilli.StringToMillisecond(siblingPin.timeText.getText()) ) {
+					setLayoutX(boundingStart+ConversionStringMilli.StringToMillisecond(timeText.getText())*(MainControler.barre_fond.getWidth()/MainControler.player.getTotalDuration().toMillis()));
+					selectedZone.setWidth(getLayoutX()-siblingPin.getLayoutX());
+				}
+				break;	
+			}
+			
+		}
+	}
 
 	public void addListener() {
 		if(siblingPin == null)

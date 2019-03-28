@@ -27,11 +27,10 @@ public class ControleurModifOneSubtitle implements Initializable{
 	@FXML
 	void supprimerModifierOneSubtitle(ActionEvent event) {
 		
-		MainControler.controleur.subtitles.getSubtitles().remove(modifSubtitleUtils.selectedSubtitle);
-		// TODO fonction Remove ne marche pas sur les Collections. On ne peut pas supprimer de sous-titres.
-		MainControler.controleur.subtitlesToShow.remove(modifSubtitleUtils.selectedSubtitle);
-		MainControler.controleur.updatebarreSubtitle();
-		MainControler.controleur.updateVideo();
+		MainControler.subtitles.getSubtitles().remove(modifSubtitleUtils.selectedSubtitle);
+		MainControler.subtitlesToShow.remove(modifSubtitleUtils.selectedSubtitle);
+		MainControler.updatebarreSubtitle();
+		MainControler.updateVideo();
 		modifSubtitleUtils.modifOneSubtitleStage.close();
 
 	}
@@ -41,8 +40,8 @@ public class ControleurModifOneSubtitle implements Initializable{
 		modifSubtitleUtils.selectedSubtitle.getContenu().get(0).setText(textModifierOneSubtitle.getText());
 		modifSubtitleUtils.selectedSubtitle.setTimeStart(ConversionStringMilli.StringToMillisecond(startModifierOneSubtitle.getText()));
 		modifSubtitleUtils.selectedSubtitle.setTimeStop(ConversionStringMilli.StringToMillisecond(stopModifierOneSubtitle.getText()));
-		MainControler.controleur.updatebarreSubtitle();		
-		MainControler.controleur.updateVideo();
+		MainControler.updatebarreSubtitle();		
+		MainControler.updateVideo();
 		modifSubtitleUtils.modifOneSubtitleStage.close();
 	}
 

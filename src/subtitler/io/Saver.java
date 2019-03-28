@@ -43,7 +43,7 @@ public class Saver {
 	public static void MakeSRT(SubtitlesList subtitles, File out) throws IOException {
 		int subtitleNumber=1;
 		String srtContent="";
-		for(Subtitle sub:subtitles.getSubtitles()) {
+		for(Subtitle sub:subtitles.getSubtitlesAsSortedCollection()) {
 			srtContent+=subtitleNumber+"\n";
 			srtContent+=ConversionStringMilli.MillisecondsToString(sub.getTimeStart()).replace(".", ",")
 					+" --> "+ConversionStringMilli.MillisecondsToString(sub.getTimeStop()).replace(".", ",")+"\n";
@@ -71,7 +71,7 @@ public class Saver {
 		document.add(par);
 
 
-		for(Subtitle sub:subtitles.getSubtitles()) {
+		for(Subtitle sub:subtitles.getSubtitlesAsSortedCollection()) {
 			par = new Paragraph();	
 			par.setMarginLeft(5);
 			par.setFontSize(15);

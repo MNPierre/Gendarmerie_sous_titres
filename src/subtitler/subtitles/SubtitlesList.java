@@ -11,11 +11,11 @@ import javafx.collections.ObservableList;
 public class SubtitlesList {
 	
 	private ObservableList<Style>styles;
-	private Collection<Subtitle>subtitles;
+	private ArrayList<Subtitle>subtitles;
 	
 	public SubtitlesList() {
 		styles = FXCollections.observableArrayList();
-		subtitles = new TreeSet<Subtitle>();
+		subtitles = new ArrayList<Subtitle>();
 	}
 	
 	public ObservableList<String> getNarrators(){
@@ -73,8 +73,13 @@ public class SubtitlesList {
 		return FXCollections.observableArrayList(subtitles);
 	}
 
-	public Collection<Subtitle> getSubtitles() {
+	public ArrayList<Subtitle> getSubtitles() {
 		return subtitles;
+	}
+	
+	public Collection<Subtitle> getSubtitlesAsSortedCollection() {
+		Collection<Subtitle> coll = new TreeSet<Subtitle>(subtitles);
+		return coll;
 	}
 	
 	public void deleteByName(String name) {
