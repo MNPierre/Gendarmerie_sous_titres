@@ -55,6 +55,7 @@ import javafx.util.Duration;
 import subtitler.Main;
 import subtitler.io.Decoder;
 import subtitler.io.Encoder;
+import subtitler.io.Saver;
 import subtitler.subtitles.Search;
 import subtitler.subtitles.Speech;
 import subtitler.subtitles.Style;
@@ -388,11 +389,13 @@ public class MainControler implements Initializable {
 	void sauvegarderOnClick(ActionEvent event){
 		try {
 			FileChooser fileChooser = new FileChooser();
-			fileChooser.getExtensionFilters().add(
-					new FileChooser.ExtensionFilter("XML", "*.xml"));
+			fileChooser.getExtensionFilters().addAll(
+					new FileChooser.ExtensionFilter("XML", "*.xml"),
+					new FileChooser.ExtensionFilter("PDF", "*.pdf"),
+					new FileChooser.ExtensionFilter("SRT", "*.srt"));
 			File file = fileChooser.showSaveDialog(Main.primaryStage);
-
-			Encoder.encodeXML(subtitles, file);
+			Saver.Save(subtitles, file, fileChooser.getSelectedExtensionFilter().getDescription());
+			//Encoder.encodeXML(subtitles, file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
