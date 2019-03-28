@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.media.*?>
@@ -15,22 +16,21 @@
 
 <Pane fx:id="panePrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="851.0" prefWidth="1202.0" style="-fx-background-color: #4b4b49; -fx-border-radius: 3px;" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="subtitler.controlers.MainControler">
    <children>
-      <TabPane layoutX="89.0" layoutY="582.0" prefHeight="239.0" prefWidth="969.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="39.0" layoutY="582.0" prefHeight="240.0" prefWidth="1103.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Sous-titres">
+          <Tab text="Editions des Sous-titres">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="181.0" prefWidth="894.0">
                      <children>
                         <Label layoutX="20.0" layoutY="129.0" text="Personne :" textFill="#f8f3f3" />
                         <Button fx:id="ajouterButton" layoutX="408.0" layoutY="162.0" mnemonicParsing="false" onAction="#ajouterCommentaire" style="-fx-background-color: #302a24; -fx-border-color: #656b6d; -fx-border-radius: 3;" text="Ajouter un sous-titre" textFill="#fcfcfc" />
-                        <Button fx:id="sauvegarderButton" layoutX="761.0" layoutY="14.0" mnemonicParsing="false" onAction="#sauvegarderOnClick" style="-fx-background-color: #302a24; -fx-background-radius: 3; -fx-border-color: #656b6d;" text="Sauvegarder les sous-titres" textFill="#f8f8f8" />
+                        <Button fx:id="sauvegarderButton" layoutX="638.0" layoutY="14.0" mnemonicParsing="false" onAction="#sauvegarderOnClick" style="-fx-background-color: #302a24; -fx-background-radius: 3; -fx-border-color: #656b6d;" text="Sauvegarder les sous-titres" textFill="#f8f8f8" />
                         <Button fx:id="buttonEditSpeakers" layoutX="97.0" layoutY="159.0" mnemonicParsing="false" onAction="#showEditSpeakers" style="-fx-background-color: #302a24; -fx-border-radius: 3; -fx-border-color: #656b6d;" text="Editer les Personnes" textFill="#f5f4f4" />
                         <Button fx:id="buttonEditSubtitles" layoutX="412.0" layoutY="17.0" mnemonicParsing="false" onAction="#modifSousTitres" style="-fx-background-color: #302a24; -fx-border-color: #656b6d; -fx-border-radius: 3;" text="Modifier sous-titres" textFill="#f5f3f3" />
                         <TextField fx:id="debutInput" layoutX="97.0" layoutY="52.0" prefHeight="26.0" prefWidth="153.0" />
                         <TextField fx:id="finInput" layoutX="97.0" layoutY="88.0" prefHeight="26.0" prefWidth="153.0" />
                         <ComboBox fx:id="personneInput" layoutX="97.0" layoutY="124.0" prefHeight="26.0" prefWidth="153.0" />
                         <TextArea fx:id="subtitlesInput" layoutX="265.0" layoutY="51.0" prefHeight="99.0" prefWidth="292.0" />
-                        <ScrollBar orientation="VERTICAL" prefHeight="851.0" prefWidth="17.0" />
                         <Label layoutX="44.0" layoutY="57.0" text="Début :" textFill="#f8f3f3" />
                         <Label layoutX="65.0" layoutY="93.0" text="fin :" textFill="#f5f0f0" />
                         <Button fx:id="prendreValeurButton" layoutX="97.0" layoutY="14.0" mnemonicParsing="false" onAction="#prendreValeurs" style="-fx-background-color: #302a24; -fx-border-color: #656b6d; -fx-border-radius: 3;" text="Prendre valeurs" textFill="#f5f3f3" />
@@ -38,7 +38,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Recherche mots">
+          <Tab text="Recherche de mots">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -52,7 +52,7 @@
           </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="15.0" layoutY="2.0" mnemonicParsing="false" onAction="#showFileImport" style="-fx-background-color: #302a24; -fx-border-radius: 3; -fx-border-color: #656b6d;" text="Fichier" textFill="WHITE" />
+      <Button layoutX="1056.0" layoutY="544.0" mnemonicParsing="false" onAction="#showFileImport" style="-fx-background-color: #302a24; -fx-border-radius: 3; -fx-border-color: #656b6d;" text="Fichier" textFill="WHITE" />
       <Slider fx:id="volumeBarre" layoutX="852.0" layoutY="550.0" value="100.0" />
       <Label layoutX="794.0" layoutY="550.0" text="Volume :" textFill="WHITE" />
       <Label fx:id="volumeText" layoutX="999.0" layoutY="550.0" text="100%" textFill="WHITE" />
@@ -63,5 +63,15 @@
       <Label layoutX="487.0" layoutY="550.0" text="Fin :" textFill="#f8f3f3" />
       <Pane fx:id="paneListePersonne" layoutX="1082.0" layoutY="14.0" prefHeight="500.0" prefWidth="106.0" />
       <MediaView fx:id="video" fitHeight="300.0" fitWidth="700.0" layoutX="206.0" layoutY="47.0" />
+      <ImageView fitHeight="103.0" fitWidth="200.0" layoutX="678.0" layoutY="685.0">
+         <image>
+            <Image url="@LOGO-MONTREUIL-Moyen.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="200.0" fitWidth="232.0" layoutX="884.0" layoutY="643.0">
+         <image>
+            <Image url="@logo%20SIP.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

@@ -201,7 +201,7 @@ public class MainControler implements Initializable {
 			playPauseVideo();
 		}
 		try { 
-			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("modifPersonne.fxml").toURI().toURL()); 
+			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("assets/modifPersonne.fxml").toURI().toURL()); 
 			modifySubtitlesStage = new Stage(); 
 			modifySubtitlesStage.setTitle("Modifier Personnes");
 			Scene scene = new Scene(root, 640, 480); 
@@ -226,7 +226,7 @@ public class MainControler implements Initializable {
 			playPauseVideo();
 		}
 		try { 
-			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("modifSubtitle.fxml").toURI().toURL()); 
+			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("assets/modifSubtitle.fxml").toURI().toURL()); 
 			Stage Ajouter = new Stage(); 
 			Scene scene = new Scene(root, 640, 480); 
 			Ajouter.setTitle("Modifier Sous-Titres");
@@ -244,7 +244,7 @@ public class MainControler implements Initializable {
 		try {
 			fileImportStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
-			URL url = new File("FileImport.fxml").toURI().toURL();
+			URL url = new File("assets/FileImport.fxml").toURI().toURL();
 			loader.setLocation(url);
 			Parent root = FXMLLoader.load(url);
 			Scene scene = new Scene(root,349,241);
@@ -303,7 +303,7 @@ public class MainControler implements Initializable {
 								AnchorPane root;
 								try {
 									modifSubtitleUtils.selectedSubtitle = s;
-									root = (AnchorPane) FXMLLoader.load(new File("modifOneSubtitle.fxml").toURI().toURL());
+									root = (AnchorPane) FXMLLoader.load(new File("assets/modifOneSubtitle.fxml").toURI().toURL());
 									modifSubtitleUtils.modifOneSubtitleStage = new Stage(); 
 									Scene scene = new Scene(root, 640, 380); 
 									modifSubtitleUtils.modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
@@ -792,8 +792,8 @@ public class MainControler implements Initializable {
 		MainControler.controleur = this;
 		//D�clarations
 		try {
-			img_play = new Image(new File("PLAY.png").toURI().toURL().toString());
-			img_pause = new Image(new File("PAUSE.png").toURI().toURL().toString());
+			img_play = new Image(new File("assets/PLAY.png").toURI().toURL().toString());
+			img_pause = new Image(new File("assets/PAUSE.png").toURI().toURL().toString());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

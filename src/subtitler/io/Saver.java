@@ -20,7 +20,8 @@ public class Saver {
 	public static void Save(SubtitlesList subtitles, File file, String extention) throws IOException {
 		File newFile;
 		String path ="";
-		for(int i=0;i<file.getAbsolutePath().split("[.]").length-1;i++) {
+		int extentionsetter = file.getAbsolutePath().split("[.]").length>1?-1:0;
+		for(int i=0;i<file.getAbsolutePath().split("[.]").length-extentionsetter;i++) {
 			path+=file.getAbsolutePath().split("[.]")[i]+".";
 		}
 		switch(extention) {

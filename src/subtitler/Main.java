@@ -21,12 +21,13 @@ public class Main extends Application {
 		try {
 			Main.primaryStage = primaryStage;
 			FXMLLoader loader = new FXMLLoader();
-			URL url = new File("Test.fxml").
+			URL url = new File("assets/Main.fxml").
 					toURI().toURL();
 			loader.setLocation(url);
 			System.out.println(loader.getLocation());
 			Parent root = FXMLLoader.load(url);
 			Scene scene = new Scene(root,1200,850);
+			primaryStage.setResizable(false);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
