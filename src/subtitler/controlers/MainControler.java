@@ -132,6 +132,9 @@ public class MainControler implements Initializable {
 	
 	@FXML
     private Button clearButton;
+	
+	@FXML
+    private CheckBox showVideo;
 
 	static Slider videoSlider;
 
@@ -482,7 +485,7 @@ public class MainControler implements Initializable {
 		for(Node node:paneTextToShow.getChildren()) {
 			((Label)node).setLayoutX(0);
 			((Label)node).setMinWidth(controleur.video.getFitWidth());
-			((Label)node).setLayoutY(labelNum*25+paneTextToShow.getMinHeight()/2);
+			((Label)node).setLayoutY(labelNum*25+3*paneTextToShow.getPrefHeight()/4);
 			labelNum++;
 
 		}
@@ -533,27 +536,24 @@ public class MainControler implements Initializable {
 
 			if(paneTextToShow != null)
 				paneTextToShow.getChildren().clear();
+			
 			controleur.video.setFitWidth(900);
 			controleur.video.setFitHeight(500);
 			controleur.video.setLayoutY(4);
-			controleur.video.setLayoutX(118);
+			controleur.video.setLayoutX(125);
 			controleur.video.getMediaPlayer().play();
 
 			paneTextToShow.setLayoutX(controleur.video.getLayoutX());
 			paneTextToShow.setLayoutY(controleur.video.getLayoutY());
 
-			paneTextToShow.setMinWidth(controleur.video.getFitWidth());
-			paneTextToShow.setMinHeight(controleur.video.getFitHeight()-120);
+			paneTextToShow.setPrefWidth(controleur.video.getFitWidth()-11);
+			paneTextToShow.setPrefHeight(controleur.video.getFitHeight());
 			paneTextToShow.setStyle("-fx-background-color : none");
 
 			videoTime.setText("00:00:00");
+			videoTime.setTextFill(Color.WHITE);
 			videoTime.setLayoutX(controleur.video.getLayoutX()+controleur.video.getFitWidth());
 			videoTime.setLayoutY(controleur.video.getLayoutY()+520);
-
-			//System.out.println(fichierVideo.getDuration());
-			//			videoTimeMax.setText("/ "+fichierVideo.getDuration().toMillis());
-			//			videoTimeMax.setLayoutX(controleur.video.getLayoutX()+75);
-			//			videoTimeMax.setLayoutY(MainControler.controleur.ajouterButton.getLayoutY()+570);
 
 			controleur.personneInput.setItems(subtitles.getNarrators());
 
@@ -679,7 +679,7 @@ public class MainControler implements Initializable {
 				controleur.videoPlayStart.setText("00:00:00.000");
 				controleur.videoPlayEnd.setText("00:00:01.000");
 				controleur.panePrincipal.getChildren().add(wf.getPane());
-
+				
 				pin1.addToPane(controleur.panePrincipal);
 				pin2.addToPane(controleur.panePrincipal);
 
@@ -688,6 +688,19 @@ public class MainControler implements Initializable {
 
 				pin1.addListener();
 				pin2.addListener();
+				
+				controleur.showVideo.selectedProperty().addListener(new ChangeListener() {
+
+					@Override
+					public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+						if(controleur.showVideo.isSelected()) 
+							paneTextToShow.setStyle("-fx-background-color: none;");
+						else 
+							paneTextToShow.setStyle("-fx-background-color: black;");
+						
+					}
+					
+				});
 
 				controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
 
@@ -825,6 +838,8 @@ public class MainControler implements Initializable {
 		selectedZone = new Rectangle();
 
 		wordSearchResult = new SubtitlesList();
+		
+		showVideo.setSelected(true);
 
 		pin1 = new Pin(Mode.START);
 		pin2 = new Pin(Mode.END);
