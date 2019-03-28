@@ -72,9 +72,6 @@ public class ControleurSousTitres implements Initializable{
 			modifSubtitleUtils.modifOneSubtitleStage.show();
 
 		} catch (IOException e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setContentText("Vous n'avez pas sélectionné de ligne.");
-			alert.show();
 		} 
     }
 		
