@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.media.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.media.MediaView?>
 
-<Pane fx:id="panePrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="851.0" prefWidth="1202.0" style="-fx-background-color: #4b4b49; -fx-border-radius: 3px;" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="subtitler.controlers.MainControler">
+<Pane fx:id="panePrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="851.0" prefWidth="1202.0" style="-fx-background-color: #4b4b49; -fx-border-radius: 3px;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="subtitler.controlers.MainControler">
    <children>
       <TabPane layoutX="39.0" layoutY="582.0" prefHeight="240.0" prefWidth="1103.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Editions des Sous-titres">
+          <Tab text="Edition des Sous-titres">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="181.0" prefWidth="894.0">
                      <children>
@@ -52,23 +53,24 @@
           </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="1056.0" layoutY="544.0" mnemonicParsing="false" onAction="#showFileImport" style="-fx-background-color: #302a24; -fx-border-radius: 3; -fx-border-color: #656b6d;" text="Fichier" textFill="WHITE" />
-      <Slider fx:id="volumeBarre" layoutX="852.0" layoutY="550.0" value="100.0" />
-      <Label layoutX="794.0" layoutY="550.0" text="Volume :" textFill="WHITE" />
-      <Label fx:id="volumeText" layoutX="999.0" layoutY="550.0" text="100%" textFill="WHITE" />
-      <TextField fx:id="videoPlayStart" layoutX="346.0" layoutY="545.0" prefHeight="25.0" prefWidth="106.0" />
-      <TextField fx:id="videoPlayEnd" layoutX="521.0" layoutY="545.0" prefHeight="25.0" prefWidth="106.0" />
-      <CheckBox fx:id="zoomCheckBox" layoutX="652.0" layoutY="549.0" mnemonicParsing="false" text="Zoom" textFill="WHITE" />
+      <Button layoutX="1090.0" layoutY="545.0" mnemonicParsing="false" onAction="#showFileImport" style="-fx-background-color: #302a24; -fx-border-radius: 3; -fx-border-color: #656b6d;" text="Fichier" textFill="WHITE" />
+      <Slider fx:id="volumeBarre" layoutX="748.0" layoutY="550.0" value="100.0" />
+      <Label layoutX="690.0" layoutY="550.0" text="Volume :" textFill="WHITE" />
+      <Label fx:id="volumeText" layoutX="895.0" layoutY="550.0" text="100%" textFill="WHITE" />
+      <TextField fx:id="videoPlayStart" layoutX="295.0" layoutY="546.0" prefHeight="25.0" prefWidth="106.0" />
+      <TextField fx:id="videoPlayEnd" layoutX="481.0" layoutY="545.0" prefHeight="25.0" prefWidth="106.0" />
+      <CheckBox fx:id="zoomCheckBox" layoutX="612.0" layoutY="549.0" mnemonicParsing="false" text="Zoom" textFill="WHITE" />
       <Label layoutX="115.0" layoutY="550.0" text="Partie de la video à lire     début:" textFill="WHITE" />
-      <Label layoutX="487.0" layoutY="550.0" text="Fin :" textFill="#f8f3f3" />
+      <Label layoutX="447.0" layoutY="550.0" text="Fin :" textFill="#f8f3f3" />
       <Pane fx:id="paneListePersonne" layoutX="1082.0" layoutY="14.0" prefHeight="500.0" prefWidth="106.0" />
-      <MediaView fx:id="video" fitHeight="300.0" fitWidth="700.0" layoutX="206.0" layoutY="47.0" />
+      <MediaView fx:id="video" fitHeight="300.0" fitWidth="800.0" layoutX="206.0" layoutY="47.0" />
       <ImageView fitHeight="103.0" fitWidth="200.0" layoutX="678.0" layoutY="685.0">
          <image>
             <Image url="@LOGO-MONTREUIL-Moyen.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="200.0" fitWidth="232.0" layoutX="884.0" layoutY="643.0">
+      <CheckBox fx:id="showVideo" layoutX="943.0" layoutY="550.0" mnemonicParsing="false" text="Afficher la video" textFill="WHITE" />
+      <ImageView fitHeight="200.0" fitWidth="232.0" layoutX="915.0" layoutY="640.0">
          <image>
             <Image url="@logo%20SIP.png" />
          </image>
