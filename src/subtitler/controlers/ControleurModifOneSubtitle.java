@@ -32,7 +32,7 @@ public class ControleurModifOneSubtitle implements Initializable{
 		MainControler.updatebarreSubtitle();
 		MainControler.updateVideo();
 		modifSubtitleUtils.modifOneSubtitleStage.close();
-
+		ControleurSousTitres.loadValues();
 	}
 
 	@FXML

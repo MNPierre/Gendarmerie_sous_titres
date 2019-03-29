@@ -44,18 +44,22 @@ public class ControleurSousTitres implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		controleur = this;
-		auteurView.setCellValueFactory(cellData -> cellData.getValue().getContenu().get(0).getAuthorProperty());
+		loadValues();
+	}
+	
+	public static void loadValues() {
+		ControleurSousTitres.controleur.auteurView.setCellValueFactory(cellData -> cellData.getValue().getContenu().get(0).getAuthorProperty());
 		//subtitlesView.setItems(MainControler.subtitles.getObservableSubtitles());
 		
-		speechView.setCellValueFactory(cellData -> cellData.getValue().getContenu().get(0).getTextProperty());
+		ControleurSousTitres.controleur.speechView.setCellValueFactory(cellData -> cellData.getValue().getContenu().get(0).getTextProperty());
 		//subtitlesView.setItems(MainControler.subtitles.getObservableSubtitles());
 		
-		timeStart.setCellValueFactory(cellData -> cellData.getValue().getTimeStartProperty());
+		ControleurSousTitres.controleur.timeStart.setCellValueFactory(cellData -> cellData.getValue().getTimeStartProperty());
 		
-		timeStop.setCellValueFactory(cellData -> cellData.getValue().getTimeStopProperty());
+		ControleurSousTitres.controleur.timeStop.setCellValueFactory(cellData -> cellData.getValue().getTimeStopProperty());
 		//subtitlesView.setItems(MainControler.subtitles.getObservableSubtitles());
 		
-		subtitlesView.setItems(MainControler.subtitles.getObservableSubtitles());
+		ControleurSousTitres.controleur.subtitlesView.setItems(MainControler.subtitles.getObservableSubtitles());
 	}
 	
 
@@ -64,7 +68,7 @@ public class ControleurSousTitres implements Initializable{
 		AnchorPane root;
 		try {
 			modifSubtitleUtils.selectedSubtitle = subtitlesView.getSelectionModel().getSelectedItem();
-			root = (AnchorPane) FXMLLoader.load(new File("modifOneSubtitle.fxml").toURI().toURL());
+			root = (AnchorPane) FXMLLoader.load(new File("assets/modifOneSubtitle.fxml").toURI().toURL());
 			modifSubtitleUtils.modifOneSubtitleStage = new Stage(); 
 			Scene scene = new Scene(root, 640, 380); 
 			modifSubtitleUtils.modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
