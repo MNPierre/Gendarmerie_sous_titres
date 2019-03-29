@@ -9,13 +9,13 @@ public class ConversionStringMilli {
 			
 			String[] splitedTime = stringMilli.split(":");
 			
-			int hours = splitedTime.length<2?00:Integer.parseInt(splitedTime[0]);
+			int hours = splitedTime.length<3?00:Integer.parseInt(splitedTime[0]);
 			
-			int minutes = splitedTime.length<3?00:Integer.parseInt(splitedTime[1]);
+			int minutes = splitedTime.length<2?00:Integer.parseInt(splitedTime[splitedTime.length-2]);
 			
 			String[] secAndMilliSec = splitedTime[splitedTime.length-1].split("[.]");
 			
-			int seconds = Integer.parseInt( secAndMilliSec.length<2?splitedTime[2]:secAndMilliSec[0]);
+			int seconds = Integer.parseInt( secAndMilliSec.length<2?splitedTime[splitedTime.length-1]:secAndMilliSec[0]);
 			
 			int milliseconds = Integer.parseInt(secAndMilliSec.length<2 ?"00":secAndMilliSec[1]);
 			

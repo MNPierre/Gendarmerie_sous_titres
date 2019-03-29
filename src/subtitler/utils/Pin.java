@@ -132,13 +132,24 @@ public class Pin {
 					setLayoutX(boundingStart+ConversionStringMilli.StringToMillisecond(timeText.getText())*(MainControler.barre_fond.getWidth()/MainControler.player.getTotalDuration().toMillis()));
 					selectedZone.setWidth(siblingPin.getLayoutX()-getLayoutX());
 					selectedZone.setLayoutX(getLayoutX()-boundingStart);
+				}else {
+					timeText.setText(ConversionStringMilli.MillisecondsToString(ConversionStringMilli.StringToMillisecond(siblingPin.timeText.getText())-1000));
+					setLayoutX(boundingStart+ConversionStringMilli.StringToMillisecond(timeText.getText())*(MainControler.barre_fond.getWidth()/MainControler.player.getTotalDuration().toMillis()));
+					selectedZone.setWidth(siblingPin.getLayoutX()-getLayoutX());
+					selectedZone.setLayoutX(getLayoutX()-boundingStart);
 				}
 				break;
 
 			case END:
 				if( ConversionStringMilli.StringToMillisecond(timeText.getText())>ConversionStringMilli.StringToMillisecond(siblingPin.timeText.getText()) ) {
-					setLayoutX(boundingStart+ConversionStringMilli.StringToMillisecond(timeText.getText())*(MainControler.barre_fond.getWidth()/MainControler.player.getTotalDuration().toMillis()));
-					selectedZone.setWidth(getLayoutX()-siblingPin.getLayoutX());
+					if(ConversionStringMilli.StringToMillisecond(timeText.getText())<MainControler.player.getTotalDuration().toMillis()) {
+						setLayoutX(boundingStart+ConversionStringMilli.StringToMillisecond(timeText.getText())*(MainControler.barre_fond.getWidth()/MainControler.player.getTotalDuration().toMillis()));
+						selectedZone.setWidth(getLayoutX()-siblingPin.getLayoutX());
+					}else {
+						timeText.setText(ConversionStringMilli.MillisecondsToString((long) MainControler.player.getTotalDuration().toMillis()));
+						setLayoutX(boundingStart+ConversionStringMilli.StringToMillisecond(timeText.getText())*(MainControler.barre_fond.getWidth()/MainControler.player.getTotalDuration().toMillis()));
+						selectedZone.setWidth(getLayoutX()-siblingPin.getLayoutX());
+					}
 				}
 				break;	
 			}

@@ -21,7 +21,7 @@ public class Saver {
 		File newFile;
 		String path ="";
 		int extentionsetter = file.getAbsolutePath().split("[.]").length>1?-1:0;
-		for(int i=0;i<file.getAbsolutePath().split("[.]").length-extentionsetter;i++) {
+		for(int i=0;i<file.getAbsolutePath().split("[.]").length+extentionsetter;i++) {
 			path+=file.getAbsolutePath().split("[.]")[i]+".";
 		}
 		switch(extention) {
