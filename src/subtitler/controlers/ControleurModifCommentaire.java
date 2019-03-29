@@ -22,15 +22,16 @@ public class ControleurModifCommentaire implements Initializable{
     @FXML
     void supprimerModifier(ActionEvent event) {
     	MainControler.commentaires.remove(MarqueurCommentaire.commentaireToEdit);
-    	MarqueurCommentaire.modifCommentStage.close();
+    	MarqueurCommentaire.commentaireToEdit.removeFromPane(MainControler.getPanPrincipale());
     	MainControler.updateVideo();
+    	MarqueurCommentaire.modifCommentStage.close();
     }
 
     @FXML
     void validerModifier(ActionEvent event) {
     	MarqueurCommentaire.commentaireToEdit.setTime(ConversionStringMilli.StringToMillisecond(timeStartText.getText()));
-    	MarqueurCommentaire.modifCommentStage.close();
     	MainControler.updateVideo();
+    	MarqueurCommentaire.modifCommentStage.close();
     }
 
 	@Override
