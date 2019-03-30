@@ -42,19 +42,18 @@ public class ControleurFileImport implements Initializable{
     @FXML
     void buttonValidate(ActionEvent event) {
     	String xmlFile = textFieldSubtitlesFile.getText();
-    	String file = textFieldFile.getText();
+    	String mediaFile = textFieldFile.getText();
     	
-    	if(!(new File(xmlFile).exists()) ) {
-    		xmlFile = null;
-		}
+    	boolean xmlFileExist = new File(xmlFile).exists();
+    	boolean mediaFileExist = new File(mediaFile).exists();
     	
-    	if(!(new File(file).exists()) ) {
-			alert.setContentText("Le fichier \""+file+"\" est introuvable");
-			alert.show();
-		}else {
-			MainControler.fileImportStage.close();
-			MainControler.setNewVideoXml(file, xmlFile);
+    	if(mediaFileExist || MainControler.fichierVideo != null ) {
+    		MainControler.fileImportStage.close();
+			MainControler.setNewVideoXml(mediaFileExist?mediaFile:null, xmlFileExist?xmlFile:null);
 			
+		}else {
+			alert.setContentText("Le fichier \""+mediaFile+"\" est introuvable");
+			alert.show();
 		}
     	
     }

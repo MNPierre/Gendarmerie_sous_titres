@@ -21,18 +21,22 @@ public class Saver {
 		File newFile;
 		String path ="";
 		int extentionsetter = file.getAbsolutePath().split("[.]").length>1?-1:0;
+		
 		for(int i=0;i<file.getAbsolutePath().split("[.]").length+extentionsetter;i++) {
 			path+=file.getAbsolutePath().split("[.]")[i]+".";
 		}
+		
 		switch(extention) {
 		case "PDF":
 			newFile = new File(path+"pdf");
 			MakePDF(subtitles, newFile);
 			break;
+			
 		case "SRT":
 			newFile = new File(path+"srt");
 			MakeSRT(subtitles, newFile);
 			break;
+			
 		case "XML":
 			newFile = new File(path+"xml");
 			Encoder.encodeXML(subtitles, newFile);
@@ -65,28 +69,28 @@ public class Saver {
 		PdfWriter writer = new PdfWriter(out);
 		PdfDocument pdf = new PdfDocument(writer);
 		Document document = new Document(pdf);
+		
 		Paragraph par = new Paragraph();
 		par.setBold();
 		par.add("Sous-titres :");
 		document.add(par);
-
 
 		for(Subtitle sub:subtitles.getSubtitlesAsSortedCollection()) {
 			par = new Paragraph();	
 			par.setMarginLeft(5);
 			par.setFontSize(15);
 			par.add("Commence de "+ConversionStringMilli.MillisecondsToString(sub.getTimeStart())
-			+" â "+ConversionStringMilli.MillisecondsToString(sub.getTimeStart()));
+			+" à "+ConversionStringMilli.MillisecondsToString(sub.getTimeStart()));
 			document.add(par);
 			
 			for(Speech speech:sub.getContenu()) {
 
 				par = new Paragraph();
 				par.setMarginLeft(10);
-
-				par.add("- "+speech.getAuthor()+" :");
 				par.setFontSize(10);
+				par.add("- "+speech.getAuthor()+" :");
 				document.add(par);
+				
 				par = new Paragraph();
 				par.setItalic();
 				par.setMarginLeft(16);

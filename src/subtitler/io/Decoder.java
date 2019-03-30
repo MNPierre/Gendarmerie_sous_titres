@@ -118,14 +118,18 @@ public class Decoder {
 
 				subtitles.addSubtitles(subtitle);
 			}
-			System.out.println(root.getChildNodes().getLength());
-			
+			if(MainControler.commentaires != null) {
+				for(MarqueurCommentaire commentaire:MainControler.commentaires) {
+					commentaire.removeFromPane(MainControler.getPanPrincipale());
+				}
+			}
+			ArrayList<MarqueurCommentaire> commentaires = new ArrayList<>();
 			for(MarqueurCommentaire commentaire:MainControler.commentaires) {
 				commentaire.removeFromPane(MainControler.getPanPrincipale());
 			}
 			
 			if(root.getChildNodes().getLength()>5) {
-				ArrayList<MarqueurCommentaire> commentaires = new ArrayList<>();
+				
 				for(int t=1;t<root.getChildNodes().item(5).getChildNodes().getLength();t+=2) {
 					MarqueurCommentaire newComm = new MarqueurCommentaire(
 							root.getChildNodes().item(5).getChildNodes().item(t).getTextContent(),
@@ -133,9 +137,9 @@ public class Decoder {
 							0,0);
 					commentaires.add(newComm);
 				}
-				MainControler.commentaires = commentaires;
+				
 			}
-
+			MainControler.commentaires = commentaires;
 		} catch (SAXException | IOException | ParserConfigurationException e) {
 			e.printStackTrace();
 		}
