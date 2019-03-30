@@ -69,70 +69,70 @@ public class MainControler implements Initializable {
 
 
 	@FXML
-	private Pane paneListeNarrators;
+    private Pane panePrincipal;
 
-	@FXML
-	private Slider sliderPaneListeNarrators;
+    @FXML
+    private Button ajouterButton;
 
-	@FXML
-	private Pane panePrincipal;
+    @FXML
+    private Button sauvegarderButton;
 
-	@FXML
-	private Button ajouterButton;
+    @FXML
+    private Button buttonEditSpeakers;
 
-	@FXML
-	private Button sauvegarderButton;
+    @FXML
+    private Button buttonEditSubtitles;
 
-	@FXML
-	private Button editSpeakersButton;
+    @FXML
+    private TextField debutInput;
 
-	@FXML
-	private TextField wordToSearchBox;
+    @FXML
+    private TextField finInput;
 
-	@FXML
-	private Button searchKeyWordButton;
+    @FXML
+    private ComboBox<String> personneInput;
 
-	@FXML
-	private TextField videoPlayStart;
+    @FXML
+    private TextArea subtitlesInput;
 
-	@FXML
-	private TextField videoPlayEnd;
+    @FXML
+    private Button prendreValeurButton;
 
-	@FXML
-	private Button editSubtitlesButton;
+    @FXML
+    private Button addCommentButton;
 
-	@FXML
-	private CheckBox zoomCheckBox;
+    @FXML
+    private TextField wordToSearchBox;
 
-	@FXML
-	private Slider volumeBarre;
+    @FXML
+    private Button buttonSearchKeyWord;
 
-	@FXML
-	private Label volumeText;
+    @FXML
+    private Button clearButton;
 
-	@FXML
-	private TextField debutInput;
+    @FXML
+    private Slider volumeBarre;
 
-	@FXML
-	private TextField finInput;
+    @FXML
+    private Label volumeText;
 
-	@FXML
-	private ComboBox<String> personneInput;
+    @FXML
+    private TextField videoPlayStart;
 
-	@FXML
-	private TextArea subtitlesInput;
+    @FXML
+    private TextField videoPlayEnd;
 
-	@FXML
-	private MediaView video;
+    @FXML
+    private CheckBox zoomCheckBox;
 
-	@FXML
-	private Button prendreValeurButton;
+    @FXML
+    private Pane paneListePersonne;
 
-	@FXML
-	private Button clearButton;
+    @FXML
+    private MediaView video;
 
-	@FXML
-	private CheckBox showVideo;
+    @FXML
+    private CheckBox showVideo;
 
 	static Slider videoSlider;
 
@@ -622,10 +622,10 @@ public class MainControler implements Initializable {
 			fichierVideo = new Media( new File(file).toURI().toString() );
 
 			if(wf != null) {
-				wf.startService(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
+				wf.startService(file);
 
 			}else
-				wf = new WaveForm(file, WaveForm.WaveFormJob.AMPLITUDES_AND_WAVEFORM, 10);
+				wf = new WaveForm(file, 10);
 
 
 			if(listenerVideoTime != null) {
@@ -912,11 +912,11 @@ public class MainControler implements Initializable {
 	 * */
 	public static void updateListNarrators() {
 		int nbCol = MainControler.subtitles.getStyles().size()/8;
-		MainControler.controleur.paneListeNarrators.setPrefWidth(144*nbCol);
-		MainControler.controleur.paneListeNarrators.getChildren().clear();
+		MainControler.controleur.paneListePersonne.setPrefWidth(144*nbCol);
+		MainControler.controleur.paneListePersonne.getChildren().clear();
 		for(int i = 0; i < MainControler.subtitles.getStyles().size(); i++) {
 			Group g = new Group();
-			g.prefWidth(MainControler.controleur.paneListeNarrators.getPrefWidth());
+			g.prefWidth(MainControler.controleur.paneListePersonne.getPrefWidth());
 			g.prefHeight(20);
 			g.setLayoutY(i*25);
 			Label author = new Label(MainControler.subtitles.getStyles().get(i).getNarrator());
@@ -926,7 +926,7 @@ public class MainControler implements Initializable {
 			color.setLayoutX(5);
 			color.setLayoutY(5);
 			g.getChildren().addAll(author, color);
-			MainControler.controleur.paneListeNarrators.getChildren().add(g);
+			MainControler.controleur.paneListePersonne.getChildren().add(g);
 		}
 	}
 
@@ -993,9 +993,9 @@ public class MainControler implements Initializable {
 		videoPlayStart.setDisable(value);
 		videoPlayEnd.setDisable(value);
 		volumeBarre.setDisable(value);
-		searchKeyWordButton.setDisable(value);
-		editSpeakersButton.setDisable(value);
-		editSubtitlesButton.setDisable(value);
+		buttonSearchKeyWord.setDisable(value);
+		buttonEditSpeakers.setDisable(value);;
+		buttonEditSubtitles.setDisable(value);;
 		prendreValeurButton.setDisable(value);
 		clearButton.setDisable(value);
 		showVideo.setDisable(value);
