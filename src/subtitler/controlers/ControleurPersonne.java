@@ -73,7 +73,7 @@ public class ControleurPersonne implements Initializable{
 			MainControler.subtitles.changeColor(modifPersonneInput.getValue(), color);
 			MainControler.subtitles.searchColor(modifPersonneInput.getValue()).setColor(color);
 		}
-		MainControler.fillListePersonne();
+		MainControler.updateListNarrators();
 		MainControler.updatebarreSubtitle();
 	}
 

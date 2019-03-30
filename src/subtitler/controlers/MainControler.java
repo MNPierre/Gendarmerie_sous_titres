@@ -69,10 +69,10 @@ public class MainControler implements Initializable {
 
 
 	@FXML
-	private Pane paneListePersonne;
+	private Pane paneListeNarrators;
 
 	@FXML
-	private Slider sliderPaneListePersonne;
+	private Slider sliderPaneListeNarrators;
 
 	@FXML
 	private Pane panePrincipal;
@@ -84,13 +84,13 @@ public class MainControler implements Initializable {
 	private Button sauvegarderButton;
 
 	@FXML
-	private Button buttonEditSpeakers;
+	private Button editSpeakersButton;
 
 	@FXML
 	private TextField wordToSearchBox;
 
 	@FXML
-	private Button buttonSearchKeyWord;
+	private Button searchKeyWordButton;
 
 	@FXML
 	private TextField videoPlayStart;
@@ -99,7 +99,7 @@ public class MainControler implements Initializable {
 	private TextField videoPlayEnd;
 
 	@FXML
-	private Button buttonEditSubtitles;
+	private Button editSubtitlesButton;
 
 	@FXML
 	private CheckBox zoomCheckBox;
@@ -159,6 +159,7 @@ public class MainControler implements Initializable {
 	static Pin pin1;
 	static Pin pin2;
 
+
 	static Group fonctions ;
 	static Group barres ;
 	static Group play_pause ;
@@ -184,18 +185,31 @@ public class MainControler implements Initializable {
 
 	public static ArrayList<MarqueurCommentaire> commentaires;
 
+	/*
+	 * Rechercher mots onClick
+	 * 	Enter results in wordSearchResult and update subtitlebars to show results
+	 * */
 	@FXML
 	void searchKeyWord(ActionEvent event) {
 		wordSearchResult = Search.recherche(wordToSearchBox.getText(), MainControler.subtitles);
 		updatebarreSubtitle();
 	}
 
+	/*
+	 * clear rechercher mots onClick
+	 * Clear the results
+	 * */
 	@FXML
 	void clearSearch(ActionEvent event) {
 		wordToSearchBox.setText("");
 		updatebarreSubtitle();
 	}
 
+	
+	/*
+	 * Editer Personne onClick
+	 * 	Show menu to add and edit Narrators
+	 * */
 	@FXML
 	void showEditSpeakers(ActionEvent event) {
 		if(player.getStatus() == Status.PLAYING) {
@@ -216,7 +230,10 @@ public class MainControler implements Initializable {
 
 		}
 	}
-
+	/*
+	 * Prendre valeurs OnClick
+	 * 	Get values from pin1 and pin2 and put them into the debutInput and finInput inputs
+	 * */
 	@FXML
 	void prendreValeurs(ActionEvent event) {
 		debutInput.setText(videoPlayStart.getText());
@@ -224,6 +241,10 @@ public class MainControler implements Initializable {
 	}
 
 	Stage paneEditSubtitles;
+	/*
+	 * modifier sous-titres onClick
+	 * Show pane with the list of subtitles to edit them;
+	 * */
 	@FXML
 	void modifSousTitres(ActionEvent event) {
 		if(player.getStatus() == Status.PLAYING) {
@@ -246,6 +267,11 @@ public class MainControler implements Initializable {
 
 	}
 
+	
+	/*
+	 * Fichier onClick
+	 * 	Show the menu to import files
+	 * */
 	@FXML
 	void showFileImport(ActionEvent event) {
 		try {
@@ -267,6 +293,10 @@ public class MainControler implements Initializable {
 		}
 	}
 
+	
+	/*
+	 * Function that calculate all the subtitlesBarres.
+	 * */
 	public static void updatebarreSubtitle() {
 		barresSubtitles.getChildren().clear();
 		for(int i = 0; i < subtitles.getNarrators().size(); i++) {
@@ -274,6 +304,7 @@ public class MainControler implements Initializable {
 				for(Speech sp : s.getContenu()) {
 					if(sp.getAuthor().equals(subtitles.getNarrators().get(i))) {
 						Rectangle r;
+						// Case if zoomed
 						if(MainControler.controleur.zoomCheckBox.isSelected()) {							
 							long sampleStart = ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayStart.getText());
 							long sampleStop = ConversionStringMilli.StringToMillisecond(MainControler.controleur.videoPlayEnd.getText());;
@@ -308,6 +339,10 @@ public class MainControler implements Initializable {
 								r.setTranslateY(r.getTranslateY()+2);
 							}
 						});
+						/*
+						 * onClick Event to open the menu to edit this particular subtitle
+						 * 
+						 * */
 						r.setOnMouseClicked(new EventHandler<MouseEvent>(){
 							public void handle(MouseEvent me){
 								AnchorPane root;
@@ -327,6 +362,8 @@ public class MainControler implements Initializable {
 								} 
 							}
 						});
+						
+						//Adding colors
 						for(Style st : subtitles.getStyles()) {
 							if(st != null) {
 								if(st.getNarrator().equals(sp.getAuthor())) {
@@ -334,7 +371,9 @@ public class MainControler implements Initializable {
 								}
 							}
 						}
-
+						/*
+						 * Case if we're searching a word
+						 * */
 						ArrayList<Subtitle> subtitlesToCheck = new ArrayList<>();
 						for(Subtitle sub:wordSearchResult.getSubtitles()) {
 							subtitlesToCheck.add(sub);
@@ -352,7 +391,6 @@ public class MainControler implements Initializable {
 		wordSearchResult.getSubtitles().clear();
 	}
 
-
 	private static void playPauseVideo() {
 		//pause
 		if(player.getStatus() == Status.PLAYING){
@@ -369,6 +407,11 @@ public class MainControler implements Initializable {
 		}
 	}
 
+	
+	/*
+	 * Ajouter commentaire onClick
+	 * 	Add a new commentary to the list of "commentaires" and update video to show the new commentaire (the little blue rectangle)
+	 * */
 	@FXML
 	void addComment(ActionEvent event) {
 		if(controleur.debutInput.getText().replaceAll("[^0123456789:.]", "").equals("") || controleur.subtitlesInput.getText().replaceAll("[ ]", "").equals("")) {
@@ -386,6 +429,10 @@ public class MainControler implements Initializable {
 		}
 	}
 
+	/*
+	 * Ajouter sous-titres onClick
+	 * 	Add a new subtitle to the list update video and update barres to show it
+	 * */
 	@FXML
 	void addSubtitle(ActionEvent event) {
 
@@ -412,6 +459,11 @@ public class MainControler implements Initializable {
 		}
 	}
 
+	
+	/*
+	 * Sauvegarder onClick
+	 * 	Show menu to save file
+	 * */
 	@FXML
 	void sauvegarderOnClick(ActionEvent event){
 		try {
@@ -427,7 +479,10 @@ public class MainControler implements Initializable {
 		}
 
 	}
-
+	/*
+	 * Function that update general video parameters for example to resize values when zoomBox is checked
+	 * 	it also recalculate the wave form 
+	 * */
 	public static void updateVideo() {
 
 		double currentTime = player.getCurrentTime().toMillis();
@@ -483,7 +538,9 @@ public class MainControler implements Initializable {
 			}
 
 		}
-
+		/*
+		 * Load all the subtitle to show at the moment where the video is.
+		 * */
 		paneTextToShow.getChildren().clear();
 		for(Subtitle sub:subtitlesToShow) {
 			for(Speech speech:sub.getContenu()) {
@@ -543,6 +600,9 @@ public class MainControler implements Initializable {
 
 	static double barreSize=40;
 
+	/*
+	 * Getting subtitles and comment from XML chosen by user + configure the video at starting
+	 * */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void setNewVideoXml(String file, String xmlFile) {
 
@@ -613,12 +673,12 @@ public class MainControler implements Initializable {
 				@Override
 				public void onChanged(Change c) {
 					controleur.personneInput.setItems(subtitles.getNarrators());
-					fillListePersonne();
+					updateListNarrators();
 				}
 
 			});
-
-			//Listener du temps de la video
+			
+			//Listener du temps de la video it'll update the parameters at each frame
 			listenerVideoTime = new ChangeListener<Duration>(){
 				@Override
 				public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
@@ -695,7 +755,7 @@ public class MainControler implements Initializable {
 			selectedZone.setLayoutX(pin1.getLayoutX()-(controleur.video.getLayoutX()+35));
 			selectedZone.setWidth(pin2.getLayoutX()-pin1.getLayoutX());
 
-			fillListePersonne();
+			updateListNarrators();
 
 			if(!doVideoAlreadyBeanLoad) {
 
@@ -748,7 +808,9 @@ public class MainControler implements Initializable {
 					}
 
 				});
-
+				/*
+				 * Listener on the zoomBox value
+				 * */
 				controleur.zoomCheckBox.selectedProperty().addListener(new ChangeListener() {
 
 					@Override
@@ -773,7 +835,7 @@ public class MainControler implements Initializable {
 
 				});
 
-				//Event changement du temps de lecture de la video
+				//Event for moving into the media timeline
 				barres.setOnMouseClicked(new EventHandler<MouseEvent>(){
 					public void handle(MouseEvent me){
 
@@ -788,7 +850,11 @@ public class MainControler implements Initializable {
 						}
 					}
 				});	
-
+				
+				
+				/*
+				 * Event to change volume
+				 * */
 				controleur.volumeBarre.valueProperty().addListener(new ChangeListener<Number>() {
 					@Override
 					public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -798,6 +864,9 @@ public class MainControler implements Initializable {
 
 				});;
 
+				/*
+				 * Event to update the pin1 when you change the value in videoPlayStart input
+				 * */
 				controleur.videoPlayStart.setOnKeyPressed(new EventHandler<KeyEvent>() {
 					@Override
 					public void handle(KeyEvent event) {
@@ -808,6 +877,9 @@ public class MainControler implements Initializable {
 					}
 				});
 
+				/*
+				 * Event to update the pin2 when you change the value in videoPlayEnd input
+				 * */
 				controleur.videoPlayEnd.setOnKeyPressed(new EventHandler<KeyEvent>() {
 					@Override
 					public void handle(KeyEvent event) {
@@ -834,14 +906,17 @@ public class MainControler implements Initializable {
 
 
 	}
-
-	public static void fillListePersonne() {
+	/*
+	 * Update the NarratorsList on top-right
+	 * 
+	 * */
+	public static void updateListNarrators() {
 		int nbCol = MainControler.subtitles.getStyles().size()/8;
-		MainControler.controleur.paneListePersonne.setPrefWidth(144*nbCol);
-		MainControler.controleur.paneListePersonne.getChildren().clear();
+		MainControler.controleur.paneListeNarrators.setPrefWidth(144*nbCol);
+		MainControler.controleur.paneListeNarrators.getChildren().clear();
 		for(int i = 0; i < MainControler.subtitles.getStyles().size(); i++) {
 			Group g = new Group();
-			g.prefWidth(MainControler.controleur.paneListePersonne.getPrefWidth());
+			g.prefWidth(MainControler.controleur.paneListeNarrators.getPrefWidth());
 			g.prefHeight(20);
 			g.setLayoutY(i*25);
 			Label author = new Label(MainControler.subtitles.getStyles().get(i).getNarrator());
@@ -851,7 +926,7 @@ public class MainControler implements Initializable {
 			color.setLayoutX(5);
 			color.setLayoutY(5);
 			g.getChildren().addAll(author, color);
-			MainControler.controleur.paneListePersonne.getChildren().add(g);
+			MainControler.controleur.paneListeNarrators.getChildren().add(g);
 		}
 	}
 
@@ -907,7 +982,9 @@ public class MainControler implements Initializable {
 
 		setVideoToolsSetDisable(true);
 	}
-
+	/*
+	 * Disable all inputs when no media is loaded
+	 * */
 	public void setVideoToolsSetDisable(boolean value) {
 		zoomCheckBox.setDisable(value);
 		ajouterButton.setDisable(value);
@@ -916,9 +993,9 @@ public class MainControler implements Initializable {
 		videoPlayStart.setDisable(value);
 		videoPlayEnd.setDisable(value);
 		volumeBarre.setDisable(value);
-		buttonSearchKeyWord.setDisable(value);
-		buttonEditSpeakers.setDisable(value);
-		buttonEditSubtitles.setDisable(value);
+		searchKeyWordButton.setDisable(value);
+		editSpeakersButton.setDisable(value);
+		editSubtitlesButton.setDisable(value);
 		prendreValeurButton.setDisable(value);
 		clearButton.setDisable(value);
 		showVideo.setDisable(value);
