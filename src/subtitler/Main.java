@@ -1,15 +1,8 @@
 package subtitler;
-import java.io.File;
-import java.net.URL;
-
-import com.sun.prism.paint.Color;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -20,12 +13,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			Main.primaryStage = primaryStage;
-			FXMLLoader loader = new FXMLLoader();
-			URL url = new File("assets/Main.fxml").
-					toURI().toURL();
-			loader.setLocation(url);
-			System.out.println(loader.getLocation());
-			Parent root = FXMLLoader.load(url);
+			Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("assets/Main.fxml").toURI().toURL());
 			Scene scene = new Scene(root,1200,850);
 			primaryStage.setResizable(false);
 			primaryStage.setScene(scene);

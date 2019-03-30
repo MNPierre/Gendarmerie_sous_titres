@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="231.0" prefWidth="349.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="subtitler.controlers.ControleurFileImport">
+   <children>
+      <Pane prefHeight="231.0" prefWidth="349.0">
+         <children>
+            <Button layoutX="143.0" layoutY="176.0" mnemonicParsing="false" onAction="#buttonValidate" text="Valider" />
+            <TextField fx:id="textFieldFile" layoutX="27.0" layoutY="56.0" prefHeight="26.0" prefWidth="213.0" />
+            <TextField fx:id="textFieldSubtitlesFile" layoutX="27.0" layoutY="118.0" prefHeight="26.0" prefWidth="213.0" />
+            <Label layoutX="27.0" layoutY="32.0" text="Fichier video/son" />
+            <Label layoutX="27.0" layoutY="102.0" text="Fichier sous-titres" />
+            <Button layoutX="253.0" layoutY="56.0" mnemonicParsing="false" onAction="#buttonImportFile" text="Importer" />
+            <Button layoutX="253.0" layoutY="120.0" mnemonicParsing="false" onAction="#buttonImportSubtitlesFile" text="Importer" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

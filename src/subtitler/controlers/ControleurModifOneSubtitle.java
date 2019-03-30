@@ -1,7 +1,6 @@
 package subtitler.controlers;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -9,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import subtitler.subtitles.Subtitle;
 import subtitler.utils.ConversionStringMilli;
 import subtitler.utils.modifSubtitleUtils;
 

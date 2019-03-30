@@ -2,7 +2,6 @@ package subtitler.subtitles;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import subtitler.utils.ConversionStringMilli;
 
 public class Speech {
 

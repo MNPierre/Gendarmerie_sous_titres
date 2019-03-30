@@ -2,7 +2,7 @@ package subtitler.controlers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -60,8 +60,8 @@ import subtitler.subtitles.SubtitlesList;
 import subtitler.utils.ConversionStringMilli;
 import subtitler.utils.MarqueurCommentaire;
 import subtitler.utils.Pin;
-import subtitler.utils.Search;
 import subtitler.utils.Pin.Mode;
+import subtitler.utils.Search;
 import subtitler.utils.WaveForm;
 import subtitler.utils.modifSubtitleUtils;
 
@@ -132,6 +132,12 @@ public class MainControler implements Initializable {
 
 	@FXML
 	private CheckBox showVideo;
+	
+	@FXML
+    private ImageView imageLogoIUTM;
+
+    @FXML
+    private ImageView imageLogoGN;
 
 	static Slider videoSlider;
 
@@ -215,7 +221,7 @@ public class MainControler implements Initializable {
 			playPauseVideo();
 		}
 		try { 
-			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("assets/modifPersonne.fxml").toURI().toURL()); 
+			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getClassLoader().getResource("assets/modifPersonne.fxml").toURI().toURL()); 
 			if(modifySubtitlesStage != null)
 				modifySubtitlesStage.close();
 			modifySubtitlesStage = new Stage(); 
@@ -224,7 +230,7 @@ public class MainControler implements Initializable {
 			modifySubtitlesStage.setScene(scene); 
 			modifySubtitlesStage.show();
 		} 
-		catch (IOException e) {  
+		catch (IOException | URISyntaxException e) {  
 			e.printStackTrace(); 
 
 		}
@@ -252,14 +258,14 @@ public class MainControler implements Initializable {
 
 			if(paneEditSubtitles != null)
 				paneEditSubtitles.close();
-			AnchorPane root = (AnchorPane) FXMLLoader.load(new File("assets/modifSubtitle.fxml").toURI().toURL());
+			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getClassLoader().getResource("assets/modifSubtitle.fxml").toURI().toURL());
 			paneEditSubtitles = new Stage(); 
 			Scene scene = new Scene(root, 640, 480); 
 			paneEditSubtitles.setTitle("Modifier Sous-Titres");
 			paneEditSubtitles.setScene(scene); 
 			paneEditSubtitles.show(); 
 		} 
-		catch (IOException e) {  
+		catch (IOException | URISyntaxException e) {  
 			e.printStackTrace(); 
 		}
 
@@ -278,7 +284,7 @@ public class MainControler implements Initializable {
 
 			fileImportStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
-			URL url = new File("assets/FileImport.fxml").toURI().toURL();
+			URL url = getClass().getClassLoader().getResource("assets/FileImport.fxml").toURI().toURL();
 			loader.setLocation(url);
 			Parent root = FXMLLoader.load(url);
 			Scene scene = new Scene(root,349,241);
@@ -286,7 +292,7 @@ public class MainControler implements Initializable {
 			fileImportStage.show();
 
 
-		} catch (IOException e) {
+		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
@@ -346,7 +352,7 @@ public class MainControler implements Initializable {
 								AnchorPane root;
 								try {
 									modifSubtitleUtils.selectedSubtitle = s;
-									root = (AnchorPane) FXMLLoader.load(new File("assets/modifOneSubtitle.fxml").toURI().toURL());
+									root = (AnchorPane) FXMLLoader.load(getClass().getClassLoader().getResource("assets/modifOneSubtitle.fxml").toURI().toURL());
 									if(modifSubtitleUtils.modifOneSubtitleStage != null)
 										modifSubtitleUtils.modifOneSubtitleStage.close();
 									modifSubtitleUtils.modifOneSubtitleStage = new Stage(); 
@@ -355,7 +361,7 @@ public class MainControler implements Initializable {
 									modifSubtitleUtils.modifOneSubtitleStage.setScene(scene); 
 									modifSubtitleUtils.modifOneSubtitleStage.show();
 
-								} catch (IOException e) {
+								} catch (IOException | URISyntaxException e) {
 									e.printStackTrace();
 								} 
 							}
@@ -938,10 +944,12 @@ public class MainControler implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		MainControler.controleur = this;
 		//D�clarations
+		img_play = new Image(getClass().getClassLoader().getResource("assets/PLAY.png").toString());
+		img_pause = new Image(getClass().getClassLoader().getResource("assets/PAUSE.png").toString());
 		try {
-			img_play = new Image(new File("assets/PLAY.png").toURI().toURL().toString());
-			img_pause = new Image(new File("assets/PAUSE.png").toURI().toURL().toString());
-		} catch (MalformedURLException e) {
+			imageLogoGN.setImage(new Image(getClass().getClassLoader().getResource("assets/logoSIP.png").toString()));
+			imageLogoIUTM.setImage(new Image(getClass().getClassLoader().getResource("assets/LOGO-MONTREUIL-Moyen.png").toString()));
+		}catch(NullPointerException e) {
 			e.printStackTrace();
 		}
 
