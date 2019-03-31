@@ -3,6 +3,8 @@ package subtitler.controlers;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -43,6 +45,7 @@ public class ControleurSousTitres implements Initializable{
 		loadValues();
 	}
 	
+	
 	public static void loadValues() {
 		ControleurSousTitres.controleur.auteurView.setCellValueFactory(cellData -> cellData.getValue().getContenu().get(0).getAuthorProperty());
 		//subtitlesView.setItems(MainControler.subtitles.getObservableSubtitles());
@@ -60,19 +63,18 @@ public class ControleurSousTitres implements Initializable{
 	
 
 	@FXML
-    void modifierOnClick(ActionEvent event) {
+    void modifierOnClick(ActionEvent event) throws MalformedURLException, IOException, URISyntaxException {
 		AnchorPane root;
-		try {
+
 			modifSubtitleUtils.selectedSubtitle = subtitlesView.getSelectionModel().getSelectedItem();
-			root = (AnchorPane) FXMLLoader.load(new File("assets/modifOneSubtitle.fxml").toURI().toURL());
+			root = (AnchorPane) FXMLLoader.load(getClass().getClassLoader().getResource("assets/modifOneSubtitle.fxml").toURI().toURL()); 
 			modifSubtitleUtils.modifOneSubtitleStage = new Stage(); 
 			Scene scene = new Scene(root, 640, 380); 
 			modifSubtitleUtils.modifOneSubtitleStage.setTitle("Modifier Un Sous-Titre");
 			modifSubtitleUtils.modifOneSubtitleStage.setScene(scene); 
 			modifSubtitleUtils.modifOneSubtitleStage.show();
 
-		} catch (IOException e) {
-		} 
+	
     }
 		
 }

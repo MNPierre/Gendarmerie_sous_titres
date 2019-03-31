@@ -985,6 +985,7 @@ public class MainControler implements Initializable {
 
 		commentaires = new ArrayList<MarqueurCommentaire>();
 
+
 		pin1 = new Pin(Mode.START);
 		pin2 = new Pin(Mode.END);
 

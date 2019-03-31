@@ -1,7 +1,7 @@
 package subtitler.utils;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -49,7 +49,8 @@ public class MarqueurCommentaire {
 		body.setLayoutX(x);
 		body.setLayoutY(y+1);
 		body.setFill(Color.AQUA);
-
+		
+		
 		body.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -62,6 +63,7 @@ public class MarqueurCommentaire {
 			}
 		});
 
+		
 		body.setOnMouseExited(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -82,7 +84,7 @@ public class MarqueurCommentaire {
 				commentaireToEdit = moi;
 				AnchorPane root;
 				try {
-					root = (AnchorPane) FXMLLoader.load(new File("assets/modifCommentaire.fxml").toURI().toURL());
+					root = (AnchorPane) FXMLLoader.load(getClass().getClassLoader().getResource("assets/modifCommentaire.fxml").toURI().toURL()); 
 					modifCommentStage = new Stage(); 
 					Scene scene = new Scene(root, 430, 360); 
 					modifCommentStage.setResizable(false);
@@ -91,6 +93,9 @@ public class MarqueurCommentaire {
 					modifCommentStage.show();
 
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
 			}

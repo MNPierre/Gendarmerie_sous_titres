@@ -26,6 +26,8 @@ public class ControleurModifCommentaire implements Initializable{
     	MainControler.updateVideo();
     	MarqueurCommentaire.modifCommentStage.close();
     }
+    
+    
 
     @FXML
     void validerModifier(ActionEvent event) {
